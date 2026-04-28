@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analyse Synchro9 — Coach</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root {
+  --bg:#07101f;--surface:#0f1f35;--surface2:#162840;--border:#1e3352;
+  --ice:#00c8e8;--text:#e8f0fc;--muted:#5a7090;--text2:#a0b4cc;
+  --green:#1de9a0;--orange:#ff9f2e;--red:#ff4f6a;--yellow:#ffd84a;--purple:#b388ff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);padding-bottom:50px;}
+
+.header{background:linear-gradient(135deg,#060d1e,#0a1a38,#002840);padding:20px 16px 16px;border-bottom:2px solid var(--ice);position:relative;overflow:hidden;}
+.header::before{content:'⛸';position:absolute;right:-5px;top:-15px;font-size:120px;opacity:.05;}
+.badge{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--ice);border:1px solid var(--ice);padding:2px 7px;border-radius:2px;display:inline-block;margin-bottom:6px;}
+.badge-draft{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--orange);border:1px solid var(--orange);padding:2px 7px;border-radius:2px;display:inline-block;margin-bottom:6px;margin-left:6px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:#fff;line-height:1;}
+h1 span{color:var(--ice);}
+.meta{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.6;}
+
+/* TABS */
+.tabs{display:flex;overflow-x:auto;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:1px;color:var(--muted);padding:11px 13px;white-space:nowrap;cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;transition:all .2s;flex-shrink:0;}
+.tab-btn.active{color:var(--ice);border-bottom-color:var(--ice);}
+.panel{display:none;padding:14px;}
+.panel.active{display:block;}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;}
+.card-head{display:flex;align-items:flex-start;gap:10px;padding:12px 13px;}
+.card-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.card-title{font-weight:600;font-size:13px;flex:1;line-height:1.4;}
+.card-body{border-top:1px solid var(--border);padding:11px 13px;font-size:12.5px;line-height:1.8;color:var(--text2);}
+.card-body strong{color:var(--text);}
+
+.badge-tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:7px;white-space:nowrap;margin-top:1px;}
+.tag-green{color:var(--green);background:rgba(29,233,160,.1);border:1px solid rgba(29,233,160,.25);}
+.tag-orange{color:var(--orange);background:rgba(255,159,46,.1);border:1px solid rgba(255,159,46,.25);}
+.tag-red{color:var(--red);background:rgba(255,79,106,.1);border:1px solid rgba(255,79,106,.25);}
+.tag-ice{color:var(--ice);background:rgba(0,200,232,.08);border:1px solid rgba(0,200,232,.2);}
+.tag-purple{color:var(--purple);background:rgba(179,136,255,.1);border:1px solid rgba(179,136,255,.25);}
+.tag-yellow{color:var(--yellow);background:rgba(255,216,74,.1);border:1px solid rgba(255,216,74,.25);}
+
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;color:var(--orange);padding:10px 0 6px;}
+.sec-title:first-child{padding-top:0;}
+
+/* PENDING */
+.pending-box{background:rgba(255,159,46,.05);border:1px solid rgba(255,159,46,.2);border-left:3px solid var(--orange);border-radius:8px;padding:12px 13px;margin-bottom:10px;font-size:12.5px;line-height:1.7;color:#d4aa60;}
+.pending-box strong{color:var(--orange);}
+
+/* INFO */
+.info-box{background:rgba(0,200,232,.05);border:1px solid rgba(0,200,232,.2);border-radius:8px;padding:12px 13px;margin-bottom:10px;font-size:12.5px;line-height:1.7;}
+.info-box strong{color:var(--ice);}
+
+/* PRIORITY LIST */
+.prio-list{display:flex;flex-direction:column;gap:7px;}
+.prio-item{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 12px;}
+.prio-num{font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--orange);line-height:1;min-width:20px;}
+.prio-text{font-size:12.5px;line-height:1.6;}
+.prio-text strong{color:var(--text);}
+.prio-text em{color:var(--muted);font-style:normal;font-size:11.5px;}
+
+/* COMPARE TABLE */
+.cmp-table{width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:10px;}
+.cmp-table th{background:var(--surface2);color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:1px;padding:7px 9px;text-align:left;border-bottom:1px solid var(--border);}
+.cmp-table td{padding:8px 9px;border-bottom:1px solid rgba(30,51,82,.5);font-size:11.5px;color:var(--text2);vertical-align:top;}
+.cmp-table td:first-child{font-weight:600;color:var(--text);width:35%;}
+.pos{color:var(--green);}
+.neg{color:var(--red);}
+
+/* NOTE BOX */
+.note-box{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 13px;font-size:12px;color:var(--muted);line-height:1.7;margin-top:10px;}
+.note-box strong{color:var(--text);}
+
+/* UPDATE LOG */
+.update-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.update-item:last-child{border-bottom:none;}
+.update-date{font-family:'Bebas Neue',sans-serif;font-size:12px;color:var(--muted);min-width:70px;}
+.update-text{font-size:12px;color:var(--text2);line-height:1.6;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="badge">SYNCHRO9</div>
+    <div class="badge-draft">ANALYSE EN COURS</div>
+  </div>
+  <h1>ANALYSE <span>COACHING</span></h1>
+  <div class="meta">
+    Document évolutif · Dernière mise à jour : avril 2026<br>
+    Basé sur ISU Communication 2784 · Complété au fil des informations officielles
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="show('vision')">Vision ISU</button>
+  <button class="tab-btn" onclick="show('tactique')">Tactique</button>
+  <button class="tab-btn" onclick="show('scoring')">Scoring</button>
+  <button class="tab-btn" onclick="show('profil')">Profil équipe</button>
+  <button class="tab-btn" onclick="show('updates')">Mises à jour</button>
+</div>
+
+<!-- VISION ISU -->
+<div class="panel active" id="panel-vision">
+
+  <div class="sec-title">Ce que l'ISU veut créer</div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">📺</div><div class="card-title">Un format conçu pour les JO et la télévision</div><div class="badge-tag tag-red">CLEF</div></div>
+    <div class="card-body">La vision du président de l'ISU est explicite : le Synchro9 doit être <strong>facile à filmer</strong>. Ça signifie que la compacité de l'équipe n'est pas juste une règle technique — c'est le <strong>critère esthétique central</strong> du format. Les juges vont, consciemment ou non, récompenser ce qui "filme bien" : une masse compacte, lisible, visuellement impactante en cadrage serré.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🎯</div><div class="card-title">Moins de technique, plus de spectacle</div></div>
+    <div class="card-body">La réduction du nombre d'éléments obligatoires et leur simplification (pas de niveaux 1–4, pas de GOE codifié par élément) signale une volonté de rendre le format <strong>accessible au grand public</strong>. L'idée est qu'un spectateur sans connaissance du patinage synchronisé comprenne et apprécie ce qu'il voit. C'est un changement fondamental par rapport au synchro classique.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🎵</div><div class="card-title">Identité culturelle imposée</div></div>
+    <div class="card-body">La musique <strong>street dance obligatoire</strong> pour 2026–27 et 2027–28 (Starting Rounds), et le <strong>110–120 BPM imposé</strong> en semi-finales, sont des contraintes très fortes qui orientent vers une énergie urbaine, jeune, percussive. Le costume et la musique doivent être "modern, urban and youthful" — c'est une direction artistique claire, pas une suggestion.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🔄</div><div class="card-title">Continuité vs. éléments</div></div>
+    <div class="card-body">Le programme est évalué comme une <strong>"continuous performance"</strong> — pas comme une succession d'éléments à cocher. C'est probablement la rupture la plus profonde avec le synchro classique. Les transitions, la fluidité entre les mouvements, et la cohérence dramaturgique du programme comptent autant que les éléments obligatoires eux-mêmes.</div>
+  </div>
+
+</div>
+
+<!-- TACTIQUE -->
+<div class="panel" id="panel-tactique">
+
+  <div class="sec-title">Opportunités à exploiter</div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">💡</div><div class="card-title">Le système Highlighting — gérer les niveaux</div><div class="badge-tag tag-green">OPPORTUNITÉ</div></div>
+    <div class="card-body"><strong>1 à 3 filles peuvent faire quelque chose de différent</strong> sans pénalité sur le Difficulty Score. Tactiquement : mettre les filles les plus faibles techniquement dans la masse compacte, et réserver le highlighting pour les plus fortes sur les moments clés. Cela permet de présenter une équipe homogène visuellement tout en cachant les disparités de niveau.<br><br>
+    <strong>Attention :</strong> si un mouvement est utilisé comme Full Team Movement, il ne peut être réutilisé qu'en highlight ou subgroup — donc prévoir dès la construction du programme la hiérarchie des utilisations.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">💡</div><div class="card-title">Liberté sur les Difficulty Features</div><div class="badge-tag tag-green">OPPORTUNITÉ</div></div>
+    <div class="card-body">"Any type of Jump", "Any type of Spin" — <strong>il n'y a pas de hiérarchie de difficulté imposée</strong> dans le texte actuel (en attente du barème). Ça signifie qu'on peut choisir les features que l'équipe maîtrise le mieux et les travailler à la perfection plutôt que de risquer des éléments complexes mal exécutés.<br><br>
+    Tactiquement : <strong>identifier les 2–4 features les plus accessibles pour l'équipe</strong> et construire le programme autour, quitte à les répéter (répétition explicitement autorisée).</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">💡</div><div class="card-title">Choix des patterns — jouer sur ses forces</div><div class="badge-tag tag-green">OPPORTUNITÉ</div></div>
+    <div class="card-body">On choisit 2 à 4 patterns parmi une liste de 4 — on n'est <strong>pas obligé de tous les faire</strong>. Identifier ceux qui correspondent aux forces de l'équipe et aux mouvements déjà maîtrisés. Les patterns peuvent être répétés sans restriction — donc un pattern bien exécuté deux fois vaut mieux qu'un pattern raté une seule fois.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">💡</div><div class="card-title">Les 4 shapes — levier de Difficulty Score</div><div class="badge-tag tag-ice">À CREUSER</div></div>
+    <div class="card-body">Les 4 formes obligatoires (Block, Line, Wheel, Circle) <strong>avec différents holds et configurations contribuent au Difficulty Score</strong>. C'est probablement l'un des leviers les plus accessibles pour maximiser ce score sans risque technique élevé. Varier les prises dans chaque shape coûte peu physiquement et peut rapporter significativement — à confirmer quand le barème sortira.</div>
+  </div>
+
+  <div class="sec-title" style="margin-top:14px;">Points de vigilance</div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">⚠️</div><div class="card-title">La compacité permanente — désapprendre le synchro classique</div><div class="badge-tag tag-orange">VIGILANCE</div></div>
+    <div class="card-body">"All skaters must stay close together and must not separate unnecessarily, maintaining one compact and clear arrangement at all times." C'est une contrainte très forte qui va à l'encontre des automatismes du synchro classique où les filles sont habituées à prendre de l'espace dans les formations.<br><br>
+    Pour tes filles juniors qui viennent du classique : <strong>le travail de désapprentissage de l'espacement sera probablement aussi important que l'apprentissage des nouveaux éléments.</strong></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">⚠️</div><div class="card-title">Creative Dance — axe court obligatoire</div><div class="badge-tag tag-orange">VIGILANCE</div></div>
+    <div class="card-body">La Creative Dance doit utiliser <strong>l'axe court de la glace</strong> pour ces deux saisons, commencer à une bande et finir à la bande opposée. C'est une contrainte spatiale précise qui demande une gestion rigoureuse de la vitesse et du timing sur un espace réduit (environ 26m en largeur de patinoire standard). À anticiper dès la construction chorégraphique.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">⚠️</div><div class="card-title">Twizzles en finale — exigence technique élevée</div><div class="badge-tag tag-red">EXIGEANT</div></div>
+    <div class="card-body">En Final/Placement : <strong>minimum 4 révolutions par twizzle, dans les deux directions</strong>, maximum 4 foot placements entre chaque twizzle. C'est techniquement l'élément le plus exigeant du règlement. Pour des juniors en construction, c'est l'élément qui demande le plus de travail spécifique — à anticiper dès la saison, même si la finale semble loin.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">⚠️</div><div class="card-title">Intersection — même mouvement au pi obligatoire (Starting)</div><div class="badge-tag tag-orange">VIGILANCE</div></div>
+    <div class="card-body">En Starting Rounds, <strong>toutes les patineuses doivent faire le même mouvement au point d'intersection</strong>. En Creative Intersection (Semi-Finals), le mouvement peut être différent. La nuance est importante pour la construction chorégraphique selon le round visé.</div>
+  </div>
+
+  <div class="sec-title" style="margin-top:14px;">Comparaison Synchro classique vs Synchro9</div>
+
+  <table class="cmp-table">
+    <thead><tr><th>Aspect</th><th>Synchro classique</th><th>Synchro9</th></tr></thead>
+    <tbody>
+      <tr><td>Taille équipe</td><td>12 ou 16</td><td>9</td></tr>
+      <tr><td>Évaluation</td><td>Éléments codifiés (niveaux + GOE)</td><td>Performance continue holistique</td></tr>
+      <tr><td>Espacement</td><td>Formations variables avec espace</td><td>Compacité permanente obligatoire</td></tr>
+      <tr><td>Musique</td><td>Libre</td><td>Imposée par round (street dance, BPM)</td></tr>
+      <tr><td>Liberté tech.</td><td>Faible (éléments très codifiés)</td><td>Élevée (choix des features)</td></tr>
+      <tr><td>Public cible</td><td>Spécialistes</td><td>Grand public / TV / JO</td></tr>
+    </tbody>
+  </table>
+
+</div>
+
+<!-- SCORING -->
+<div class="panel" id="panel-scoring">
+
+  <div class="pending-box">
+    <strong>⏳ Section en attente de données officielles</strong><br>
+    Le barème de scoring détaillé n'a pas encore été publié par l'ISU. Cette section sera complétée dès publication des règles de calcul complètes.
+  </div>
+
+  <div class="sec-title">Ce qu'on sait à ce jour</div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">📊</div><div class="card-title">Structure 50% technique / 50% présentation</div><div class="badge-tag tag-yellow">À CONFIRMER</div></div>
+    <div class="card-body">Information non officielle à ce stade. Si confirmée, cette répartition est identique au synchro classique — ce qui serait en contradiction avec la philosophie affichée de réduction de la technique. <strong>La définition exacte de ce qui compose chaque catégorie sera déterminante</strong> : si la "présentation" inclut la compacité, la musicalité et la continuité, son poids réel sera bien plus important qu'en synchro classique.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">📊</div><div class="card-title">Difficulty Score — shapes et holds</div><div class="badge-tag tag-ice">PARTIEL</div></div>
+    <div class="card-body">Le document mentionne que <strong>les 4 shapes avec différents holds et configurations seront considérés dans le Difficulty Score</strong>. C'est le seul indice concret sur le calcul. La variété des prises dans les formes est donc un levier identifié.<br><br>
+    <strong>Questions en attente :</strong><br>
+    — Y a-t-il un barème par type de hold ?<br>
+    — Les Difficulty Features ont-elles des valeurs différentes selon leur complexité ?<br>
+    — Comment sont évalués les patterns ?</div>
+  </div>
+
+  <div class="note-box">
+    <strong>À surveiller :</strong> publications ISU post-avril 2026 · Premiers résultats de compétitions officielles Synchro9 · Retours d'équipes ayant déjà expérimenté le format en test.
+  </div>
+
+</div>
+
+<!-- PROFIL ÉQUIPE -->
+<div class="panel" id="panel-profil">
+
+  <div class="sec-title">Profil idéal pour le Synchro9</div>
+
+  <div class="info-box">Ce qui suit est une analyse basée sur la lecture du règlement et la vision ISU — à affiner avec l'expérience des premières compétitions.</div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Qualités prioritaires</div><div class="badge-tag tag-green">RECRUTEMENT</div></div>
+    <div class="card-body">
+      <strong>1. Qualité de patinage individuel</strong> — la compacité permanente expose chaque patineuse. Pas d'espace pour cacher un mauvais edge.<br><br>
+      <strong>2. Expressivité scénique</strong> — le format est conçu pour le grand public et la TV. Les filles qui "ont quelque chose à montrer" seront plus précieuses ici qu'en synchro classique.<br><br>
+      <strong>3. Adaptabilité musicale</strong> — la street dance demande un sens du rythme et une capacité à incarner un style musical très différent du synchro classique.<br><br>
+      <strong>4. Sens de la synchronisation dans l'espace réduit</strong> — rester compact en mouvement est plus difficile que dans les formations classiques. Proprioception et conscience spatiale sont clefs.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">💡</div><div class="card-title">Avantage de tes juniors venant du classique</div><div class="badge-tag tag-ice">CONTEXTE</div></div>
+    <div class="card-body">
+      <strong>Points forts transférables :</strong> synchronisation collective, écoute des autres, discipline de groupe, connaissance des formes (Block, Line, Wheel, Circle déjà maîtrisées).<br><br>
+      <strong>Points à retravailler :</strong> désapprendre l'espacement du classique, développer l'expressivité individuelle, s'approprier une esthétique urbaine/moderne.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">⚠️</div><div class="card-title">Profils à éviter ou à gérer</div><div class="badge-tag tag-orange">SÉLECTION</div></div>
+    <div class="card-body">
+      <strong>Filles très techniques mais rigides artistiquement</strong> — le format pénalisera une exécution propre mais froide plus qu'en synchro classique.<br><br>
+      <strong>Filles peu à l'aise dans l'espace réduit</strong> — la compacité permanente peut créer de l'anxiété chez des patineuses habituées à avoir de l'espace autour d'elles.
+    </div>
+  </div>
+
+  <div class="sec-title" style="margin-top:14px;">Questions ouvertes pour la sélection</div>
+
+  <div class="prio-list">
+    <div class="prio-item"><div class="prio-num">?</div><div class="prio-text"><strong>Faut-il privilégier des filles avec un background danse ?</strong><br><em>La street dance obligatoire et l'expressivité scénique suggèrent que oui.</em></div></div>
+    <div class="prio-item"><div class="prio-num">?</div><div class="prio-text"><strong>Le niveau de twizzle est-il un critère de sélection dès maintenant ?</strong><br><em>Exigence haute en finale (4 rev. × 2 directions) — anticiper si l'objectif inclut les rondes finales.</em></div></div>
+    <div class="prio-item"><div class="prio-num">?</div><div class="prio-text"><strong>Quelle taille d'équipe travailler pour les auditions ?</strong><br><em>9 + remplaçantes — prévoir un effectif de 11–12 minimum.</em></div></div>
+  </div>
+
+</div>
+
+<!-- MISES À JOUR -->
+<div class="panel" id="panel-updates">
+
+  <div class="info-box">Ce document est mis à jour au fil des publications ISU et des retours de compétition. Chaque mise à jour est datée et tracée ici.</div>
+
+  <div class="card" style="margin-top:4px;">
+    <div class="card-head"><div class="card-icon">📋</div><div class="card-title">Historique des mises à jour</div></div>
+    <div class="card-body" id="update-log">
+      <div class="update-item">
+        <div class="update-date">Avr. 2026</div>
+        <div class="update-text"><strong>Version initiale</strong> — Analyse basée sur ISU Communication 2784 et vision ISU connue à date. Scoring en attente.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pending-box" style="margin-top:10px;">
+    <strong>Sections à compléter :</strong><br>
+    — Barème Difficulty Score (publication ISU attendue)<br>
+    — Retours premiers championnats Synchro9<br>
+    — Stratégie de programme spécifique à l'équipe une fois constituée<br>
+    — Analyse comparative des premières équipes en compétition
+  </div>
+
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

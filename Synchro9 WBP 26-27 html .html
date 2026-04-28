@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WBP Synchro9 2026/27–2027/28</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root {
+  --bg:#07101f;--surface:#0f1f35;--surface2:#162840;--border:#1e3352;
+  --ice:#00c8e8;--text:#e8f0fc;--muted:#5a7090;--text2:#a0b4cc;
+  --green:#1de9a0;--orange:#ff9f2e;--red:#ff4f6a;--yellow:#ffd84a;--purple:#b388ff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);padding-bottom:40px;}
+
+.header{background:linear-gradient(135deg,#060d1e,#0a1a38,#002840);padding:20px 16px 16px;border-bottom:2px solid var(--ice);position:relative;overflow:hidden;}
+.header::before{content:'9';position:absolute;right:10px;top:-10px;font-family:'Bebas Neue',sans-serif;font-size:160px;opacity:.05;color:var(--ice);}
+.badge{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--ice);border:1px solid var(--ice);padding:2px 7px;border-radius:2px;display:inline-block;margin-bottom:6px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:#fff;line-height:1;}
+h1 span{color:var(--ice);}
+.meta{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.6;}
+
+.tabs{display:flex;overflow-x:auto;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:1px;color:var(--muted);padding:11px 13px;white-space:nowrap;cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;transition:all .2s;flex-shrink:0;}
+.tab-btn.active{color:var(--ice);border-bottom-color:var(--ice);}
+
+.panel{display:none;padding:14px;}
+.panel.active{display:block;}
+
+/* SECTION */
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--orange);margin:14px 0 8px;}
+.sec-title:first-child{margin-top:0;}
+
+.block{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;}
+.block-head{display:flex;align-items:center;gap:10px;padding:11px 13px;cursor:pointer;}
+.block-head:active{background:var(--surface2);}
+.bh-num{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--ice);min-width:24px;line-height:1;}
+.bh-name{font-weight:600;font-size:13px;flex:1;}
+.bh-tag{font-size:10px;color:var(--muted);background:rgba(0,200,232,.07);border:1px solid rgba(0,200,232,.15);padding:2px 7px;border-radius:8px;white-space:nowrap;}
+.chevron{color:var(--muted);font-size:10px;transition:transform .2s;}
+.block.open .chevron{transform:rotate(180deg);}
+.block-body{display:none;border-top:1px solid var(--border);padding:12px 13px;font-size:12.5px;line-height:1.8;}
+.block.open .block-body{display:block;}
+
+.ul{list-style:none;display:flex;flex-direction:column;gap:5px;}
+.li{padding-left:16px;position:relative;font-size:12.5px;line-height:1.7;}
+.li::before{content:'—';position:absolute;left:0;color:var(--ice);}
+.li.sub{padding-left:28px;}
+.li.sub::before{content:'·';color:var(--muted);}
+.li.subsub{padding-left:40px;}
+.li.subsub::before{content:'○';font-size:9px;color:var(--muted);}
+
+strong{color:var(--text);font-weight:600;}
+em{color:var(--orange);font-style:normal;font-weight:600;}
+
+.info-box{background:rgba(0,200,232,.05);border:1px solid rgba(0,200,232,.2);border-radius:8px;padding:11px 13px;margin-bottom:10px;font-size:12.5px;line-height:1.8;}
+.warn-box{background:rgba(255,159,46,.06);border:1px solid rgba(255,159,46,.2);border-radius:8px;padding:11px 13px;margin-bottom:10px;font-size:12.5px;line-height:1.8;}
+
+.seg-badge{display:inline-block;font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:1px;padding:3px 9px;border-radius:10px;margin-bottom:10px;}
+.seg-start{color:var(--green);background:rgba(29,233,160,.1);border:1px solid rgba(29,233,160,.25);}
+.seg-semi{color:var(--yellow);background:rgba(255,216,74,.1);border:1px solid rgba(255,216,74,.25);}
+.seg-final{color:var(--purple);background:rgba(179,136,255,.1);border:1px solid rgba(179,136,255,.25);}
+
+.diff-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
+.diff-chip{font-size:11px;padding:4px 9px;border-radius:15px;background:var(--surface2);border:1px solid var(--border);color:var(--text2);}
+.diff-chip.senior-only{color:var(--orange);border-color:rgba(255,159,46,.3);background:rgba(255,159,46,.07);}
+
+.divider{border:none;border-top:1px solid var(--border);margin:12px 0;}
+
+p.note{font-size:11.5px;color:var(--muted);line-height:1.7;margin-top:6px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">ISU COMMUNICATION 2784</div>
+  <h1>WBP <span>SYNCHRO9</span></h1>
+  <div class="meta">
+    Effective for 2026/2027 &amp; 2027/2028 seasons · April 27, 2026<br>
+    Jae Youl Kim, President · Colin Smith, Director General
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="show('philosophy')">Philosophy</button>
+  <button class="tab-btn" onclick="show('definitions')">Definitions</button>
+  <button class="tab-btn" onclick="show('general')">General WBP</button>
+  <button class="tab-btn" onclick="show('starting')">Starting Rounds</button>
+  <button class="tab-btn" onclick="show('semis')">Semi-Finals</button>
+  <button class="tab-btn" onclick="show('final')">Final/Placement</button>
+</div>
+
+<!-- PHILOSOPHY -->
+<div class="panel active" id="panel-philosophy">
+  <div class="info-box">
+    The program is evaluated as a <strong>continuous performance</strong> built around:
+    <ul class="ul" style="margin-top:8px;">
+      <li class="li">Shape creation</li>
+      <li class="li">Full-team unison</li>
+      <li class="li">Audience visibility and recognizability</li>
+    </ul>
+    <p class="note" style="margin-top:8px;">The goal is <strong>maximum choreographic freedom</strong>, while still ensuring technical, athletic, and synchronized integrity. All music and costumes selected for the various events should be <strong>modern, urban and youthful</strong>.</p>
+  </div>
+</div>
+
+<!-- DEFINITIONS -->
+<div class="panel" id="panel-definitions">
+
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-num">1</div><div class="bh-name">Difficulty Features</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <ul class="ul">
+        <li class="li">Difficult movement types that teams must use as part of their choreography.</li>
+        <li class="li">Any of these may be performed by a <strong>subgroup (consisting of at least 4 Skaters)</strong> or by the <strong>full team</strong> (when full-team participation is desired).</li>
+        <li class="subsub li" style="padding-left:20px;">○ Difficulty Features performed by <strong>highlighters only</strong> are <em>not counted</em> towards the Difficulty Score.</li>
+        <li class="li">If a Feature has been used as a Full Team Movement, it can only be reused as a highlight or in a subgroup.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-num">2</div><div class="bh-name">Full Team Movement</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <ul class="ul">
+        <li class="li">A Full Team Movement requires <strong>all skaters to do the exact same movements</strong> (unless otherwise stated below).</li>
+        <li class="li">Highlighting and subgroups are <em>not permitted</em>.</li>
+        <li class="li">A Full Team Movement should be <strong>integrated into shape(s)</strong> and done <strong>once per program</strong> as required in the Well-Balanced Program Content to demonstrate unison and technique.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-num">3</div><div class="bh-name">Highlighting</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <p style="margin-bottom:8px;">An instance in which <strong>1–3 skaters (the highlighters)</strong> perform a movement, pose, or action that contrasts with the movements of the team.</p>
+      <ul class="ul">
+        <li class="li">Highlighting may occur <strong>multiple times</strong> during the program and may be applied during any shape or pattern.</li>
+        <li class="li">Highlighters must be <strong>part of the formation</strong>, clearly visible and intentionally contrasted (by spacing, timing, movement, or direction).</li>
+        <li class="li">Highlighters must <strong>remain part of the team</strong> and must preserve flow.</li>
+        <li class="li">Any movements performed by highlighters will <em>not be counted</em> towards the Difficulty Score but are considered in other scores.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-num">4</div><div class="bh-name">Pattern</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <p style="margin-bottom:8px;">Patterns mean distinct patterning modes. Used to showcase ice coverage, continuous movement and use of multidimensional space. <strong>Must be included in each program</strong> as required in the WBP.</p>
+      <div class="sec-title" style="font-size:12px;margin-top:8px;">Linear</div>
+      <ul class="ul">
+        <li class="li">Intersecting / Passing-through</li>
+        <li class="li">Pivoting</li>
+        <li class="li">Change of place</li>
+        <li class="li">Change of Axis (Long, Short, Diagonal, Continuous)</li>
+      </ul>
+      <div class="sec-title" style="font-size:12px;margin-top:10px;">Rotational</div>
+      <ul class="ul">
+        <li class="li">Traveling</li>
+        <li class="li">Weaving</li>
+        <li class="li">Interlocking</li>
+        <li class="li">Change of rotational direction</li>
+      </ul>
+      <div class="sec-title" style="font-size:12px;margin-top:10px;">Other</div>
+      <ul class="ul">
+        <li class="li">Mirror image</li>
+        <li class="li">Serpentine</li>
+        <li class="li">Syncopation</li>
+        <li class="li">Stationary</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- GENERAL WBP -->
+<div class="panel" id="panel-general">
+
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-num">1</div><div class="bh-name">Four Shapes Requirements</div><div class="bh-tag">APPLICABLE TO ALL ROUNDS</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <p style="margin-bottom:8px;">Teams must <strong>clearly integrate all following shapes</strong> during the program:</p>
+      <ul class="ul">
+        <li class="li"><strong>Block</strong> (open and/or closed)</li>
+        <li class="li"><strong>Line</strong></li>
+        <li class="li"><strong>Wheel</strong></li>
+        <li class="li"><strong>Circle</strong></li>
+      </ul>
+      <p class="note">These may appear briefly, morph from one into another, or be layered into other movements. Shapes can be repeated. Different holds and configurations may be used and will be considered in the Difficulty Score.</p>
+    </div>
+  </div>
+
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-num">2</div><div class="bh-name">Choreographic Requirements</div><div class="bh-tag">APPLICABLE TO ALL ROUNDS</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <p style="margin-bottom:8px;">Every program must include a variety of <strong>Skating Vocabulary</strong>:</p>
+      <ul class="ul">
+        <li class="li">Multiple types of handholds</li>
+        <li class="li">Body Movements / Multidimensional use of space</li>
+        <li class="li">Variety of Turns / Steps / Linking steps</li>
+      </ul>
+      <div class="warn-box" style="margin-top:10px;">
+        All skaters must <strong>stay close together</strong> and must <em>not separate unnecessarily</em>, maintaining one <strong>compact and clear arrangement</strong> at all times.
+      </div>
+      <p class="note">In addition, each program must satisfy the requirements listed in the Well-Balanced Program Content.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- STARTING ROUNDS -->
+<div class="panel" id="panel-starting">
+  <div class="seg-badge seg-start">STARTING ROUNDS</div>
+
+  <div class="info-box">
+    <strong>Program duration:</strong> Maximum <em>3:30 minutes</em><br>
+    <strong>Required music theme (2026–27 &amp; 2027–28):</strong> <em>Street dance</em>
+  </div>
+
+  <div class="sec-title">Required Full Team Movements</div>
+
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-name">Creative Dance</div><div class="bh-tag">FULL TEAM</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <ul class="ul">
+        <li class="li">For seasons 2026–2027 &amp; 2027–2028: <strong>Must use the short axis</strong></li>
+        <li class="li">All Skaters perform using vocabulary of skating on <strong>one continuous axis</strong> (different movements are permitted).</li>
+        <li class="li">Must be used to <strong>match the music</strong> in order to enhance the idea of the program and fully reflect the music.</li>
+        <li class="li"><strong>Begins at a barrier and ends at the opposite barrier.</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-name">Choreographic Series</div><div class="bh-tag">FULL TEAM</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <p style="margin-bottom:8px;">All Skaters must execute the <strong>same Choreographic Series</strong> consisting of:</p>
+      <ul class="ul">
+        <li class="li">Different skating movements</li>
+        <li class="li">At least <strong>two different types of Turns</strong></li>
+        <li class="li">Different arm movements and body movement(s)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-name">Free Skating Move</div><div class="bh-tag">FULL TEAM</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <ul class="ul">
+        <li class="li">All Skaters must execute the <strong>same fm</strong></li>
+        <li class="li">Team must <em>not separate</em></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-name">Intersection</div><div class="bh-tag">FULL TEAM</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <ul class="ul">
+        <li class="li">All Skaters must execute the <strong>same movement(s) at the axis of intersection (pi)</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-name">Group Lift</div><div class="bh-tag">FULL TEAM</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <ul class="ul">
+        <li class="li">All Skaters must participate in a <strong>Group Lift</strong></li>
+        <li class="li">Must include at least <strong>creative entry</strong> and a <strong>difficult and/or creative position</strong></li>
+        <li class="li">Acrobatic lifts as per rule 990 are <em>not permitted</em>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec-title">Required Difficulty Features</div>
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-name">Difficulty Features</div><div class="bh-tag">2–4 JUN · 2–5 SEN</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <p style="margin-bottom:8px;">Must be performed <strong>at least once</strong> (may be repeated without restrictions):</p>
+      <div class="diff-chips">
+        <span class="diff-chip senior-only">Death Spiral (Senior only)</span>
+        <span class="diff-chip">Any type of Jump</span>
+        <span class="diff-chip">Vault / Un-sustained lift</span>
+        <span class="diff-chip">Spin</span>
+        <span class="diff-chip">Twizzles</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-title">Required Patterns</div>
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-name">Patterns</div><div class="bh-tag">2–4 REQUIRED</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <p style="margin-bottom:8px;">Must occur at least once. Additional patterns may be included and may be repeated.</p>
+      <ul class="ul">
+        <li class="li">Linear – <strong>Pivoting</strong></li>
+        <li class="li">Rotational – <strong>Traveling</strong></li>
+        <li class="li">Rotational – <strong>Change of Rotational Direction</strong></li>
+        <li class="li"><strong>Mirror Image</strong></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SEMI-FINALS -->
+<div class="panel" id="panel-semis">
+  <div class="seg-badge seg-semi">SEMI-FINALS</div>
+
+  <div class="info-box">
+    <strong>Program duration:</strong> Maximum <em>2:40 minutes</em><br>
+    <strong>Required BPM (2026–27 &amp; 2027–28):</strong> <em>110–120 BPM</em>
+  </div>
+
+  <div class="sec-title">Required Full Team Movements</div>
+
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-name">Step Sequence</div><div class="bh-tag">FULL TEAM</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <ul class="ul">
+        <li class="li">All Skaters must execute <strong>at least 10 turns and/or steps</strong></li>
+        <li class="li">All Skaters must execute <strong>at least 1 series of difficult turns</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-name">Spin</div><div class="bh-tag">FULL TEAM</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <ul class="ul">
+        <li class="li">All Skaters must execute the <strong>exact same spin from start to finish</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-name">Creative Intersection</div><div class="bh-tag">FULL TEAM</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <ul class="ul">
+        <li class="li">All Skaters must execute a movement(s) (<strong>same or different</strong>) at the axis of intersection (pi)</li>
+        <li class="li"><strong>Creative Entry</strong> required</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec-title">Required Difficulty Features</div>
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-name">Difficulty Features</div><div class="bh-tag">2–3 JUN · 2–4 SEN</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <p style="margin-bottom:8px;">Must be performed <strong>at least once</strong> (may be repeated without restrictions):</p>
+      <div class="diff-chips">
+        <span class="diff-chip senior-only">Death Spiral (Senior only)</span>
+        <span class="diff-chip">Any type of Jump</span>
+        <span class="diff-chip">Vault / Un-sustained lift</span>
+        <span class="diff-chip">Free skating moves</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-title">Required Patterns</div>
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-name">Patterns</div><div class="bh-tag">2–4 REQUIRED</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <ul class="ul">
+        <li class="li">Linear – <strong>Change of Axis</strong></li>
+        <li class="li">Linear – <strong>Change of Place</strong></li>
+        <li class="li">Rotational – <strong>Weaving</strong></li>
+        <li class="li"><strong>Serpentine</strong></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- FINAL -->
+<div class="panel" id="panel-final">
+  <div class="seg-badge seg-final">FINAL / PLACEMENT ROUNDS</div>
+
+  <div class="info-box">
+    <strong>Program duration:</strong> Maximum <em>3:30 minutes</em>
+  </div>
+
+  <div class="sec-title">Required Full Team Movements</div>
+
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-name">Set of Twizzles</div><div class="bh-tag">FULL TEAM</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <ul class="ul">
+        <li class="li">All Skaters must execute the <strong>same set of Twizzles</strong> with a minimum of <strong>one Twizzle in both rotational directions</strong></li>
+        <li class="li">A maximum of <strong>four-foot placements</strong> are permitted in-between each Twizzle</li>
+        <li class="sub li">○ The fifth foot placement must be the entry of the Twizzle</li>
+        <li class="li">At least <strong>4 revolutions in each twizzle</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-name">Series of Free Skating Moves</div><div class="bh-tag">FULL TEAM</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <ul class="ul">
+        <li class="li">All Skaters must execute <strong>at least two different types of fms</strong></li>
+        <li class="sub li">• At least one <strong>one-foot fm</strong></li>
+        <li class="sub li">• At least one <strong>two-foot fm</strong></li>
+        <li class="li">Team must <em>not separate</em></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-name">Creative Lift</div><div class="bh-tag">FULL TEAM</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <ul class="ul">
+        <li class="li">All Skaters must participate in a lift (<strong>same or different, group or pair</strong>)</li>
+        <li class="li">Acrobatic lifts as per rule 990 are <em>not permitted</em>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-name">Creative Dance</div><div class="bh-tag">FULL TEAM</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <ul class="ul">
+        <li class="li">For seasons 2026–2027 &amp; 2027–2028: <strong>Must use the short axis</strong></li>
+        <li class="li">All Skaters perform using vocabulary of skating on <strong>one continuous axis</strong> (different movements are permitted).</li>
+        <li class="li">Must be used to <strong>match the music</strong> in order to enhance the idea of the program and fully reflect the music.</li>
+        <li class="li"><strong>Begins at a barrier and ends at the opposite barrier.</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec-title">Required Difficulty Features</div>
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-name">Difficulty Features</div><div class="bh-tag">2–4 JUN · 2–5 SEN</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <p style="margin-bottom:8px;">Must be performed <strong>at least once</strong> (may be repeated without restrictions):</p>
+      <div class="diff-chips">
+        <span class="diff-chip senior-only">Death Spiral (Senior only)</span>
+        <span class="diff-chip">Any type of Jump</span>
+        <span class="diff-chip">Vault / Un-sustained lift</span>
+        <span class="diff-chip">Sliding Movement</span>
+        <span class="diff-chip">Series of at least 3 Turns</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-title">Required Patterns</div>
+  <div class="block open">
+    <div class="block-head" onclick="toggle(this)"><div class="bh-name">Patterns</div><div class="bh-tag">2–4 REQUIRED</div><div class="chevron">▼</div></div>
+    <div class="block-body">
+      <ul class="ul">
+        <li class="li">Linear – <strong>Intersecting / Passing through</strong></li>
+        <li class="li">Linear – <strong>Change of Axis</strong></li>
+        <li class="li">Rotational – <strong>Interlocking</strong></li>
+        <li class="li"><strong>Syncopation</strong></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+function toggle(head){head.parentElement.classList.toggle('open');}
+</script>
+</body>
+</html>
