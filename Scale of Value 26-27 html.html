@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scale of Values 2026 — Complete</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{--bg:#07101f;--surface:#0f1f35;--surface2:#162840;--border:#1e3352;--ice:#00c8e8;--text:#e8f0fc;--muted:#5a7090;--text2:#a0b4cc;--green:#1de9a0;--orange:#ff9f2e;--red:#ff4f6a;--yellow:#ffd84a;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);padding-bottom:40px;}
+.header{background:linear-gradient(135deg,#060d1e,#0a1a38,#002840);padding:20px 16px 16px;border-bottom:2px solid var(--ice);}
+.badge{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--ice);border:1px solid var(--ice);padding:2px 7px;border-radius:2px;display:inline-block;margin-bottom:6px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:#fff;line-height:1;}
+h1 span{color:var(--ice);}
+.meta{font-size:11px;color:var(--muted);margin-top:6px;}
+.sticky-bar{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--border);}
+.tabs-row{display:flex;overflow-x:auto;padding:0 12px;}
+.tabs-row::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:1px;color:var(--muted);padding:11px 12px;white-space:nowrap;cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;transition:all .2s;}
+.tab-btn.active{color:var(--ice);border-bottom-color:var(--ice);}
+.search-bar{display:flex;gap:8px;padding:8px 12px;}
+.search-input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;}
+.search-input:focus{border-color:var(--ice);}
+.filter-sel{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-size:11px;font-family:'DM Sans',sans-serif;outline:none;}
+.section-wrap{padding:0 12px 12px;}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--orange);padding:14px 0 7px;}
+.elem-table{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;}
+.elem-table.hidden{display:none;}
+.elem-head{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;}
+.et-code{font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--ice);min-width:56px;letter-spacing:1px;}
+.et-name{font-weight:600;font-size:12px;flex:1;line-height:1.3;}
+.et-range{font-size:10px;color:var(--muted);white-space:nowrap;}
+.chevron{color:var(--muted);font-size:10px;transition:transform .2s;flex-shrink:0;}
+.elem-table.open .chevron{transform:rotate(180deg);}
+.table-wrap{display:none;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.elem-table.open .table-wrap{display:block;}
+table{width:100%;border-collapse:collapse;font-size:11px;}
+thead th{background:rgba(0,200,232,0.07);color:var(--ice);font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:.8px;padding:6px 5px;text-align:center;border-bottom:1px solid var(--border);white-space:nowrap;}
+thead th:first-child{text-align:left;padding-left:10px;}
+tbody tr:nth-child(even){background:rgba(255,255,255,0.015);}
+tbody td{padding:5px 5px;border-bottom:1px solid rgba(30,51,82,0.4);text-align:center;color:var(--text2);font-size:11px;}
+tbody td:first-child{text-align:left;font-weight:600;color:var(--text);font-family:'Bebas Neue',sans-serif;font-size:11px;padding-left:10px;white-space:nowrap;}
+.base-val{color:var(--yellow)!important;font-weight:700;}
+.pos-val{color:var(--green);}
+.neg-val{color:var(--red);}
+.dg{color:var(--orange)!important;}
+.abbrev-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:12px;}
+.abbrev-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 10px;}
+.abbrev-code{font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--ice);}
+.abbrev-name{font-size:11px;color:var(--muted);margin-top:1px;}
+.panel{display:none;}
+.panel.active{display:block;}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="badge">ISU COMM. 2776 — COMPLET</div>
+  <h1>SCALE OF <span>VALUES</span></h1>
+  <div class="meta">Valid July 1, 2026 · Tous niveaux · Downgrades &lt; et &lt;&lt; inclus · GOE = ±50% base value</div>
+</div>
+<div class="sticky-bar">
+  <div class="tabs-row">
+    <button class="tab-btn active" onclick="showPanel('sov',this)">SOV Tables</button>
+    <button class="tab-btn" onclick="showPanel('abbrev',this)">Abréviations</button>
+  </div>
+  <div class="search-bar" id="search-bar">
+    <input class="search-input" id="search" placeholder="TwE, GL, NHE, ME, SySp..." oninput="filterTables()">
+    <select class="filter-sel" id="filter-cat" onchange="filterTables()">
+      <option value="">Tous</option>
+      <option value="artistic">Artistic</option>
+      <option value="creative">Creative</option>
+      <option value="gl">Group Lift</option>
+      <option value="intersection">Intersection</option>
+      <option value="linear">Linear/Rotating</option>
+      <option value="mixed">Mixed</option>
+      <option value="move">Move</option>
+      <option value="nhe">No Hold</option>
+      <option value="pair">Pair</option>
+      <option value="pivoting">Pivoting</option>
+      <option value="spin">Spin</option>
+      <option value="traveling">Traveling</option>
+      <option value="twizzle">Twizzle</option>
+    </select>
+  </div>
+</div>
+
+<div class="panel active" id="panel-sov">
+<div class="section-wrap">
+
+<div class="section-title">1. Artistic Elements</div>
+<div class="elem-table" data-cat="artistic" data-codes="AB AC AL AW ARTISTIC">
+  <div class="elem-head" onclick="this.parentElement.classList.toggle('open')"><div class="et-code">AB/AC/AL/AW</div><div class="et-name">Artistic Block / Circle / Line / Wheel</div><div class="et-range">1.00–4.00</div><div class="chevron">▼</div></div>
+  <div class="table-wrap"><table><thead><tr><th>Code</th><th>-5</th><th>-4</th><th>-3</th><th>-2</th><th>-1</th><th>BASE</th><th>+1</th><th>+2</th><th>+3</th><th>+4</th><th>+5</th></tr></thead><tbody>
+    <tr><td>xB</td><td class="neg-val">-0.50</td><td class="neg-val">-0.40</td><td class="neg-val">-0.30</td><td class="neg-val">-0.20</td><td class="neg-val">-0.10</td><td class="base-val">1.00</td><td class="pos-val">0.10</td><td class="pos-val">0.20</td><td class="pos-val">0.30</td><td class="pos-val">0.40</td><td class="pos-val">0.50</td></tr>
+    <tr><td>x1</td><td class="neg-val">-1.25</td><td class="neg-val">-1.00</td><td class="neg-val">-0.75</td><td class="neg-val">-0.50</td><td class="neg-val">-0.25</td><td class="base-val">2.50</td><td class="pos-val">0.25</td><td class="pos-val">0.50</td><td class="pos-val">0.75</td><td class="pos-val">1.00</td><td class="pos-val">1.25</td></tr>
+    <tr><td>x2</td><td class="neg-val">-2.00</td><td class="neg-val">-1.60</td><td class="neg-val">-1.20</td><td class="neg-val">-0.80</td><td class="neg-val">-0.40</td><td class="base-val">4.00</td><td class="pos-val">0.40</td><td class="pos-val">0.80</td><td class="pos-val">1.20</td><td class="pos-val">1.60</td><td class="pos-val">2.00</td></tr>
+  </tbody></table></div>
+</div>
+
+<div class="section-title">2. Creative Elements</div>
+<div class="elem-table" data-cat="creative" data-codes="CRD CRI CRL CREATIVE">
+  <div class="elem-head" onclick="this.parentElement.classList.toggle('open')"><div class="et-code">CrD/CrI/CrL</div><div class="et-name">Creative Dance / Intersection / Lift — Level 1</div><div class="et-range">4.00</div><div class="chevron">▼</div></div>
+  <div class="table-wrap"><table><thead><tr><th>Code</th><th>-5</th><th>-4</th><th>-3</th><th>-2</th><th>-1</th><th>BASE</th><th>+1</th><th>+2</th><th>+3</th><th>+4</th><th>+5</th></tr></thead><tbody>
+    <tr><td>CrD1/CrI1/CrL1</td><td class="neg-val">-2.00</td><td class="neg-val">-1.60</td><td class="neg-val">-1.20</td><td class="neg-val">-0.80</td><td class="neg-val">-0.40</td><td class="base-val">4.00</td><td class="pos-val">0.40</td><td class="pos-val">0.80</td><td class="pos-val">1.20</td><td class="pos-val">1.60</td><td class="pos-val">2.00</td></tr>
+  </tbody></table></div>
+</div>
+
+<div class="section-title">3. Group Lift Element (GL)</div>
+<div class="elem-table" data-cat="gl" data-codes="GL GROUP LIFT">
+  <div class="elem-head" onclick="this.parentElement.classList.toggle('open')"><div class="et-code">GL</div><div class="et-name">Group Lift — tous niveaux + downgrades</div><div class="et-range">1.50–8.00</div><div class="chevron">▼</div></div>
+  <div class="table-wrap"><table><thead><tr><th>Code</th><th>-5</th><th>-4</th><th>-3</th><th>-2</th><th>-1</th><th>BASE</th><th>+1</th><th>+2</th><th>+3</th><th>+4</th><th>+5</th></tr></thead><tbody>
+    <tr><td>GLB</td><td class="neg-val">-0.75</td><td class="neg-val">-0.60</td><td class="neg-val">-0.45</td><td class="neg-val">-0.30</td><td class="neg-val">-0.15</td><td class="base-val">1.50</td><td class="pos-val">0.15</td><td class="pos-val">0.30</td><td class="pos-val">0.45</td><td class="pos-val">0.60</td><td class="pos-val">0.75</td></tr>
+    <tr><td>GL1</td><td class="neg-val">-2.00</td><td class="neg-val">-1.60</td><td class="neg-val">-1.20</td><td class="neg-val">-0.80</td><td class="neg-val">-0.40</td><td class="base-val">4.00</td><td class="pos-val">0.40</td><td class="pos-val">0.80</td><td class="pos-val">1.20</td><td class="pos-val">1.60</td><td class="pos-val">2.00</td></tr>
+    <tr><td class="dg">GL1&lt;</td><td class="neg-val">-1.88</td><td class="neg-val">-1.50</td><td class="neg-val">-1.13</td><td class="neg-val">-0.75</td><td class="neg-val">-0.38</td><td class="base-val">3.75</td><td class="pos-val">0.38</td><td class="pos-val">0.75</td><td class="pos-val">1.13</td><td class="pos-val">1.50</td><td class="pos-val">1.88</td></tr>
+    <tr><td class="dg">GL1&lt;&lt;</td><td class="neg-val">-1.63</td><td class="neg-val">-1.30</td><td class="neg-val">-0.98</td><td class="neg-val">-0.65</td><td class="neg-val">-0.33</td><td class="base-val">3.25</td><td class="pos-val">0.33</td><td class="pos-val">0.65</td><td class="pos-val">0.98</td><td class="pos-val">1.30</td><td class="pos-val">1.63</td></tr>
+    <tr><td>GL2</td><td class="neg-val">-2.50</td><td class="neg-val">-2.00</td><td class="neg-val">-1.50</td><td class="neg-val">-1.00</td><td class="neg-val">-0.50</td><td class="base-val">5.00</td><td class="pos-val">0.50</td><td class="pos-val">1.00</td><td class="pos-val">1.50</td><td class="pos-val">2.00</td><td class="pos-val">2.50</td></tr>
+    <tr><td class="dg">GL2&lt;</td><td class="neg-val">-2.38</td><td class="neg-val">-1.90</td><td class="neg-val">-1.43</td><td class="neg-val">-0.95</td><td class="neg-val">-0.48</td><td class="base-val">4.75</td><td class="pos-val">0.48</td><td class="pos-val">0.95</td><td class="pos-val">1.43</td><td class="pos-val">1.90</td><td class="pos-val">2.38</td></tr>
+    <tr><td class="dg">GL2&lt;&lt;</td><td class="neg-val">-2.13</td><td class="neg-val">-1.70</td><td class="neg-val">-1.28</td><td class="neg-val">-0.85</td><td class="neg-val">-0.43</td><td class="base-val">4.25</td><td class="pos-val">0.43</td><td class="pos-val">0.85</td><td class="pos-val">1.28</td><td class="pos-val">1.70</td><td class="pos-val">2.13</td></tr>
+    <tr><td>GL3</td><td class="neg-val">-3.50</td><td class="neg-val">-2.80</td><td class="neg-val">-2.10</td><td class="neg-val">-1.40</td><td class="neg-val">-0.70</td><td class="base-val">7.00</td><td class="pos-val">0.70</td><td class="pos-val">1.40</td><td class="pos-val">2.10</td><td class="pos-val">2.80</td><td class="pos-val">3.50</td></tr>
+    <tr><td class="dg">GL3&lt;</td><td class="neg-val">-3.38</td><td class="neg-val">-2.70</td><td class="neg-val">-2.03</td><td class="neg-val">-1.35</td><td class="neg-val">-0.68</td><td class="base-val">6.75</td><td class="pos-val">0.68</td><td class="pos-val">1.35</td><td class="pos-val">2.03</td><td class="pos-val">2.70</td><td class="pos-val">3.38</td></tr>
+    <tr><td class="dg">GL3&lt;&lt;</td><td class="neg-val">-3.13</td><td class="neg-val">-2.50</td><td class="neg-val">-1.88</td><td class="neg-val">-1.25</td><td class="neg-val">-0.63</td><td class="base-val">6.25</td><td class="pos-val">0.63</td><td class="pos-val">1.25</td><td class="pos-val">1.88</td><td class="pos-val">2.50</td><td class="pos-val">3.13</td></tr>
+    <tr><td>GL4</td><td class="neg-val">-4.00</td><td class="neg-val">-3.20</td><td class="neg-val">-2.40</td><td class="neg-val">-1.60</td><td class="neg-val">-0.80</td><td class="base-val">8.00</td><td class="pos-val">0.80</td><td class="pos-val">1.60</td><td class="pos-val">2.40</td><td class="pos-val">3.20</td><td class="pos-val">4.00</td></tr>
+    <tr><td class="dg">GL4&lt;</td><td class="neg-val">-3.88</td><td class="neg-val">-3.10</td><td class="neg-val">-2.33</td><td class="neg-val">-1.55</td><td class="neg-val">-0.78</td><td class="base-val">7.75</td><td class="pos-val">0.78</td><td class="pos-val">1.55</td><td class="pos-val">2.33</td><td class="pos-val">3.10</td><td class="pos-val">3.88</td></tr>
+    <tr><td class="dg">GL4&lt;&lt;</td><td class="neg-val">-3.63</td><td class="neg-val">-2.90</td><td class="neg-val">-2.18</td><td class="neg-val">-1.45</td><td class="neg-val">-0.73</td><td class="base-val">7.25</td><td class="pos-val">0.73</td><td class="pos-val">1.45</td><td class="pos-val">2.18</td><td class="pos-val">2.90</td><td class="pos-val">3.63</td></tr>
+  </tbody></table></div>
+</div>
+
+<div class="section-title">4. Intersection Element (I) — 29 niveaux</div>
+<div class="elem-table" data-cat="intersection" data-codes="I PI INTERSECTION">
+  <div class="elem-head" onclick="this.parentElement.classList.toggle('open')"><div class="et-code">I / pi</div><div class="et-name">Intersection — 29 niveaux complets</div><div class="et-range">0.25–7.50</div><div class="chevron">▼</div></div>
+  <div class="table-wrap"><table><thead><tr><th>Lv</th><th>Code</th><th>-5</th><th>-4</th><th>-3</th><th>-2</th><th>-1</th><th>BASE</th><th>+1</th><th>+2</th><th>+3</th><th>+4</th><th>+5</th></tr></thead><tbody>
+    <tr><td>B</td><td>IB</td><td class="neg-val">-0.13</td><td class="neg-val">-0.10</td><td class="neg-val">-0.08</td><td class="neg-val">-0.05</td><td class="neg-val">-0.03</td><td class="base-val">0.25</td><td class="pos-val">0.03</td><td class="pos-val">0.05</td><td class="pos-val">0.08</td><td class="pos-val">0.10</td><td class="pos-val">0.13</td></tr>
+    <tr><td>1</td><td>IB piB</td><td class="neg-val">-0.25</td><td class="neg-val">-0.20</td><td class="neg-val">-0.15</td><td class="neg-val">-0.10</td><td class="neg-val">-0.05</td><td class="base-val">0.50</td><td class="pos-val">0.05</td><td class="pos-val">0.10</td><td class="pos-val">0.15</td><td class="pos-val">0.20</td><td class="pos-val">0.25</td></tr>
+    <tr><td>2</td><td>I1</td><td class="neg-val">-0.38</td><td class="neg-val">-0.30</td><td class="neg-val">-0.23</td><td class="neg-val">-0.15</td><td class="neg-val">-0.08</td><td class="base-val">0.75</td><td class="pos-val">0.08</td><td class="pos-val">0.15</td><td class="pos-val">0.23</td><td class="pos-val">0.30</td><td class="pos-val">0.38</td></tr>
+    <tr><td>3</td><td>IB pi1</td><td class="neg-val">-0.50</td><td class="neg-val">-0.40</td><td class="neg-val">-0.30</td><td class="neg-val">-0.20</td><td class="neg-val">-0.10</td><td class="base-val">1.00</td><td class="pos-val">0.10</td><td class="pos-val">0.20</td><td class="pos-val">0.30</td><td class="pos-val">0.40</td><td class="pos-val">0.50</td></tr>
+    <tr><td>4</td><td>I1 piB</td><td class="neg-val">-0.63</td><td class="neg-val">-0.50</td><td class="neg-val">-0.38</td><td class="neg-val">-0.25</td><td class="neg-val">-0.13</td><td class="base-val">1.25</td><td class="pos-val">0.13</td><td class="pos-val">0.25</td><td class="pos-val">0.38</td><td class="pos-val">0.50</td><td class="pos-val">0.63</td></tr>
+    <tr><td>5</td><td>I1 pi1</td><td class="neg-val">-0.75</td><td class="neg-val">-0.60</td><td class="neg-val">-0.45</td><td class="neg-val">-0.30</td><td class="neg-val">-0.15</td><td class="base-val">1.50</td><td class="pos-val">0.15</td><td class="pos-val">0.30</td><td class="pos-val">0.45</td><td class="pos-val">0.60</td><td class="pos-val">0.75</td></tr>
+    <tr><td>6</td><td>IB pi2</td><td class="neg-val">-0.88</td><td class="neg-val">-0.70</td><td class="neg-val">-0.53</td><td class="neg-val">-0.35</td><td class="neg-val">-0.18</td><td class="base-val">1.75</td><td class="pos-val">0.18</td><td class="pos-val">0.35</td><td class="pos-val">0.53</td><td class="pos-val">0.70</td><td class="pos-val">0.88</td></tr>
+    <tr><td>7</td><td>I2</td><td class="neg-val">-1.00</td><td class="neg-val">-0.80</td><td class="neg-val">-0.60</td><td class="neg-val">-0.40</td><td class="neg-val">-0.20</td><td class="base-val">2.00</td><td class="pos-val">0.20</td><td class="pos-val">0.40</td><td class="pos-val">0.60</td><td class="pos-val">0.80</td><td class="pos-val">1.00</td></tr>
+    <tr><td>8</td><td>I1 pi2</td><td class="neg-val">-1.13</td><td class="neg-val">-0.90</td><td class="neg-val">-0.68</td><td class="neg-val">-0.45</td><td class="neg-val">-0.23</td><td class="base-val">2.25</td><td class="pos-val">0.23</td><td class="pos-val">0.45</td><td class="pos-val">0.68</td><td class="pos-val">0.90</td><td class="pos-val">1.13</td></tr>
+    <tr><td>9</td><td>IB pi3</td><td class="neg-val">-1.25</td><td class="neg-val">-1.00</td><td class="neg-val">-0.75</td><td class="neg-val">-0.50</td><td class="neg-val">-0.25</td><td class="base-val">2.50</td><td class="pos-val">0.25</td><td class="pos-val">0.50</td><td class="pos-val">0.75</td><td class="pos-val">1.00</td><td class="pos-val">1.25</td></tr>
+    <tr><td>10</td><td>I2 piB</td><td class="neg-val">-1.38</td><td class="neg-val">-1.10</td><td class="neg-val">-0.83</td><td class="neg-val">-0.55</td><td class="neg-val">-0.28</td><td class="base-val">2.75</td><td class="pos-val">0.28</td><td class="pos-val">0.55</td><td class="pos-val">0.83</td><td class="pos-val">1.10</td><td class="pos-val">1.38</td></tr>
+    <tr><td>11</td><td>I3</td><td class="neg-val">-1.50</td><td class="neg-val">-1.20</td><td class="neg-val">-0.90</td><td class="neg-val">-0.60</td><td class="neg-val">-0.30</td><td class="base-val">3.00</td><td class="pos-val">0.30</td><td class="pos-val">0.60</td><td class="pos-val">0.90</td><td class="pos-val">1.20</td><td class="pos-val">1.50</td></tr>
+    <tr><td>12</td><td>I2 pi1</td><td class="neg-val">-1.63</td><td class="neg-val">-1.30</td><td class="neg-val">-0.98</td><td class="neg-val">-0.65</td><td class="neg-val">-0.33</td><td class="base-val">3.25</td><td class="pos-val">0.33</td><td class="pos-val">0.65</td><td class="pos-val">0.98</td><td class="pos-val">1.30</td><td class="pos-val">1.63</td></tr>
+    <tr><td>13</td><td>I1 pi3</td><td class="neg-val">-1.75</td><td class="neg-val">-1.40</td><td class="neg-val">-1.05</td><td class="neg-val">-0.70</td><td class="neg-val">-0.35</td><td class="base-val">3.50</td><td class="pos-val">0.35</td><td class="pos-val">0.70</td><td class="pos-val">1.05</td><td class="pos-val">1.40</td><td class="pos-val">1.75</td></tr>
+    <tr><td>14</td><td>I3 piB</td><td class="neg-val">-1.88</td><td class="neg-val">-1.50</td><td class="neg-val">-1.13</td><td class="neg-val">-0.75</td><td class="neg-val">-0.38</td><td class="base-val">3.75</td><td class="pos-val">0.38</td><td class="pos-val">0.75</td><td class="pos-val">1.13</td><td class="pos-val">1.50</td><td class="pos-val">1.88</td></tr>
+    <tr><td>15</td><td>I4</td><td class="neg-val">-2.00</td><td class="neg-val">-1.60</td><td class="neg-val">-1.20</td><td class="neg-val">-0.80</td><td class="neg-val">-0.40</td><td class="base-val">4.00</td><td class="pos-val">0.40</td><td class="pos-val">0.80</td><td class="pos-val">1.20</td><td class="pos-val">1.60</td><td class="pos-val">2.00</td></tr>
+    <tr><td>16</td><td>I4 piB</td><td class="neg-val">-2.13</td><td class="neg-val">-1.70</td><td class="neg-val">-1.28</td><td class="neg-val">-0.85</td><td class="neg-val">-0.43</td><td class="base-val">4.25</td><td class="pos-val">0.43</td><td class="pos-val">0.85</td><td class="pos-val">1.28</td><td class="pos-val">1.70</td><td class="pos-val">2.13</td></tr>
+    <tr><td>17</td><td>IB pi4</td><td class="neg-val">-2.25</td><td class="neg-val">-1.80</td><td class="neg-val">-1.35</td><td class="neg-val">-0.90</td><td class="neg-val">-0.45</td><td class="base-val">4.50</td><td class="pos-val">0.45</td><td class="pos-val">0.90</td><td class="pos-val">1.35</td><td class="pos-val">1.80</td><td class="pos-val">2.25</td></tr>
+    <tr><td>18</td><td>I2 pi2</td><td class="neg-val">-2.38</td><td class="neg-val">-1.90</td><td class="neg-val">-1.43</td><td class="neg-val">-0.95</td><td class="neg-val">-0.48</td><td class="base-val">4.75</td><td class="pos-val">0.48</td><td class="pos-val">0.95</td><td class="pos-val">1.43</td><td class="pos-val">1.90</td><td class="pos-val">2.38</td></tr>
+    <tr><td>19</td><td>I3 pi1</td><td class="neg-val">-2.50</td><td class="neg-val">-2.00</td><td class="neg-val">-1.50</td><td class="neg-val">-1.00</td><td class="neg-val">-0.50</td><td class="base-val">5.00</td><td class="pos-val">0.50</td><td class="pos-val">1.00</td><td class="pos-val">1.50</td><td class="pos-val">2.00</td><td class="pos-val">2.50</td></tr>
+    <tr><td>20</td><td>I4 pi1</td><td class="neg-val">-2.63</td><td class="neg-val">-2.10</td><td class="neg-val">-1.58</td><td class="neg-val">-1.05</td><td class="neg-val">-0.53</td><td class="base-val">5.25</td><td class="pos-val">0.53</td><td class="pos-val">1.05</td><td class="pos-val">1.58</td><td class="pos-val">2.10</td><td class="pos-val">2.63</td></tr>
+    <tr><td>21</td><td>I1 pi4</td><td class="neg-val">-2.75</td><td class="neg-val">-2.20</td><td class="neg-val">-1.65</td><td class="neg-val">-1.10</td><td class="neg-val">-0.55</td><td class="base-val">5.50</td><td class="pos-val">0.55</td><td class="pos-val">1.10</td><td class="pos-val">1.65</td><td class="pos-val">2.20</td><td class="pos-val">2.75</td></tr>
+    <tr><td>22</td><td>I2 pi3</td><td class="neg-val">-2.88</td><td class="neg-val">-2.30</td><td class="neg-val">-1.73</td><td class="neg-val">-1.15</td><td class="neg-val">-0.58</td><td class="base-val">5.75</td><td class="pos-val">0.58</td><td class="pos-val">1.15</td><td class="pos-val">1.73</td><td class="pos-val">2.30</td><td class="pos-val">2.88</td></tr>
+    <tr><td>23</td><td>I3 pi2</td><td class="neg-val">-3.00</td><td class="neg-val">-2.40</td><td class="neg-val">-1.80</td><td class="neg-val">-1.20</td><td class="neg-val">-0.60</td><td class="base-val">6.00</td><td class="pos-val">0.60</td><td class="pos-val">1.20</td><td class="pos-val">1.80</td><td class="pos-val">2.40</td><td class="pos-val">3.00</td></tr>
+    <tr><td>24</td><td>I4 pi2</td><td class="neg-val">-3.13</td><td class="neg-val">-2.50</td><td class="neg-val">-1.88</td><td class="neg-val">-1.25</td><td class="neg-val">-0.63</td><td class="base-val">6.25</td><td class="pos-val">0.63</td><td class="pos-val">1.25</td><td class="pos-val">1.88</td><td class="pos-val">2.50</td><td class="pos-val">3.13</td></tr>
+    <tr><td>25</td><td>I2 pi4</td><td class="neg-val">-3.25</td><td class="neg-val">-2.60</td><td class="neg-val">-1.95</td><td class="neg-val">-1.30</td><td class="neg-val">-0.65</td><td class="base-val">6.50</td><td class="pos-val">0.65</td><td class="pos-val">1.30</td><td class="pos-val">1.95</td><td class="pos-val">2.60</td><td class="pos-val">3.25</td></tr>
+    <tr><td>26</td><td>I3 pi3</td><td class="neg-val">-3.38</td><td class="neg-val">-2.70</td><td class="neg-val">-2.03</td><td class="neg-val">-1.35</td><td class="neg-val">-0.68</td><td class="base-val">6.75</td><td class="pos-val">0.68</td><td class="pos-val">1.35</td><td class="pos-val">2.03</td><td class="pos-val">2.70</td><td class="pos-val">3.38</td></tr>
+    <tr><td>27</td><td>I4 pi3</td><td class="neg-val">-3.50</td><td class="neg-val">-2.80</td><td class="neg-val">-2.10</td><td class="neg-val">-1.40</td><td class="neg-val">-0.70</td><td class="base-val">7.00</td><td class="pos-val">0.70</td><td class="pos-val">1.40</td><td class="pos-val">2.10</td><td class="pos-val">2.80</td><td class="pos-val">3.50</td></tr>
+    <tr><td>28</td><td>I3 pi4</td><td class="neg-val">-3.63</td><td class="neg-val">-2.90</td><td class="neg-val">-2.18</td><td class="neg-val">-1.45</td><td class="neg-val">-0.73</td><td class="base-val">7.25</td><td class="pos-val">0.73</td><td class="pos-val">1.45</td><td class="pos-val">2.18</td><td class="pos-val">2.90</td><td class="pos-val">3.63</td></tr>
+    <tr><td>29</td><td>I4 pi4</td><td class="neg-val">-3.75</td><td class="neg-val">-3.00</td><td class="neg-val">-2.25</td><td class="neg-val">-1.50</td><td class="neg-val">-0.75</td><td class="base-val">7.50</td><td class="pos-val">0.75</td><td class="pos-val">1.50</td><td class="pos-val">2.25</td><td class="pos-val">3.00</td><td class="pos-val">3.75</td></tr>
+  </tbody></table></div>
+</div>
+
+<div class="section-title">5. Linear and Rotating Elements</div>
+<div class="elem-table" data-cat="linear" data-codes="B L C W LINEAR ROTATING BLOCK LINE CIRCLE WHEEL">
+  <div class="elem-head" onclick="this.parentElement.classList.toggle('open')"><div class="et-code">B/L/C/W</div><div class="et-name">Block / Line / Circle / Wheel</div><div class="et-range">1.00–4.00</div><div class="chevron">▼</div></div>
+  <div class="table-wrap"><table><thead><tr><th>Code</th><th>-5</th><th>-4</th><th>-3</th><th>-2</th><th>-1</th><th>BASE</th><th>+1</th><th>+2</th><th>+3</th><th>+4</th><th>+5</th></tr></thead><tbody>
+    <tr><td>xB</td><td class="neg-val">-0.50</td><td class="neg-val">-0.40</td><td class="neg-val">-0.30</td><td class="neg-val">-0.20</td><td class="neg-val">-0.10</td><td class="base-val">1.00</td><td class="pos-val">0.10</td><td class="pos-val">0.20</td><td class="pos-val">0.30</td><td class="pos-val">0.40</td><td class="pos-val">0.50</td></tr>
+    <tr><td>x1</td><td class="neg-val">-0.75</td><td class="neg-val">-0.60</td><td class="neg-val">-0.45</td><td class="neg-val">-0.30</td><td class="neg-val">-0.15</td><td class="base-val">1.50</td><td class="pos-val">0.15</td><td class="pos-val">0.30</td><td class="pos-val">0.45</td><td class="pos-val">0.60</td><td class="pos-val">0.75</td></tr>
+    <tr><td>x2</td><td class="neg-val">-1.00</td><td class="neg-val">-0.80</td><td class="neg-val">-0.60</td><td class="neg-val">-0.40</td><td class="neg-val">-0.20</td><td class="base-val">2.00</td><td class="pos-val">0.20</td><td class="pos-val">0.40</td><td class="pos-val">0.60</td><td class="pos-val">0.80</td><td class="pos-val">1.00</td></tr>
+    <tr><td>x3</td><td class="neg-val">-1.50</td><td class="neg-val">-1.20</td><td class="neg-val">-0.90</td><td class="neg-val">-0.60</td><td class="neg-val">-0.30</td><td class="base-val">3.00</td><td class="pos-val">0.30</td><td class="pos-val">0.60</td><td class="pos-val">0.90</td><td class="pos-val">1.20</td><td class="pos-val">1.50</td></tr>
+    <tr><td>x4</td><td class="neg-val">-2.00</td><td class="neg-val">-1.60</td><td class="neg-val">-1.20</td><td class="neg-val">-0.80</td><td class="neg-val">-0.40</td><td class="base-val">4.00</td><td class="pos-val">0.40</td><td class="pos-val">0.80</td><td class="pos-val">1.20</td><td class="pos-val">1.60</td><td class="pos-val">2.00</td></tr>
+  </tbody></table></div>
+</div>
+
+<div class="section-title">6. Mixed Element (Mi)</div>
+<div class="elem-table" data-cat="mixed" data-codes="MI MIXED">
+  <div class="elem-head" onclick="this.parentElement.classList.toggle('open')"><div class="et-code">Mi</div><div class="et-name">Mixed Element — Level 1</div><div class="et-range">4.00</div><div class="chevron">▼</div></div>
+  <div class="table-wrap"><table><thead><tr><th>Code</th><th>-5</th><th>-4</th><th>-3</th><th>-2</th><th>-1</th><th>BASE</th><th>+1</th><th>+2</th><th>+3</th><th>+4</th><th>+5</th></tr></thead><tbody>
+    <tr><td>Mi1</td><td class="neg-val">-2.00</td><td class="neg-val">-1.60</td><td class="neg-val">-1.20</td><td class="neg-val">-0.80</td><td class="neg-val">-0.40</td><td class="base-val">4.00</td><td class="pos-val">0.40</td><td class="pos-val">0.80</td><td class="pos-val">1.20</td><td class="pos-val">1.60</td><td class="pos-val">2.00</td></tr>
+  </tbody></table></div>
+</div>
+
+<div class="section-title">7. Move Element (ME)</div>
+<div class="elem-table" data-cat="move" data-codes="ME MEB MOVE">
+  <div class="elem-head" onclick="this.parentElement.classList.toggle('open')"><div class="et-code">ME</div><div class="et-name">Move Element — tous niveaux + downgrades</div><div class="et-range">1.50–7.00</div><div class="chevron">▼</div></div>
+  <div class="table-wrap"><table><thead><tr><th>Code</th><th>-5</th><th>-4</th><th>-3</th><th>-2</th><th>-1</th><th>BASE</th><th>+1</th><th>+2</th><th>+3</th><th>+4</th><th>+5</th></tr></thead><tbody>
+    <tr><td>MEB</td><td class="neg-val">-0.75</td><td class="neg-val">-0.60</td><td class="neg-val">-0.45</td><td class="neg-val">-0.30</td><td class="neg-val">-0.15</td><td class="base-val">1.50</td><td class="pos-val">0.15</td><td class="pos-val">0.30</td><td class="pos-val">0.45</td><td class="pos-val">0.60</td><td class="pos-val">0.75</td></tr>
+    <tr><td>ME1</td><td class="neg-val">-1.50</td><td class="neg-val">-1.20</td><td class="neg-val">-0.90</td><td class="neg-val">-0.60</td><td class="neg-val">-0.30</td><td class="base-val">3.00</td><td class="pos-val">0.30</td><td class="pos-val">0.60</td><td class="pos-val">0.90</td><td class="pos-val">1.20</td><td class="pos-val">1.50</td></tr>
+    <tr><td class="dg">ME1&lt;</td><td class="neg-val">-1.38</td><td class="neg-val">-1.10</td><td class="neg-val">-0.83</td><td class="neg-val">-0.55</td><td class="neg-val">-0.28</td><td class="base-val">2.75</td><td class="pos-val">0.28</td><td class="pos-val">0.55</td><td class="pos-val">0.83</td><td class="pos-val">1.10</td><td class="pos-val">1.38</td></tr>
+    <tr><td class="dg">ME1&lt;&lt;</td><td class="neg-val">-1.13</td><td class="neg-val">-0.90</td><td class="neg-val">-0.68</td><td class="neg-val">-0.45</td><td class="neg-val">-0.23</td><td class="base-val">2.25</td><td class="pos-val">0.23</td><td class="pos-val">0.45</td><td class="pos-val">0.68</td><td class="pos-val">0.90</td><td class="pos-val">1.13</td></tr>
+    <tr><td>ME2</td><td class="neg-val">-2.25</td><td class="neg-val">-1.80</td><td class="neg-val">-1.35</td><td class="neg-val">-0.90</td><td class="neg-val">-0.45</td><td class="base-val">4.50</td><td class="pos-val">0.45</td><td class="pos-val">0.90</td><td class="pos-val">1.35</td><td class="pos-val">1.80</td><td class="pos-val">2.25</td></tr>
+    <tr><td class="dg">ME2&lt;</td><td class="neg-val">-2.13</td><td class="neg-val">-1.70</td><td class="neg-val">-1.28</td><td class="neg-val">-0.85</td><td class="neg-val">-0.43</td><td class="base-val">4.25</td><td class="pos-val">0.43</td><td class="pos-val">0.85</td><td class="pos-val">1.28</td><td class="pos-val">1.70</td><td class="pos-val">2.13</td></tr>
+    <tr><td class="dg">ME2&lt;&lt;</td><td class="neg-val">-1.88</td><td class="neg-val">-1.50</td><td class="neg-val">-1.13</td><td class="neg-val">-0.75</td><td class="neg-val">-0.38</td><td class="base-val">3.75</td><td class="pos-val">0.38</td><td class="pos-val">0.75</td><td class="pos-val">1.13</td><td class="pos-val">1.50</td><td class="pos-val">1.88</td></tr>
+    <tr><td>ME3</td><td class="neg-val">-3.00</td><td class="neg-val">-2.40</td><td class="neg-val">-1.80</td><td class="neg-val">-1.20</td><td class="neg-val">-0.60</td><td class="base-val">6.00</td><td class="pos-val">0.60</td><td class="pos-val">1.20</td><td class="pos-val">1.80</td><td class="pos-val">2.40</td><td class="pos-val">3.00</td></tr>
+    <tr><td class="dg">ME3&lt;</td><td class="neg-val">-2.88</td><td class="neg-val">-2.30</td><td class="neg-val">-1.73</td><td class="neg-val">-1.15</td><td class="neg-val">-0.58</td><td class="base-val">5.75</td><td class="pos-val">0.58</td><td class="pos-val">1.15</td><td class="pos-val">1.73</td><td class="pos-val">2.30</td><td class="pos-val">2.88</td></tr>
+    <tr><td class="dg">ME3&lt;&lt;</td><td class="neg-val">-2.63</td><td class="neg-val">-2.10</td><td class="neg-val">-1.58</td><td class="neg-val">-1.05</td><td class="neg-val">-0.53</td><td class="base-val">5.25</td><td class="pos-val">0.53</td><td class="pos-val">1.05</td><td class="pos-val">1.58</td><td class="pos-val">2.10</td><td class="pos-val">2.63</td></tr>
+    <tr><td>ME4</td><td class="neg-val">-3.50</td><td class="neg-val">-2.80</td><td class="neg-val">-2.10</td><td class="neg-val">-1.40</td><td class="neg-val">-0.70</td><td class="base-val">7.00</td><td class="pos-val">0.70</td><td class="pos-val">1.40</td><td class="pos-val">2.10</td><td class="pos-val">2.80</td><td class="pos-val">3.50</td></tr>
+    <tr><td class="dg">ME4&lt;</td><td class="neg-val">-3.38</td><td class="neg-val">-2.70</td><td class="neg-val">-2.03</td><td class="neg-val">-1.35</td><td class="neg-val">-0.68</td><td class="base-val">6.75</td><td class="pos-val">0.68</td><td class="pos-val">1.35</td><td class="pos-val">2.03</td><td class="pos-val">2.70</td><td class="pos-val">3.38</td></tr>
+    <tr><td class="dg">ME4&lt;&lt;</td><td class="neg-val">-3.13</td><td class="neg-val">-2.50</td><td class="neg-val">-1.88</td><td class="neg-val">-1.25</td><td class="neg-val">-0.63</td><td class="base-val">6.25</td><td class="pos-val">0.63</td><td class="pos-val">1.25</td><td class="pos-val">1.88</td><td class="pos-val">2.50</td><td class="pos-val">3.13</td></tr>
+  </tbody></table></div>
+</div>
+
+<div class="section-title">8. No Hold Element (NHE) — 27 niveaux</div>
+<div class="elem-table" data-cat="nhe" data-codes="NHE NHEB NO HOLD">
+  <div class="elem-head" onclick="this.parentElement.classList.toggle('open')"><div class="et-code">NHE</div><div class="et-name">No Hold Element — 27 niveaux complets</div><div class="et-range">0.25–8.00</div><div class="chevron">▼</div></div>
+  <div class="table-wrap"><table><thead><tr><th>Lv</th><th>Code</th><th>-5</th><th>-4</th><th>-3</th><th>-2</th><th>-1</th><th>BASE</th><th>+1</th><th>+2</th><th>+3</th><th>+4</th><th>+5</th></tr></thead><tbody>
+    <tr><td>B</td><td>NHEB</td><td class="neg-val">-0.13</td><td class="neg-val">-0.10</td><td class="neg-val">-0.08</td><td class="neg-val">-0.05</td><td class="neg-val">-0.03</td><td class="base-val">0.25</td><td class="pos-val">0.03</td><td class="pos-val">0.05</td><td class="pos-val">0.08</td><td class="pos-val">0.10</td><td class="pos-val">0.13</td></tr>
+    <tr><td>1</td><td>NHEB sB / NHE1</td><td class="neg-val">-0.25</td><td class="neg-val">-0.20</td><td class="neg-val">-0.15</td><td class="neg-val">-0.10</td><td class="neg-val">-0.05</td><td class="base-val">0.50</td><td class="pos-val">0.05</td><td class="pos-val">0.10</td><td class="pos-val">0.15</td><td class="pos-val">0.20</td><td class="pos-val">0.25</td></tr>
+    <tr><td>2</td><td>NHEB s1</td><td class="neg-val">-0.38</td><td class="neg-val">-0.30</td><td class="neg-val">-0.23</td><td class="neg-val">-0.15</td><td class="neg-val">-0.08</td><td class="base-val">0.75</td><td class="pos-val">0.08</td><td class="pos-val">0.15</td><td class="pos-val">0.23</td><td class="pos-val">0.30</td><td class="pos-val">0.38</td></tr>
+    <tr><td>3</td><td>NHE1 sB</td><td class="neg-val">-0.50</td><td class="neg-val">-0.40</td><td class="neg-val">-0.30</td><td class="neg-val">-0.20</td><td class="neg-val">-0.10</td><td class="base-val">1.00</td><td class="pos-val">0.10</td><td class="pos-val">0.20</td><td class="pos-val">0.30</td><td class="pos-val">0.40</td><td class="pos-val">0.50</td></tr>
+    <tr><td>4</td><td>NHE2</td><td class="neg-val">-0.63</td><td class="neg-val">-0.50</td><td class="neg-val">-0.38</td><td class="neg-val">-0.25</td><td class="neg-val">-0.13</td><td class="base-val">1.25</td><td class="pos-val">0.13</td><td class="pos-val">0.25</td><td class="pos-val">0.38</td><td class="pos-val">0.50</td><td class="pos-val">0.63</td></tr>
+    <tr><td>5</td><td>NHE1 s1</td><td class="neg-val">-0.75</td><td class="neg-val">-0.60</td><td class="neg-val">-0.45</td><td class="neg-val">-0.30</td><td class="neg-val">-0.15</td><td class="base-val">1.50</td><td class="pos-val">0.15</td><td class="pos-val">0.30</td><td class="pos-val">0.45</td><td class="pos-val">0.60</td><td class="pos-val">0.75</td></tr>
+    <tr><td>6</td><td>NHE2 sB</td><td class="neg-val">-0.88</td><td class="neg-val">-0.70</td><td class="neg-val">-0.53</td><td class="neg-val">-0.35</td><td class="neg-val">-0.18</td><td class="base-val">1.75</td><td class="pos-val">0.18</td><td class="pos-val">0.35</td><td class="pos-val">0.53</td><td class="pos-val">0.70</td><td class="pos-val">0.88</td></tr>
+    <tr><td>7</td><td>NHE2 s1</td><td class="neg-val">-1.00</td><td class="neg-val">-0.80</td><td class="neg-val">-0.60</td><td class="neg-val">-0.40</td><td class="neg-val">-0.20</td><td class="base-val">2.00</td><td class="pos-val">0.20</td><td class="pos-val">0.40</td><td class="pos-val">0.60</td><td class="pos-val">0.80</td><td class="pos-val">1.00</td></tr>
+    <tr><td>8</td><td>NHEB s2</td><td class="neg-val">-1.13</td><td class="neg-val">-0.90</td><td class="neg-val">-0.68</td><td class="neg-val">-0.45</td><td class="neg-val">-0.23</td><td class="base-val">2.25</td><td class="pos-val">0.23</td><td class="pos-val">0.45</td><td class="pos-val">0.68</td><td class="pos-val">0.90</td><td class="pos-val">1.13</td></tr>
+    <tr><td>9</td><td>NHE3</td><td class="neg-val">-1.25</td><td class="neg-val">-1.00</td><td class="neg-val">-0.75</td><td class="neg-val">-0.50</td><td class="neg-val">-0.25</td><td class="base-val">2.50</td><td class="pos-val">0.25</td><td class="pos-val">0.50</td><td class="pos-val">0.75</td><td class="pos-val">1.00</td><td class="pos-val">1.25</td></tr>
+    <tr><td>10</td><td>NHE1 s2</td><td class="neg-val">-1.38</td><td class="neg-val">-1.10</td><td class="neg-val">-0.83</td><td class="neg-val">-0.55</td><td class="neg-val">-0.28</td><td class="base-val">2.75</td><td class="pos-val">0.28</td><td class="pos-val">0.55</td><td class="pos-val">0.83</td><td class="pos-val">1.10</td><td class="pos-val">1.38</td></tr>
+    <tr><td>11</td><td>NHE3 sB</td><td class="neg-val">-1.50</td><td class="neg-val">-1.20</td><td class="neg-val">-0.90</td><td class="neg-val">-0.60</td><td class="neg-val">-0.30</td><td class="base-val">3.00</td><td class="pos-val">0.30</td><td class="pos-val">0.60</td><td class="pos-val">0.90</td><td class="pos-val">1.20</td><td class="pos-val">1.50</td></tr>
+    <tr><td>12</td><td>NHE3 s1</td><td class="neg-val">-1.63</td><td class="neg-val">-1.30</td><td class="neg-val">-0.98</td><td class="neg-val">-0.65</td><td class="neg-val">-0.33</td><td class="base-val">3.25</td><td class="pos-val">0.33</td><td class="pos-val">0.65</td><td class="pos-val">0.98</td><td class="pos-val">1.30</td><td class="pos-val">1.63</td></tr>
+    <tr><td>13</td><td>NHE2 s2</td><td class="neg-val">-1.75</td><td class="neg-val">-1.40</td><td class="neg-val">-1.05</td><td class="neg-val">-0.70</td><td class="neg-val">-0.35</td><td class="base-val">3.50</td><td class="pos-val">0.35</td><td class="pos-val">0.70</td><td class="pos-val">1.05</td><td class="pos-val">1.40</td><td class="pos-val">1.75</td></tr>
+    <tr><td>14</td><td>NHEB s3</td><td class="neg-val">-2.00</td><td class="neg-val">-1.60</td><td class="neg-val">-1.20</td><td class="neg-val">-0.80</td><td class="neg-val">-0.40</td><td class="base-val">4.00</td><td class="pos-val">0.40</td><td class="pos-val">0.80</td><td class="pos-val">1.20</td><td class="pos-val">1.60</td><td class="pos-val">2.00</td></tr>
+    <tr><td>15</td><td>NHE4 sB</td><td class="neg-val">-2.50</td><td class="neg-val">-2.00</td><td class="neg-val">-1.50</td><td class="neg-val">-1.00</td><td class="neg-val">-0.50</td><td class="base-val">5.00</td><td class="pos-val">0.50</td><td class="pos-val">1.00</td><td class="pos-val">1.50</td><td class="pos-val">2.00</td><td class="pos-val">2.50</td></tr>
+    <tr><td>16</td><td>NHE4 s1</td><td class="neg-val">-2.63</td><td class="neg-val">-2.10</td><td class="neg-val">-1.58</td><td class="neg-val">-1.05</td><td class="neg-val">-0.53</td><td class="base-val">5.25</td><td class="pos-val">0.53</td><td class="pos-val">1.05</td><td class="pos-val">1.58</td><td class="pos-val">2.10</td><td class="pos-val">2.63</td></tr>
+    <tr><td>17</td><td>NHE1 s3</td><td class="neg-val">-2.75</td><td class="neg-val">-2.20</td><td class="neg-val">-1.65</td><td class="neg-val">-1.10</td><td class="neg-val">-0.55</td><td class="base-val">5.50</td><td class="pos-val">0.55</td><td class="pos-val">1.10</td><td class="pos-val">1.65</td><td class="pos-val">2.20</td><td class="pos-val">2.75</td></tr>
+    <tr><td>18</td><td>NHE2 s3</td><td class="neg-val">-2.88</td><td class="neg-val">-2.30</td><td class="neg-val">-1.73</td><td class="neg-val">-1.15</td><td class="neg-val">-0.58</td><td class="base-val">5.75</td><td class="pos-val">0.58</td><td class="pos-val">1.15</td><td class="pos-val">1.73</td><td class="pos-val">2.30</td><td class="pos-val">2.88</td></tr>
+    <tr><td>19</td><td>NHEB s4</td><td class="neg-val">-3.00</td><td class="neg-val">-2.40</td><td class="neg-val">-1.80</td><td class="neg-val">-1.20</td><td class="neg-val">-0.60</td><td class="base-val">6.00</td><td class="pos-val">0.60</td><td class="pos-val">1.20</td><td class="pos-val">1.80</td><td class="pos-val">2.40</td><td class="pos-val">3.00</td></tr>
+    <tr><td>20</td><td>NHE1 s4</td><td class="neg-val">-3.13</td><td class="neg-val">-2.50</td><td class="neg-val">-1.88</td><td class="neg-val">-1.25</td><td class="neg-val">-0.63</td><td class="base-val">6.25</td><td class="pos-val">0.63</td><td class="pos-val">1.25</td><td class="pos-val">1.88</td><td class="pos-val">2.50</td><td class="pos-val">3.13</td></tr>
+    <tr><td>21</td><td>NHE3 s2</td><td class="neg-val">-3.25</td><td class="neg-val">-2.60</td><td class="neg-val">-1.95</td><td class="neg-val">-1.30</td><td class="neg-val">-0.65</td><td class="base-val">6.50</td><td class="pos-val">0.65</td><td class="pos-val">1.30</td><td class="pos-val">1.95</td><td class="pos-val">2.60</td><td class="pos-val">3.25</td></tr>
+    <tr><td>22</td><td>NHE4 s2</td><td class="neg-val">-3.38</td><td class="neg-val">-2.70</td><td class="neg-val">-2.03</td><td class="neg-val">-1.35</td><td class="neg-val">-0.68</td><td class="base-val">6.75</td><td class="pos-val">0.68</td><td class="pos-val">1.35</td><td class="pos-val">2.03</td><td class="pos-val">2.70</td><td class="pos-val">3.38</td></tr>
+    <tr><td>23</td><td>NHE2 s4</td><td class="neg-val">-3.50</td><td class="neg-val">-2.80</td><td class="neg-val">-2.10</td><td class="neg-val">-1.40</td><td class="neg-val">-0.70</td><td class="base-val">7.00</td><td class="pos-val">0.70</td><td class="pos-val">1.40</td><td class="pos-val">2.10</td><td class="pos-val">2.80</td><td class="pos-val">3.50</td></tr>
+    <tr><td>24</td><td>NHE3 s3</td><td class="neg-val">-3.63</td><td class="neg-val">-2.90</td><td class="neg-val">-2.18</td><td class="neg-val">-1.45</td><td class="neg-val">-0.73</td><td class="base-val">7.25</td><td class="pos-val">0.73</td><td class="pos-val">1.45</td><td class="pos-val">2.18</td><td class="pos-val">2.90</td><td class="pos-val">3.63</td></tr>
+    <tr><td>25</td><td>NHE4 s3</td><td class="neg-val">-3.75</td><td class="neg-val">-3.00</td><td class="neg-val">-2.25</td><td class="neg-val">-1.50</td><td class="neg-val">-0.75</td><td class="base-val">7.50</td><td class="pos-val">0.75</td><td class="pos-val">1.50</td><td class="pos-val">2.25</td><td class="pos-val">3.00</td><td class="pos-val">3.75</td></tr>
+    <tr><td>26</td><td>NHE3 s4</td><td class="neg-val">-3.88</td><td class="neg-val">-3.10</td><td class="neg-val">-2.33</td><td class="neg-val">-1.55</td><td class="neg-val">-0.78</td><td class="base-val">7.75</td><td class="pos-val">0.78</td><td class="pos-val">1.55</td><td class="pos-val">2.33</td><td class="pos-val">3.10</td><td class="pos-val">3.88</td></tr>
+    <tr><td>27</td><td>NHE4 s4</td><td class="neg-val">-4.00</td><td class="neg-val">-3.20</td><td class="neg-val">-2.40</td><td class="neg-val">-1.60</td><td class="neg-val">-0.80</td><td class="base-val">8.00</td><td class="pos-val">0.80</td><td class="pos-val">1.60</td><td class="pos-val">2.40</td><td class="pos-val">3.20</td><td class="pos-val">4.00</td></tr>
+  </tbody></table></div>
+</div>
+
+<div class="section-title">9. Pair Element (Pa)</div>
+<div class="elem-table" data-cat="pair" data-codes="PA PAB PAIR">
+  <div class="elem-head" onclick="this.parentElement.classList.toggle('open')"><div class="et-code">Pa</div><div class="et-name">Pair Element</div><div class="et-range">1.50–7.00</div><div class="chevron">▼</div></div>
+  <div class="table-wrap"><table><thead><tr><th>Code</th><th>-5</th><th>-4</th><th>-3</th><th>-2</th><th>-1</th><th>BASE</th><th>+1</th><th>+2</th><th>+3</th><th>+4</th><th>+5</th></tr></thead><tbody>
+    <tr><td>PaB</td><td class="neg-val">-0.75</td><td class="neg-val">-0.60</td><td class="neg-val">-0.45</td><td class="neg-val">-0.30</td><td class="neg-val">-0.15</td><td class="base-val">1.50</td><td class="pos-val">0.15</td><td class="pos-val">0.30</td><td class="pos-val">0.45</td><td class="pos-val">0.60</td><td class="pos-val">0.75</td></tr>
+    <tr><td>Pa1</td><td class="neg-val">-1.75</td><td class="neg-val">-1.40</td><td class="neg-val">-1.05</td><td class="neg-val">-0.70</td><td class="neg-val">-0.35</td><td class="base-val">3.50</td><td class="pos-val">0.35</td><td class="pos-val">0.70</td><td class="pos-val">1.05</td><td class="pos-val">1.40</td><td class="pos-val">1.75</td></tr>
+    <tr><td>Pa2</td><td class="neg-val">-2.25</td><td class="neg-val">-1.80</td><td class="neg-val">-1.35</td><td class="neg-val">-0.90</td><td class="neg-val">-0.45</td><td class="base-val">4.50</td><td class="pos-val">0.45</td><td class="pos-val">0.90</td><td class="pos-val">1.35</td><td class="pos-val">1.80</td><td class="pos-val">2.25</td></tr>
+    <tr><td>Pa3</td><td class="neg-val">-3.00</td><td class="neg-val">-2.40</td><td class="neg-val">-1.80</td><td class="neg-val">-1.20</td><td class="neg-val">-0.60</td><td class="base-val">6.00</td><td class="pos-val">0.60</td><td class="pos-val">1.20</td><td class="pos-val">1.80</td><td class="pos-val">2.40</td><td class="pos-val">3.00</td></tr>
+    <tr><td>Pa4</td><td class="neg-val">-3.50</td><td class="neg-val">-2.80</td><td class="neg-val">-2.10</td><td class="neg-val">-1.40</td><td class="neg-val">-0.70</td><td class="base-val">7.00</td><td class="pos-val">0.70</td><td class="pos-val">1.40</td><td class="pos-val">2.10</td><td class="pos-val">2.80</td><td class="pos-val">3.50</td></tr>
+  </tbody></table></div>
+</div>
+
+<div class="section-title">10–11. Pivoting Elements (PB / PL)</div>
+<div class="elem-table" data-cat="pivoting" data-codes="PB PL PIVOTING">
+  <div class="elem-head" onclick="this.parentElement.classList.toggle('open')"><div class="et-code">PB / PL</div><div class="et-name">Pivoting Block / Line</div><div class="et-range">1.50–6.50</div><div class="chevron">▼</div></div>
+  <div class="table-wrap"><table><thead><tr><th>Code</th><th>-5</th><th>-4</th><th>-3</th><th>-2</th><th>-1</th><th>BASE</th><th>+1</th><th>+2</th><th>+3</th><th>+4</th><th>+5</th></tr></thead><tbody>
+    <tr><td>PBB/PLB</td><td class="neg-val">-0.75</td><td class="neg-val">-0.60</td><td class="neg-val">-0.45</td><td class="neg-val">-0.30</td><td class="neg-val">-0.15</td><td class="base-val">1.50</td><td class="pos-val">0.15</td><td class="pos-val">0.30</td><td class="pos-val">0.45</td><td class="pos-val">0.60</td><td class="pos-val">0.75</td></tr>
+    <tr><td>PB1/PL1</td><td class="neg-val">-1.75</td><td class="neg-val">-1.40</td><td class="neg-val">-1.05</td><td class="neg-val">-0.70</td><td class="neg-val">-0.35</td><td class="base-val">3.50</td><td class="pos-val">0.35</td><td class="pos-val">0.70</td><td class="pos-val">1.05</td><td class="pos-val">1.40</td><td class="pos-val">1.75</td></tr>
+    <tr><td>PB2/PL2</td><td class="neg-val">-2.25</td><td class="neg-val">-1.80</td><td class="neg-val">-1.35</td><td class="neg-val">-0.90</td><td class="neg-val">-0.45</td><td class="base-val">4.50</td><td class="pos-val">0.45</td><td class="pos-val">0.90</td><td class="pos-val">1.35</td><td class="pos-val">1.80</td><td class="pos-val">2.25</td></tr>
+    <tr><td>PB3/PL3</td><td class="neg-val">-2.75</td><td class="neg-val">-2.20</td><td class="neg-val">-1.65</td><td class="neg-val">-1.10</td><td class="neg-val">-0.55</td><td class="base-val">5.50</td><td class="pos-val">0.55</td><td class="pos-val">1.10</td><td class="pos-val">1.65</td><td class="pos-val">2.20</td><td class="pos-val">2.75</td></tr>
+    <tr><td>PB4/PL4</td><td class="neg-val">-3.25</td><td class="neg-val">-2.60</td><td class="neg-val">-1.95</td><td class="neg-val">-1.30</td><td class="neg-val">-0.65</td><td class="base-val">6.50</td><td class="pos-val">0.65</td><td class="pos-val">1.30</td><td class="pos-val">1.95</td><td class="pos-val">2.60</td><td class="pos-val">3.25</td></tr>
+  </tbody></table></div>
+</div>
+
+<div class="section-title">12. Synchronized Spin Element (SySp)</div>
+<div class="elem-table" data-cat="spin" data-codes="SYSP SPIN SYNCHRONIZED">
+  <div class="elem-head" onclick="this.parentElement.classList.toggle('open')"><div class="et-code">SySp</div><div class="et-name">Synchronized Spin Element</div><div class="et-range">1.50–7.00</div><div class="chevron">▼</div></div>
+  <div class="table-wrap"><table><thead><tr><th>Code</th><th>-5</th><th>-4</th><th>-3</th><th>-2</th><th>-1</th><th>BASE</th><th>+1</th><th>+2</th><th>+3</th><th>+4</th><th>+5</th></tr></thead><tbody>
+    <tr><td>SySpB</td><td class="neg-val">-0.75</td><td class="neg-val">-0.60</td><td class="neg-val">-0.45</td><td class="neg-val">-0.30</td><td class="neg-val">-0.15</td><td class="base-val">1.50</td><td class="pos-val">0.15</td><td class="pos-val">0.30</td><td class="pos-val">0.45</td><td class="pos-val">0.60</td><td class="pos-val">0.75</td></tr>
+    <tr><td>SySp1</td><td class="neg-val">-1.75</td><td class="neg-val">-1.40</td><td class="neg-val">-1.05</td><td class="neg-val">-0.70</td><td class="neg-val">-0.35</td><td class="base-val">3.50</td><td class="pos-val">0.35</td><td class="pos-val">0.70</td><td class="pos-val">1.05</td><td class="pos-val">1.40</td><td class="pos-val">1.75</td></tr>
+    <tr><td>SySp2</td><td class="neg-val">-2.25</td><td class="neg-val">-1.80</td><td class="neg-val">-1.35</td><td class="neg-val">-0.90</td><td class="neg-val">-0.45</td><td class="base-val">4.50</td><td class="pos-val">0.45</td><td class="pos-val">0.90</td><td class="pos-val">1.35</td><td class="pos-val">1.80</td><td class="pos-val">2.25</td></tr>
+    <tr><td>SySp3</td><td class="neg-val">-3.00</td><td class="neg-val">-2.40</td><td class="neg-val">-1.80</td><td class="neg-val">-1.20</td><td class="neg-val">-0.60</td><td class="base-val">6.00</td><td class="pos-val">0.60</td><td class="pos-val">1.20</td><td class="pos-val">1.80</td><td class="pos-val">2.40</td><td class="pos-val">3.00</td></tr>
+    <tr><td>SySp4</td><td class="neg-val">-3.50</td><td class="neg-val">-2.80</td><td class="neg-val">-2.10</td><td class="neg-val">-1.40</td><td class="neg-val">-0.70</td><td class="base-val">7.00</td><td class="pos-val">0.70</td><td class="pos-val">1.40</td><td class="pos-val">2.10</td><td class="pos-val">2.80</td><td class="pos-val">3.50</td></tr>
+  </tbody></table></div>
+</div>
+
+<div class="section-title">13. Traveling Element (TrE)</div>
+<div class="elem-table" data-cat="traveling" data-codes="TRE TREB TRAVELING TRAVELLING">
+  <div class="elem-head" onclick="this.parentElement.classList.toggle('open')"><div class="et-code">TrE</div><div class="et-name">Traveling Element</div><div class="et-range">1.00–5.00</div><div class="chevron">▼</div></div>
+  <div class="table-wrap"><table><thead><tr><th>Code</th><th>-5</th><th>-4</th><th>-3</th><th>-2</th><th>-1</th><th>BASE</th><th>+1</th><th>+2</th><th>+3</th><th>+4</th><th>+5</th></tr></thead><tbody>
+    <tr><td>TrEB</td><td class="neg-val">-0.50</td><td class="neg-val">-0.40</td><td class="neg-val">-0.30</td><td class="neg-val">-0.20</td><td class="neg-val">-0.10</td><td class="base-val">1.00</td><td class="pos-val">0.10</td><td class="pos-val">0.20</td><td class="pos-val">0.30</td><td class="pos-val">0.40</td><td class="pos-val">0.50</td></tr>
+    <tr><td>TrE1</td><td class="neg-val">-1.00</td><td class="neg-val">-0.80</td><td class="neg-val">-0.60</td><td class="neg-val">-0.40</td><td class="neg-val">-0.20</td><td class="base-val">2.00</td><td class="pos-val">0.20</td><td class="pos-val">0.40</td><td class="pos-val">0.60</td><td class="pos-val">0.80</td><td class="pos-val">1.00</td></tr>
+    <tr><td>TrE2</td><td class="neg-val">-1.50</td><td class="neg-val">-1.20</td><td class="neg-val">-0.90</td><td class="neg-val">-0.60</td><td class="neg-val">-0.30</td><td class="base-val">3.00</td><td class="pos-val">0.30</td><td class="pos-val">0.60</td><td class="pos-val">0.90</td><td class="pos-val">1.20</td><td class="pos-val">1.50</td></tr>
+    <tr><td>TrE3</td><td class="neg-val">-2.00</td><td class="neg-val">-1.60</td><td class="neg-val">-1.20</td><td class="neg-val">-0.80</td><td class="neg-val">-0.40</td><td class="base-val">4.00</td><td class="pos-val">0.40</td><td class="pos-val">0.80</td><td class="pos-val">1.20</td><td class="pos-val">1.60</td><td class="pos-val">2.00</td></tr>
+    <tr><td>TrE4</td><td class="neg-val">-2.50</td><td class="neg-val">-2.00</td><td class="neg-val">-1.50</td><td class="neg-val">-1.00</td><td class="neg-val">-0.50</td><td class="base-val">5.00</td><td class="pos-val">0.50</td><td class="pos-val">1.00</td><td class="pos-val">1.50</td><td class="pos-val">2.00</td><td class="pos-val">2.50</td></tr>
+  </tbody></table></div>
+</div>
+
+<div class="section-title">14. Twizzle Element (TwE)</div>
+<div class="elem-table" data-cat="twizzle" data-codes="TWE TWEB TWIZZLE">
+  <div class="elem-head" onclick="this.parentElement.classList.toggle('open')"><div class="et-code">TwE</div><div class="et-name">Twizzle Element</div><div class="et-range">1.50–7.00</div><div class="chevron">▼</div></div>
+  <div class="table-wrap"><table><thead><tr><th>Code</th><th>-5</th><th>-4</th><th>-3</th><th>-2</th><th>-1</th><th>BASE</th><th>+1</th><th>+2</th><th>+3</th><th>+4</th><th>+5</th></tr></thead><tbody>
+    <tr><td>TwEB</td><td class="neg-val">-0.75</td><td class="neg-val">-0.60</td><td class="neg-val">-0.45</td><td class="neg-val">-0.30</td><td class="neg-val">-0.15</td><td class="base-val">1.50</td><td class="pos-val">0.15</td><td class="pos-val">0.30</td><td class="pos-val">0.45</td><td class="pos-val">0.60</td><td class="pos-val">0.75</td></tr>
+    <tr><td>TwE1</td><td class="neg-val">-1.75</td><td class="neg-val">-1.40</td><td class="neg-val">-1.05</td><td class="neg-val">-0.70</td><td class="neg-val">-0.35</td><td class="base-val">3.50</td><td class="pos-val">0.35</td><td class="pos-val">0.70</td><td class="pos-val">1.05</td><td class="pos-val">1.40</td><td class="pos-val">1.75</td></tr>
+    <tr><td>TwE2</td><td class="neg-val">-2.25</td><td class="neg-val">-1.80</td><td class="neg-val">-1.35</td><td class="neg-val">-0.90</td><td class="neg-val">-0.45</td><td class="base-val">4.50</td><td class="pos-val">0.45</td><td class="pos-val">0.90</td><td class="pos-val">1.35</td><td class="pos-val">1.80</td><td class="pos-val">2.25</td></tr>
+    <tr><td>TwE3</td><td class="neg-val">-3.00</td><td class="neg-val">-2.40</td><td class="neg-val">-1.80</td><td class="neg-val">-1.20</td><td class="neg-val">-0.60</td><td class="base-val">6.00</td><td class="pos-val">0.60</td><td class="pos-val">1.20</td><td class="pos-val">1.80</td><td class="pos-val">2.40</td><td class="pos-val">3.00</td></tr>
+    <tr><td>TwE4</td><td class="neg-val">-3.50</td><td class="neg-val">-2.80</td><td class="neg-val">-2.10</td><td class="neg-val">-1.40</td><td class="neg-val">-0.70</td><td class="base-val">7.00</td><td class="pos-val">0.70</td><td class="pos-val">1.40</td><td class="pos-val">2.10</td><td class="pos-val">2.80</td><td class="pos-val">3.50</td></tr>
+  </tbody></table></div>
+</div>
+
+</div></div>
+
+<div class="panel" id="panel-abbrev">
+  <div class="abbrev-grid" id="abbrev-grid"></div>
+</div>
+
+<script>
+const ABBREVS=[['AB','Artistic Block'],['AC','Artistic Circle'],['AL','Artistic Line'],['AW','Artistic Wheel'],['CrD','Creative Dance'],['CrI','Creative Intersection'],['CrL','Creative Lift'],['GL','Group Lift'],['I','Intersection'],['pi','Point Of Intersection'],['B','Linear Block'],['L','Linear Line'],['C','Circle'],['W','Wheel'],['Mi','Mixed Element'],['ME','Move Element'],['NHE','No Hold Element'],['Pa','Pair Element'],['PB','Pivoting Block'],['PL','Pivoting Line'],['SySp','Synchronized Spin'],['TrE','Travelling Element'],['TwE','Twizzle Element'],['s','Step Sequence'],['&lt;','Downgrade 1'],['&lt;&lt;','Downgrade 2']];
+document.getElementById('abbrev-grid').innerHTML=ABBREVS.map(([c,n])=>`<div class="abbrev-item"><div class="abbrev-code">${c}</div><div class="abbrev-name">${n}</div></div>`).join('');
+function showPanel(id,btn){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById('panel-'+id).classList.add('active');btn.classList.add('active');document.getElementById('search-bar').style.display=id==='sov'?'flex':'none';}
+function filterTables(){const q=document.getElementById('search').value.toUpperCase().trim();const cat=document.getElementById('filter-cat').value;document.querySelectorAll('.elem-table').forEach(el=>{const codes=(el.dataset.codes||'').toUpperCase();const elCat=el.dataset.cat||'';const mQ=!q||codes.includes(q);const mC=!cat||elCat===cat;el.classList.toggle('hidden',!mQ||!mC);});}
+</script>
+</body>
+</html>

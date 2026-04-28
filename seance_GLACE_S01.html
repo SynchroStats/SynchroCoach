@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Séance Glace — S01</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+  :root {
+    --ice: #00c2e0; --ice-dim: #0097b2;
+    --bg: #080e1c; --surface: #0f1828; --surface2: #162035; --border: #1a2b48;
+    --text: #e8edf8; --muted: #6a7d9e;
+    --green: #22c98a; --orange: #f5a623; --red: #e85555; --yellow: #f5d020;
+    --purple: #a78bfa;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 60px; }
+
+  .header { background: linear-gradient(135deg, #060e22 0%, #0a1e3d 50%, #00233d 100%); padding: 28px 20px 20px; border-bottom: 2px solid var(--ice); position: relative; overflow: hidden; }
+  .header::before { content: '⛸'; position: absolute; font-size: 150px; right: -10px; top: -20px; opacity: 0.06; }
+  .badge { display: inline-block; font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 2px; color: var(--ice); border: 1px solid var(--ice); padding: 2px 8px; border-radius: 2px; margin-bottom: 8px; }
+  .header h1 { font-family: 'Bebas Neue', sans-serif; font-size: 38px; letter-spacing: 3px; color: #fff; line-height: 1; }
+  .header h1 span { color: var(--ice); }
+  .meta { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+  .meta-item { font-size: 13px; color: var(--muted); }
+  .meta-item strong { color: var(--text); font-weight: 500; }
+
+  .alert { margin: 14px 16px 0; background: rgba(0,194,224,0.06); border: 1px solid rgba(0,194,224,0.2); border-left: 3px solid var(--ice); border-radius: 6px; padding: 10px 14px; font-size: 12.5px; color: #7ecfdf; line-height: 1.5; }
+  .alert strong { color: var(--ice); }
+
+  .total-bar { margin: 14px 16px 0; display: flex; border-radius: 6px; overflow: hidden; height: 7px; }
+  .seg-a { background: var(--green); flex: 5; }
+  .seg-b { background: var(--ice); flex: 8; }
+  .seg-c { background: var(--orange); flex: 8; }
+  .seg-d { background: var(--yellow); flex: 9; }
+  .total-label { margin: 5px 16px 0; display: flex; gap: 10px; flex-wrap: wrap; font-size: 10px; color: var(--muted); }
+
+  .timeline { padding: 16px 16px 0; display: flex; flex-direction: column; gap: 10px; }
+  .block { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .block-header { display: flex; align-items: center; gap: 12px; padding: 13px 15px; cursor: pointer; user-select: none; }
+  .block-header:hover { background: rgba(255,255,255,0.02); }
+  .time-pill { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 1px; background: var(--surface2); border: 1px solid var(--border); color: var(--ice); padding: 3px 9px; border-radius: 20px; white-space: nowrap; min-width: 52px; text-align: center; }
+  .block-title { flex: 1; font-weight: 600; font-size: 14px; }
+  .block-sub { font-size: 11px; color: var(--muted); margin-top: 1px; font-weight: 400; }
+  .chevron { color: var(--muted); font-size: 11px; transition: transform 0.25s; }
+  .block.open .chevron { transform: rotate(180deg); }
+  .block-body { display: none; border-top: 1px solid var(--border); padding: 14px 15px; font-size: 13px; line-height: 1.7; }
+  .block.open .block-body { display: block; }
+
+  .block.routine .time-pill { color: var(--green); }
+  .block.routine .block-title::before { content: '🟢 '; }
+  .block.skating .time-pill { color: var(--ice); }
+  .block.skating .block-title::before { content: '🔵 '; }
+  .block.element1 .time-pill { color: var(--orange); }
+  .block.element1 .block-title::before { content: '🟠 '; }
+  .block.element2 .time-pill { color: var(--purple); }
+  .block.element2 .block-title::before { content: '🟣 '; }
+  .block.fun .time-pill { color: var(--yellow); }
+  .block.fun .block-title::before { content: '⭐ '; }
+
+  .steps { display: flex; flex-direction: column; gap: 7px; }
+  .step { display: flex; gap: 10px; align-items: flex-start; padding: 8px 10px; background: var(--surface2); border-radius: 7px; }
+  .step-num { font-family: 'Bebas Neue', sans-serif; font-size: 15px; color: var(--ice); min-width: 18px; line-height: 1.4; }
+  .step-text { font-size: 12.5px; line-height: 1.65; }
+  .step-text strong { color: var(--text); font-weight: 600; }
+  .step-text em { color: var(--muted); font-style: normal; font-size: 11.5px; }
+
+  /* ROUTINE TOURS */
+  .tours { display: flex; flex-direction: column; gap: 7px; }
+  .tour { border-radius: 8px; border: 1px solid var(--border); overflow: hidden; }
+  .tour-head { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--surface2); }
+  .tour-num { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--ice); line-height: 1; min-width: 28px; }
+  .tour-name { font-weight: 600; font-size: 13px; flex: 1; }
+  .tour-tag { font-size: 10px; color: var(--muted); background: rgba(0,194,224,0.07); padding: 2px 7px; border-radius: 10px; border: 1px solid rgba(0,194,224,0.15); }
+  .tour-body { padding: 10px 12px; font-size: 12.5px; line-height: 1.7; color: var(--text); }
+  .tip { margin-top: 6px; font-size: 11.5px; color: var(--ice); padding-left: 8px; border-left: 2px solid var(--ice); }
+  .warn { margin-top: 6px; font-size: 11.5px; color: var(--orange); padding-left: 8px; border-left: 2px solid var(--orange); }
+  .obs { margin-top: 6px; font-size: 11.5px; color: var(--green); padding-left: 8px; border-left: 2px solid var(--green); }
+
+  /* CERCLE SECTION */
+  .cercle-box { margin-top: 12px; background: rgba(0,194,224,0.05); border: 1px solid rgba(0,194,224,0.2); border-radius: 8px; padding: 12px; }
+  .cercle-box h4 { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 1px; color: var(--ice); margin-bottom: 8px; }
+  .cercle-item { font-size: 12.5px; line-height: 1.7; padding-left: 14px; position: relative; }
+  .cercle-item::before { content: '→'; position: absolute; left: 0; color: var(--ice); }
+
+  /* PROGRESSION PIROUETTES */
+  .prog { display: flex; flex-direction: column; gap: 7px; }
+  .prog-item { display: flex; gap: 10px; align-items: flex-start; padding: 8px 10px; background: var(--surface2); border-radius: 7px; }
+  .prog-badge { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 1px; padding: 2px 7px; border-radius: 10px; white-space: nowrap; }
+  .badge-all { color: var(--green); background: rgba(34,201,138,0.1); border: 1px solid rgba(34,201,138,0.25); }
+  .badge-inter { color: var(--orange); background: rgba(245,166,35,0.1); border: 1px solid rgba(245,166,35,0.25); }
+  .badge-adv { color: var(--purple); background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.25); }
+  .prog-text { font-size: 12.5px; line-height: 1.6; }
+
+  .optional-tag { display: inline-block; font-size: 10px; color: var(--orange); border: 1px solid rgba(245,166,35,0.4); padding: 1px 6px; border-radius: 8px; margin-left: 6px; vertical-align: middle; }
+
+  .notes-box { margin: 16px 16px 0; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+  .notes-box h3 { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 1.5px; color: var(--ice); margin-bottom: 8px; }
+  .notes-line { font-size: 12px; color: var(--muted); line-height: 2.4; }
+
+  .footer { text-align: center; margin-top: 20px; font-size: 11px; color: var(--muted); letter-spacing: 1px; font-family: 'Bebas Neue', sans-serif; }
+  .footer span { color: var(--ice); }
+
+  hr.div { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">SYNCHROLEARN · SÉANCE GLACE</div>
+  <h1>SÉANCE <span>GLACE — S01</span></h1>
+  <div class="meta">
+    <div class="meta-item">📅 <strong>Rentrée 2025–26</strong></div>
+    <div class="meta-item">👥 <strong>12–20 filles</strong> · Hétérogène</div>
+    <div class="meta-item">⏱ <strong>90 min</strong></div>
+    <div class="meta-item">🎯 <strong>Routine + skating skills + éléments</strong></div>
+  </div>
+</div>
+
+<div class="alert">
+  <strong>⚠️ Après 1h de PP</strong> — Fatigue neuromusculaire déjà présente. Routine et skating skills restent progressifs. Les twizzles sont supprimés aujourd'hui — leur temps sert à poser la routine d'échauffement.
+</div>
+
+<div class="total-bar">
+  <div class="seg-a"></div>
+  <div class="seg-b"></div>
+  <div class="seg-c"></div>
+  <div class="seg-d"></div>
+</div>
+<div class="total-label">
+  <span>🟢 Routine 15'</span>
+  <span>🔵 Skating Skills 25'</span>
+  <span>🟠 Move Élément 20'</span>
+  <span>⭐ Pirouettes fun 15'</span>
+</div>
+
+<div class="timeline">
+
+  <!-- ROUTINE D'ÉCHAUFFEMENT -->
+  <div class="block routine open">
+    <div class="block-header" onclick="toggle(this)">
+      <div class="time-pill">15 min</div>
+      <div><div class="block-title">Routine d'échauffement — V1</div><div class="block-sub">Individuel en carré de 4 → collectif en ligne · À construire ensemble</div></div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="block-body">
+
+      <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">Formation : <strong style="color:var(--text)">carrés de 4</strong>, patinage individuel. Chaque tour enchaîne à l'aller et au retour. Tempo progressif.</p>
+
+      <div class="tours">
+        <div class="tour">
+          <div class="tour-head"><div class="tour-num">T1</div><div class="tour-name">Marche avant → marche arrière</div><div class="tour-tag">Mise en route</div></div>
+          <div class="tour-body">Aller : marche avant classique, placement propre. Retour : marche arrière. Tempo lent — activation et prise de repères sur la glace.
+            <div class="tip">→ Observer : qui a perdu ses sensations depuis l'an dernier, qui est déjà à l'aise.</div>
+          </div>
+        </div>
+        <div class="tour">
+          <div class="tour-head"><div class="tour-num">T2</div><div class="tour-name">Croisé avant — objectif vitesse</div><div class="tour-tag">Activation</div></div>
+          <div class="tour-body">Croisés avant, pousser franchement. Recherche de vitesse progressive. Bras libres.
+            <div class="obs">→ Qui génère de la puissance, qui glisse sans pousser. Info utile pour le niveau.</div>
+          </div>
+        </div>
+        <div class="tour">
+          <div class="tour-head"><div class="tour-num">T3</div><div class="tour-name">Croisé arrière — très bas sur les jambes</div><div class="tour-tag">Force + proprioception</div></div>
+          <div class="tour-body">Croisés arrière, centre de gravité très bas, genoux fléchis au maximum. Objectif vitesse également. Amplitude de poussée maximale.
+            <div class="tip">→ La fatigue des jambes après la PP se verra ici — c'est une info de baseline.</div>
+          </div>
+        </div>
+        <div class="tour">
+          <div class="tour-head"><div class="tour-num">T4</div><div class="tour-name">Fente profonde — loeb avant / loeb arrière</div><div class="tour-tag">Mobilité + gainage glace</div></div>
+          <div class="tour-body">Aller : fente très profonde en avant (jambe libre tendue derrière, buste droit). Retour : fente en arrière. Tempo lent, placement soigné.
+            <div class="warn">→ Après la PP, les quadriceps et les ischios sont sollicités. Observer les compensations de buste.</div>
+          </div>
+        </div>
+        <div class="tour">
+          <div class="tour-head"><div class="tour-num">T5</div><div class="tour-name">Croisé arrière + 3 avant avec haut du corps</div><div class="tour-tag">Coordination + activation haut du corps</div></div>
+          <div class="tour-body">
+            <strong>Croisé arrière :</strong> penché en avant, toucher la glace à chaque croisé → activation du haut du corps, travail de l'axe.<br>
+            <strong>3 avant :</strong> ouverture franche du haut du corps avec ouverture du bras — le buste se déroule à chaque 3.
+            <div class="tip">→ Objectif principal : activer le haut du corps avant les éléments. Le 3 avant est maîtrisé par toutes.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cercle-box">
+        <h4>⭕ Phase collective — En ligne de 4 sur le cercle</h4>
+        <div class="cercle-item" style="margin-bottom:6px;">Croisé avant sur le cercle, <strong>2 cercles dans chaque sens</strong> — 1 cercle trop court pour trouver le rythme collectif</div>
+        <div class="cercle-item">Puis croisé arrière avec <strong>poussé-poussé amplitude maximale</strong> — jambes très écartées, maximum de glace prise, bras libres. 2 cercles dans chaque sens.</div>
+        <div class="tip" style="margin-top:8px;">→ Premier vrai moment de synchronisation collective. Observer qui écoute les autres, qui est dans sa bulle.</div>
+        <div class="warn" style="margin-top:4px;">→ À la fin : demander leur ressenti sur la routine. Qu'est-ce qu'on garde, qu'est-ce qu'on modifie ? 2 min max.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SKATING SKILLS -->
+  <div class="block skating open">
+    <div class="block-header" onclick="toggle(this)">
+      <div class="time-pill">25 min</div>
+      <div><div class="block-title">Skating Skills</div><div class="block-sub">Marche avant en ligne de 4 · Tempo progressif · ± marche arrière</div></div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="block-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Marche avant en ligne de 4 — tempo lent à moyen — 15 min</strong><br>
+          Formation ligne de 4. Marche avant classique sur un tempo simple à respecter (tu bats, tu siffles, ou tu utilises de la musique). Progresser : tempo lent → tempo moyen sur la durée.<br>
+          <em>Observer : alignement dans la ligne, capacité d'adaptation aux inconnues, qui régule son espace.</em></div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Marche arrière en ligne de 4 — si le niveau le permet — 10 min</strong><span class="optional-tag">conditionnel</span><br>
+          Même formation, même logique de tempo. Introduire seulement si la marche avant tient bien et que les filles ne semblent pas trop fatiguées.<br>
+          <em>Si les lignes s'effondrent en avant, rester sur la marche avant plus longtemps.</em></div>
+        </div>
+      </div>
+      <div class="tip" style="margin-top:10px;">→ Skating skills = ta fenêtre d'observation la plus riche. Note qui prend naturellement la tête, qui s'adapte, qui décroche.</div>
+    </div>
+  </div>
+
+  <!-- MOVE ÉLÉMENT : ARABESQUES -->
+  <div class="block element1 open">
+    <div class="block-header" onclick="toggle(this)">
+      <div class="time-pill">20 min</div>
+      <div><div class="block-title">Move Élément — Arabesques</div><div class="block-sub">Tenues par les hanches · Passage en avant · Groupes mixés niveau</div></div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="block-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Explication + essai libre — 5 min</strong><br>
+          Démontrer la prise par les hanches. Laisser les filles trouver leur arabesque + leur placement dans le groupe. Mixer les niveaux volontairement — éviter de mettre les très fortes ensemble.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Répétitions avec passage en avant — 10 min</strong><br>
+          Arabesques tenues par les hanches, coordination du passage en avant. Plusieurs passages. La prise par les hanches = feedback proprioceptif immédiat sur l'alignement de la voisine.
+            <div class="tip">→ Les novices sont portées par le groupe. Les expérimentées découvrent un autre mode de pratique — ça les engage différemment.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text"><strong>Affinage — 5 min</strong><br>
+          Un ou deux passages avec feedback collectif. Identifier ce qui est à corriger pour la prochaine séance.<br>
+          <em>Ne pas tout corriger maintenant — c'est une S01, poser les bases suffit.</em></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIROUETTES = ÉLÉMENT FUN FINALE -->
+  <div class="block fun open">
+    <div class="block-header" onclick="toggle(this)">
+      <div class="time-pill">15 min</div>
+      <div><div class="block-title">⭐ Pirouettes — Élément fun finale</div><div class="block-sub">L'élément qu'elles aiment · Progression solo → à 2 → Valley Bay</div></div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="block-body">
+
+      <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">C'est le moment qu'elles attendent — l'élément plaisir qui ferme la séance. Individuel ou en binôme au choix. Les filles peu à l'aise en groupe s'expriment ici librement. Progression par niveaux, le bonus Valley Bay sert de carotte.</p>
+
+      <div class="prog">
+        <div class="prog-item">
+          <div class="prog-badge badge-all">TOUTES</div>
+          <div class="prog-text"><strong>Pirouette classique solo</strong> — Remonter les sensations, trouver l'axe. Plusieurs essais, pas de pression.</div>
+        </div>
+        <div class="prog-item">
+          <div class="prog-badge badge-inter">INTERMÉDIAIRES</div>
+          <div class="prog-text"><strong>Pirouette allongée + pirouette assise</strong> — Nécessaire pour le niveau 4. Observer la stabilité de l'axe sur chaque position.</div>
+        </div>
+        <div class="prog-item">
+          <div class="prog-badge badge-all">TOUTES</div>
+          <div class="prog-text"><strong>Pirouette à 2</strong> — En binôme, libre. C'est ici que ça devient vraiment fun — créer de la cohésion, de la légèreté, de la créativité.</div>
+        </div>
+        <div class="prog-item">
+          <div class="prog-badge badge-adv">BONUS AVANCÉES</div>
+          <div class="prog-text"><strong>Changement de pied style Valley Bay</strong> — Changement de configuration en cours de rotation. La carotte pour les motivées. Si le temps le permet.</div>
+        </div>
+      </div>
+
+      <div class="warn" style="margin-top:10px;">→ Après PP + skating skills + move élément : axe de rotation potentiellement instable. Qualité > nombre de tours, pas d'exigence élevée aujourd'hui.</div>
+      <div class="tip" style="margin-top:6px;">→ Ce bloc construit l'envie de revenir. Ne jamais le sacrifier même si la séance a pris du retard.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="notes-box">
+  <h3>📝 Notes post-séance</h3>
+  <div class="notes-line">
+    Routine : éléments à <strong>garder</strong> : _______________ &nbsp;|&nbsp; à <strong>modifier</strong> : _______________<br>
+    Skating skills : niveau général : ⬜ Attendu &nbsp;⬜ Mieux &nbsp;⬜ En-dessous<br>
+    Marche arrière faite : ⬜ Oui &nbsp;⬜ Non — Raison : ___________________________<br>
+    Arabesques : cohésion du groupe : ⬜ Bonne &nbsp;⬜ À travailler<br>
+    Pirouettes : qui maîtrise l'allongée/assise : ________________________________<br>
+    Potentielles Synchro9 identifiées : _________________________________________<br>
+    Ajustements S02 : __________________________________________________________
+  </div>
+</div>
+
+<div class="footer" style="margin-top:16px;"><span>SYNCHROLEARN</span> · GLACE · S01 · Saison 2025–26</div>
+
+<script>
+function toggle(h) { h.parentElement.classList.toggle('open'); }
+</script>
+</body>
+</html>

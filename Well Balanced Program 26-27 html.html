@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WBP 2026/27</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root {
+  --bg:#07101f;--surface:#0f1f35;--surface2:#162840;--border:#1e3352;
+  --ice:#00c8e8;--text:#e8f0fc;--muted:#5a7090;
+  --green:#1de9a0;--orange:#ff9f2e;--red:#ff4f6a;--yellow:#ffd84a;--purple:#b388ff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);padding-bottom:40px;}
+
+.header{background:linear-gradient(135deg,#060d1e,#0a1a38,#002840);padding:20px 16px 16px;border-bottom:2px solid var(--ice);}
+.badge{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--ice);border:1px solid var(--ice);padding:2px 7px;border-radius:2px;display:inline-block;margin-bottom:6px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:#fff;line-height:1;}
+h1 span{color:var(--ice);}
+.meta{font-size:11px;color:var(--muted);margin-top:6px;}
+
+.tabs{display:flex;overflow-x:auto;padding:0 14px;gap:0;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:10;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:1px;color:var(--muted);padding:12px 14px;white-space:nowrap;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;}
+.tab-btn.active{color:var(--ice);border-bottom-color:var(--ice);}
+
+.panel{display:none;padding:14px;}
+.panel.active{display:block;}
+
+.cat-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--ice);margin-bottom:4px;}
+.cat-sub{font-size:11px;color:var(--muted);margin-bottom:14px;}
+
+.elem-list{display:flex;flex-direction:column;gap:8px;}
+.elem{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.elem-head{display:flex;align-items:center;gap:10px;padding:11px 13px;cursor:pointer;}
+.elem-head:active{background:var(--surface2);}
+.elem-num{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--border);min-width:24px;line-height:1;}
+.elem-name{font-weight:600;font-size:13px;flex:1;}
+.elem-code{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:1px;color:var(--ice);background:rgba(0,200,232,0.08);border:1px solid rgba(0,200,232,0.2);padding:2px 7px;border-radius:6px;}
+.elem-body{border-top:1px solid var(--border);padding:10px 13px;display:none;}
+.elem-body.open{display:block;}
+.req-list{list-style:none;display:flex;flex-direction:column;gap:5px;}
+.req-item{font-size:12px;line-height:1.6;padding-left:14px;position:relative;color:var(--text);}
+.req-item::before{content:'→';position:absolute;left:0;color:var(--ice);}
+.feat{font-size:11px;color:var(--orange);padding-left:14px;position:relative;margin-top:3px;}
+.feat::before{content:'★';position:absolute;left:0;color:var(--orange);}
+.note-box{background:rgba(0,200,232,0.05);border:1px solid rgba(0,200,232,0.15);border-radius:7px;padding:9px 11px;margin-top:10px;font-size:11.5px;color:var(--muted);line-height:1.6;}
+
+.general-notes{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px;margin-bottom:12px;}
+.general-notes h3{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;color:var(--orange);margin-bottom:8px;}
+.gn-item{font-size:12px;line-height:1.7;padding-left:14px;position:relative;}
+.gn-item::before{content:'·';position:absolute;left:4px;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">ISU COMMUNICATION 2779</div>
+  <h1>WBP <span>2026/27</span></h1>
+  <div class="meta">Well Balanced Program Content · Valid from July 1, 2026 · Replaces Comm. 2692</div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="show('senior-sp')">Senior SP</button>
+  <button class="tab-btn" onclick="show('senior-fs')">Senior FS</button>
+  <button class="tab-btn" onclick="show('junior-sp')">Junior SP</button>
+  <button class="tab-btn" onclick="show('junior-fs')">Junior FS</button>
+  <button class="tab-btn" onclick="show('adv-novice')">Adv. Nov.</button>
+  <button class="tab-btn" onclick="show('basic-nov')">Basic Nov.</button>
+  <button class="tab-btn" onclick="show('mixed-age')">Mixed Age</button>
+  <button class="tab-btn" onclick="show('notes')">Notes</button>
+</div>
+
+<!-- SENIOR SP -->
+<div class="panel active" id="panel-senior-sp">
+  <div class="cat-title">Senior Short Program</div>
+  <div class="cat-sub">5 required elements</div>
+  <div class="elem-list">
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">1</div><div class="elem-name">Intersection Element</div><div class="elem-code">I</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="req-item">Whip Intersection is <strong>required</strong></li>
+      <li class="feat">Additional Feature: Point of Intersection (pi) required</li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">2</div><div class="elem-name">Move Element</div><div class="elem-code">ME</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="req-item">All skaters must start in the <strong>same fm position</strong></li>
+      <li class="req-item">Different feet permitted</li>
+      <li class="req-item">A second type of fm permitted only as part of a Feature</li>
+      <li class="req-item">Only two different types of fms permitted at the same time</li>
+      <li class="feat">Block Feature required</li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">3</div><div class="elem-name">No Hold Element</div><div class="elem-code">NHE</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="req-item">Must be <strong>one closed block</strong></li>
+      <li class="req-item">Feature(s) not permitted (see exceptions)</li>
+      <li class="req-item">Diagonal pattern, Non-listed Jumps & Jumps &lt;1 rev. permitted without penalty</li>
+      <li class="req-item">Maximum of NHEB will be called</li>
+      <li class="feat">Additional Feature: Step Sequence (s) required</li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">4</div><div class="elem-name">Synchronized Spin Element</div><div class="elem-code">SySp</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">5</div><div class="elem-name">Traveling Element</div><div class="elem-code">TrE</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+  </div>
+</div>
+
+<!-- SENIOR FS -->
+<div class="panel" id="panel-senior-fs">
+  <div class="cat-title">Senior Free Skating</div>
+  <div class="cat-sub">8 required elements</div>
+  <div class="elem-list">
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">1</div><div class="elem-name">Creative Dance Element</div><div class="elem-code">CrD</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">2</div><div class="elem-name">Creative Element – Lift(s)</div><div class="elem-code">CrL</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">3</div><div class="elem-name">Group Lift Element</div><div class="elem-code">GL</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">4&5</div><div class="elem-name">Two Different Intersection Elements</div><div class="elem-code">I</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="req-item">Intersection used in the Short Program is <strong>not permitted</strong></li>
+      <li class="feat">Additional Feature: Point of Intersection (pi) will be called if included</li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">6</div><div class="elem-name">Pair Element</div><div class="elem-code">Pa</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">7</div><div class="elem-name">Pivoting Element – Block</div><div class="elem-code">PB</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="req-item">Must be <strong>one closed block</strong> using a shape of your choice</li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">8</div><div class="elem-name">Twizzle Element</div><div class="elem-code">TwE</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+  </div>
+</div>
+
+<!-- JUNIOR SP -->
+<div class="panel" id="panel-junior-sp">
+  <div class="cat-title">Junior Short Program</div>
+  <div class="cat-sub">5 required elements</div>
+  <div class="elem-list">
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">1</div><div class="elem-name">Intersection Element</div><div class="elem-code">I</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="req-item">Angled Intersection is <strong>required</strong></li>
+      <li class="feat">Additional Feature: Point of Intersection (pi) required</li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">2</div><div class="elem-name">Move Element</div><div class="elem-code">ME</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="req-item">All skaters must start in the <strong>same fm position</strong></li>
+      <li class="req-item">Different feet permitted</li>
+      <li class="req-item">A second fm permitted only as part of a Feature</li>
+      <li class="req-item">Only two different types of fms permitted at the same time</li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">3</div><div class="elem-name">No Hold Element</div><div class="elem-code">NHE</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="req-item">Must be <strong>one block</strong></li>
+      <li class="req-item">Feature(s) required — counted only when done in an open block</li>
+      <li class="req-item">Additional Feature not required</li>
+      <li class="req-item">Maximum of Step Sequence Base (sB) will be called</li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">4</div><div class="elem-name">Pivoting Element – Block</div><div class="elem-code">PB</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="req-item">Must be <strong>one closed block</strong> using <strong>four lines that are as equal as possible</strong></li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">5</div><div class="elem-name">Twizzle Element</div><div class="elem-code">TwE</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+  </div>
+</div>
+
+<!-- JUNIOR FS -->
+<div class="panel" id="panel-junior-fs">
+  <div class="cat-title">Junior Free Skating</div>
+  <div class="cat-sub">7 required elements</div>
+  <div class="elem-list">
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">1</div><div class="elem-name">Creative Dance Element</div><div class="elem-code">CrD</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">2</div><div class="elem-name">Creative Element – Group Lift(s)</div><div class="elem-code">GL</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">3</div><div class="elem-name">Intersection Element</div><div class="elem-code">I</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="feat">Additional Feature: Point of Intersection (pi) will be called if included</li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">4</div><div class="elem-name">No Hold Element</div><div class="elem-code">NHE</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="req-item">Must be <strong>one closed block</strong></li>
+      <li class="req-item">Feature(s) not permitted (see exceptions)</li>
+      <li class="req-item">Diagonal pattern, Non-listed Jumps & Jumps &lt;1 rev. permitted without penalty</li>
+      <li class="req-item">Maximum of NHEB will be called</li>
+      <li class="feat">Additional Feature: Step Sequence (s) required</li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">5</div><div class="elem-name">Pair Element</div><div class="elem-code">Pa</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">6</div><div class="elem-name">Synchronized Spin Element</div><div class="elem-code">SySp</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">7</div><div class="elem-name">Traveling Element</div><div class="elem-code">TrE</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+  </div>
+</div>
+
+<!-- ADV NOVICE -->
+<div class="panel" id="panel-adv-novice">
+  <div class="cat-title">Advanced Novice Free Skating</div>
+  <div class="cat-sub">6 required elements</div>
+  <div class="elem-list">
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">1</div><div class="elem-name">Intersection Element</div><div class="elem-code">I</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="feat">Additional Feature: Point of Intersection (pi) will be called if included</li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">2</div><div class="elem-name">Move Element</div><div class="elem-code">ME</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="req-item">Maximum of two different types of fms permitted</li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">3</div><div class="elem-name">No Hold Element</div><div class="elem-code">NHE</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="req-item">Must be <strong>one closed block</strong></li>
+      <li class="req-item"><strong>One Twizzle in each rotational direction</strong> must be attempted</li>
+      <li class="feat">Feature(s) and Additional Feature: Step Sequence (s) will be called if included</li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">4</div><div class="elem-name">Synchronized Spin Element</div><div class="elem-code">SySp</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">5</div><div class="elem-name">Traveling Element</div><div class="elem-code">TrE</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">6</div><div class="elem-name">Pivoting Element – Block</div><div class="elem-code">PB</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+  </div>
+</div>
+
+<!-- BASIC NOVICE -->
+<div class="panel" id="panel-basic-nov">
+  <div class="cat-title">Basic Novice Free Skating</div>
+  <div class="cat-sub">6 required elements</div>
+  <div class="elem-list">
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">1</div><div class="elem-name">Artistic Element – Line</div><div class="elem-code">AL</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">2</div><div class="elem-name">Intersection Element</div><div class="elem-code">I</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="feat">Additional Feature: Point of Intersection (pi) will be called if included</li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">3</div><div class="elem-name">Linear Element – Block</div><div class="elem-code">B</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="req-item">Must be <strong>one closed block</strong></li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">4</div><div class="elem-name">Move Element</div><div class="elem-code">ME</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="req-item">Maximum of two different types of fms permitted</li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">5</div><div class="elem-name">Synchronized Spin Element</div><div class="elem-code">SySp</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="req-item">Maximum of <strong>SySp1</strong> will be called</li>
+      <li class="req-item">Same Spin Feature is <strong>required</strong></li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">6</div><div class="elem-name">Traveling Element</div><div class="elem-code">TrE</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+  </div>
+</div>
+
+<!-- MIXED AGE -->
+<div class="panel" id="panel-mixed-age">
+  <div class="cat-title">Mixed Age Free Skating</div>
+  <div class="cat-sub">7 required elements · Follows General rules for Junior category</div>
+  <div class="elem-list">
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">1</div><div class="elem-name">Artistic Element – Circle OR Wheel</div><div class="elem-code">AC/AW</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">Choice between Circle or Wheel</li></ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">2</div><div class="elem-name">Intersection Element</div><div class="elem-code">I</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="feat">Additional Feature: Point of Intersection (pi) will be called if included</li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">3</div><div class="elem-name">Move Element</div><div class="elem-code">ME</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="req-item">Maximum of <strong>four</strong> different types of fms permitted</li>
+      <li class="req-item">Only two different types of fms permitted at the same time</li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">4</div><div class="elem-name">No Hold Element</div><div class="elem-code">NHE</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="req-item">Must be <strong>one closed block</strong></li>
+      <li class="req-item">Maximum of step sequence level 2 (s2) will be called</li>
+      <li class="feat">Feature(s) and Additional Feature (Step Sequence) will be called if included</li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">5</div><div class="elem-name">Pivoting Element – Block</div><div class="elem-code">PB</div></div>
+    <div class="elem-body"><ul class="req-list">
+      <li class="req-item">Must be <strong>one closed block</strong></li>
+    </ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">6</div><div class="elem-name">Pair Element</div><div class="elem-code">Pa</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+
+    <div class="elem"><div class="elem-head" onclick="toggle(this)"><div class="elem-num">7</div><div class="elem-name">Twizzle Element</div><div class="elem-code">TwE</div></div>
+    <div class="elem-body"><ul class="req-list"><li class="req-item">No additional requirements specified</li></ul></div></div>
+  </div>
+  <div class="note-box" style="margin-top:10px;">Deductions per Rule 843 para 1.m) · Illegal Elements per Rule 992 para 2.c)</div>
+</div>
+
+<!-- NOTES -->
+<div class="panel" id="panel-notes">
+  <div class="cat-title">General Notes</div>
+  <div class="cat-sub">Applicable to all categories</div>
+  <div class="general-notes">
+    <h3>Rules</h3>
+    <div class="gn-item">NHE, TwE, and SySp may be skated in any order. If any of these elements follow one another, there must be a <strong>clear difference</strong> between the end of the first and the start of the next.</div>
+    <div class="gn-item" style="margin-top:6px;">A required Feature in the WBP <strong>must be attempted</strong> to satisfy the criteria.</div>
+    <div class="gn-item" style="margin-top:6px;"><strong>Novice:</strong> Individual gymnastic style movements (cartwheels, somersaults, head/handstands etc.) are <strong>not permitted</strong> — considered Illegal Elements.</div>
+  </div>
+  <div class="note-box">ISU Communication 2779 · April 24, 2026 · Replaces ISU Communication 2692</div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+function toggle(head) {
+  const body = head.nextElementSibling;
+  body.classList.toggle('open');
+}
+</script>
+</body>
+</html>

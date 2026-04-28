@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Débrief S01</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+  :root {
+    --bg: #090d18; --surface: #111826; --surface2: #172035; --border: #1c2b45;
+    --ice: #00c2e0; --text: #e8edf8; --muted: #6a7d9e;
+    --green: #22c98a; --orange: #f5a623; --red: #e85555; --yellow: #f5d020; --purple: #a78bfa;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 60px; }
+
+  .header { background: linear-gradient(135deg, #060d1e, #0a1a38, #002840); padding: 24px 18px 18px; border-bottom: 2px solid var(--ice); position: relative; overflow: hidden; }
+  .header::before { content: '📋'; position: absolute; font-size: 130px; right: -10px; top: -20px; opacity: 0.05; }
+  .badge { font-family: 'Bebas Neue', sans-serif; font-size: 10px; letter-spacing: 2px; color: var(--ice); border: 1px solid var(--ice); padding: 2px 7px; border-radius: 2px; display: inline-block; margin-bottom: 7px; }
+  h1 { font-family: 'Bebas Neue', sans-serif; font-size: 34px; letter-spacing: 3px; color: #fff; line-height: 1; }
+  h1 span { color: var(--ice); }
+  .meta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+  .meta-item { font-size: 12px; color: var(--muted); }
+  .meta-item strong { color: var(--text); }
+
+  /* SECTIONS */
+  .section { margin: 14px 14px 0; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; color: var(--ice); margin-bottom: 8px; padding-left: 2px; }
+
+  /* CARDS GRILLE */
+  .cards { display: flex; flex-direction: column; gap: 7px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 9px; overflow: hidden; }
+  .card-head { display: flex; align-items: center; gap: 10px; padding: 10px 13px; }
+  .card-icon { font-size: 16px; min-width: 22px; }
+  .card-label { font-weight: 600; font-size: 13px; flex: 1; }
+  .card-status { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+  .s-ok { color: var(--green); background: rgba(34,201,138,0.1); border: 1px solid rgba(34,201,138,0.25); }
+  .s-warn { color: var(--orange); background: rgba(245,166,35,0.1); border: 1px solid rgba(245,166,35,0.25); }
+  .s-bad { color: var(--red); background: rgba(232,85,85,0.1); border: 1px solid rgba(232,85,85,0.25); }
+  .s-info { color: var(--ice); background: rgba(0,194,224,0.08); border: 1px solid rgba(0,194,224,0.2); }
+
+  .card-body { border-top: 1px solid var(--border); padding: 9px 13px; font-size: 12px; line-height: 1.65; color: var(--text); }
+  .card-body .note { margin-top: 5px; font-size: 11px; padding-left: 8px; border-left: 2px solid; }
+  .note-green { color: var(--green); border-color: var(--green); }
+  .note-orange { color: var(--orange); border-color: var(--orange); }
+  .note-red { color: var(--red); border-color: var(--red); }
+  .note-blue { color: var(--ice); border-color: var(--ice); }
+
+  /* PRIORITÉS S02 */
+  .prio-list { display: flex; flex-direction: column; gap: 6px; }
+  .prio-item { display: flex; align-items: flex-start; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; }
+  .prio-num { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--orange); line-height: 1; min-width: 18px; }
+  .prio-text { font-size: 12px; line-height: 1.6; }
+  .prio-text strong { color: var(--text); font-weight: 600; }
+  .prio-text em { color: var(--muted); font-style: normal; font-size: 11px; }
+
+  /* BASELINE */
+  .baseline-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .bl-item { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 9px 11px; }
+  .bl-label { font-size: 10px; color: var(--muted); letter-spacing: 0.5px; margin-bottom: 3px; }
+  .bl-value { font-size: 13px; font-weight: 600; }
+  .bl-green { color: var(--green); }
+  .bl-orange { color: var(--orange); }
+  .bl-red { color: var(--red); }
+
+  /* ROUTINE V2 */
+  .routine-mods { display: flex; flex-direction: column; gap: 5px; }
+  .mod-item { font-size: 12px; line-height: 1.6; padding-left: 14px; position: relative; }
+  .mod-item::before { content: '→'; position: absolute; left: 0; color: var(--ice); }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 14px 14px; }
+
+  .footer { text-align: center; margin-top: 20px; font-size: 11px; color: var(--muted); font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
+  .footer span { color: var(--ice); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">SYNCHROLEARN · DÉBRIEF</div>
+  <h1>BILAN <span>S01</span></h1>
+  <div class="meta">
+    <div class="meta-item">📅 <strong>Rentrée 2025–26</strong></div>
+    <div class="meta-item">👥 PP <strong>18 filles</strong> · Glace <strong>20 filles</strong></div>
+    <div class="meta-item">⏱ PP <strong>~60 min</strong> · Glace <strong>90 min</strong></div>
+  </div>
+</div>
+
+<!-- BASELINE GROUPE -->
+<div class="section" style="margin-top:16px;">
+  <div class="section-title">📊 Baseline groupe — informelle</div>
+  <div class="baseline-grid">
+    <div class="bl-item"><div class="bl-label">CARDIO BASE</div><div class="bl-value bl-red">Faible</div></div>
+    <div class="bl-item"><div class="bl-label">FORCE HAUT DU CORPS</div><div class="bl-value bl-red">Très faible</div></div>
+    <div class="bl-item"><div class="bl-label">FORCE MEMBRES INF.</div><div class="bl-value bl-orange">Moyenne</div></div>
+    <div class="bl-item"><div class="bl-label">ÉQUILIBRE UNIPODAL</div><div class="bl-value bl-orange">Moyen</div></div>
+    <div class="bl-item"><div class="bl-label">PIROUETTES</div><div class="bl-value bl-green">Bonne surprise</div></div>
+    <div class="bl-item"><div class="bl-label">RÉCEPTIVITÉ COACHING</div><div class="bl-value bl-green">Bonne</div></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- PP : ÉCHAUFFEMENT -->
+<div class="section">
+  <div class="section-title">🏋️ PP — Échauffement</div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-head"><div class="card-icon">🟢</div><div class="card-label">Mobilité articulaire</div><div class="card-status s-ok">OK</div></div>
+      <div class="card-body">Mise en route tranquille, filles bavardent — ambiance positive.
+        <div class="note note-blue">→ À garder tel quel.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon">⚠️</div><div class="card-label">Gamme athlétique</div><div class="card-status s-warn">À SURVEILLER</div></div>
+      <div class="card-body">Points de côté à très faible intensité dès les premières gammes.
+        <div class="note note-orange">→ Signal de faible capacité aérobie de base. VMA test à planifier rapidement.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PP : GAINAGE -->
+<div class="section" style="margin-top:12px;">
+  <div class="section-title">🟡 PP — Blindage abdo-lombaire</div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-head"><div class="card-icon">✅</div><div class="card-label">Organisation 30''/30''</div><div class="card-status s-ok">PARFAIT</div></div>
+      <div class="card-body">18 filles · groupes de 3 naturels · pas besoin de sous-divisions. Format très fluide.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon">⚠️</div><div class="card-label">Planche + balle de tennis</div><div class="card-status s-warn">À CORRIGER</div></div>
+      <div class="card-body">Ludique mais bassin qui s'effondre dès que l'attention va sur la balle.
+        <div class="note note-orange">→ S02 : exiger placement du bassin avant chaque lancer. Ou passer à planche 1 bras.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon">💡</div><div class="card-label">Unipodal + medicine ball</div><div class="card-status s-warn">TROP FACILE</div></div>
+      <div class="card-body">Manque de challenge, instabilité insuffisante.
+        <div class="note note-orange">→ S02 : augmenter distance entre filles + passes en cloche (trajectoire haute).</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon">⭐</div><div class="card-label">Arabesque en ligne</div><div class="card-status s-ok">EXCELLENT</div></div>
+      <div class="card-body">Très bien intégré, spécifique synchro, travail complet et naturel.
+        <div class="note note-green">→ À conserver et progresser. Référence pour les futurs ateliers.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PP : CIRCUIT -->
+<div class="section" style="margin-top:12px;">
+  <div class="section-title">🔵 PP — Circuit (3 tours réalisés)</div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-head"><div class="card-icon">✅</div><div class="card-label">Box Jump coordonné à 2</div><div class="card-status s-ok">OK</div></div>
+      <div class="card-body">Bien fonctionné, engagement et coordination au rendez-vous.</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon">✅</div><div class="card-label">Course latérale 4m</div><div class="card-status s-ok">OK</div></div>
+      <div class="card-body">Bonne réponse cardio, format bien compris.</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon">⚠️</div><div class="card-label">Fente arrière + rotation</div><div class="card-status s-warn">EXÉCUTION</div></div>
+      <div class="card-body">Précipitation générale, qualité insuffisante. Correction verbale a eu un effet positif en cours de séance.
+        <div class="note note-orange">→ S02 : imposer tempo avec pause 1 sec au point bas avant de remonter.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon">🔴</div><div class="card-label">Pompes inclinées</div><div class="card-status s-bad">PRIORITÉ</div></div>
+      <div class="card-body">Niveau très faible même avec forte inclinaison. Force haut du corps = point faible majeur du groupe.
+        <div class="note note-red">→ Axe de développement saison entière. Progresser sur les pompes dès S02.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon">🔴</div><div class="card-label">Squat sauté + atterrissage</div><div class="card-status s-bad">2 ERREURS</div></div>
+      <div class="card-body">
+        <strong>Valgus au squat</strong> — faiblesse fessier moyen / mobilité cheville.<br>
+        <strong>Tirage par la nuque</strong> — compensation = manque de puissance membres inférieurs.
+        <div class="note note-red">→ Corriger le valgus avant tout chargement. Exercice fessier moyen à intégrer S02.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- GLACE -->
+<div class="section">
+  <div class="section-title">⛸️ Glace — Routine V1</div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-head"><div class="card-icon">✅</div><div class="card-label">Routine V1 — premier test</div><div class="card-status s-ok">BASE SOLIDE</div></div>
+      <div class="card-body">Structure appréciée, à affiner. Modifications identifiées pour la V2 :
+        <div class="routine-mods" style="margin-top:6px;">
+          <div class="mod-item">Garder la vitesse entre les exercices — pas de départ arrêté</div>
+          <div class="mod-item">Tours 2 et 3 : exécution beaucoup plus rapide</div>
+          <div class="mod-item">Tour 5 : rester carré dans les directions tout au long</div>
+          <div class="mod-item">Tour 5 : haut du corps libre, bras actifs et expressifs</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:12px;">
+  <div class="section-title">⛸️ Glace — Skating Skills</div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-head"><div class="card-icon">💡</div><div class="card-label">Marche avant — jambe porteuse</div><div class="card-status s-warn">TRAVAIL FOND</div></div>
+      <div class="card-body">Problème fondamental identifié : transfert passif (tomber d'une jambe à l'autre) au lieu d'un transfert actif (pousser depuis la jambe porteuse, puis transférer).
+        <div class="note note-orange">→ Fil rouge des prochaines séances. Thème à creuser techniquement avec toi.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:12px;">
+  <div class="section-title">⛸️ Glace — Move Élément + Fun finale</div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-head"><div class="card-icon">⭐</div><div class="card-label">Arabesques — passage sous la jambe</div><div class="card-status s-ok">TRÈS BON</div></div>
+      <div class="card-body">3 lignes sur 5 avec rendu beau dès la S01. Travail du timing exact au croisement des lignes. Ajout hanche → position classique = effet visuel et difficulté supplémentaire bien géré.
+        <div class="note note-green">→ Base solide. Progresser sur la synchronisation du timing S02.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon">✅</div><div class="card-label">Pirouettes — bonne surprise</div><div class="card-status s-ok">AU-DESSUS</div></div>
+      <div class="card-body">Allongée bien maîtrisée par beaucoup — meilleur que prévu. Assise travaillée les années précédentes. Valley Bay bien réussie.
+        <div class="note note-blue">→ À développer : synchronisation, tourner à un endroit précis aligné aux autres.</div>
+        <div class="note note-orange" style="margin-top:4px;">→ Note coach : améliorer les corrections en pirouette — à travailler ensemble.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- PRIORITÉS S02 -->
+<div class="section">
+  <div class="section-title">🎯 Priorités pour S02</div>
+  <div class="prio-list">
+    <div class="prio-item">
+      <div class="prio-num">1</div>
+      <div class="prio-text"><strong>Valgus squat → fessier moyen</strong><br><em>Intégrer exercice ciblé avant tout saut. Corriger avant de charger.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">2</div>
+      <div class="prio-text"><strong>Force haut du corps → progresser les pompes</strong><br><em>Point faible majeur. Axe de travail sur toute la saison.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">3</div>
+      <div class="prio-text"><strong>Fentes → tempo imposé avec pause au point bas</strong><br><em>Qualité d'exécution avant vitesse d'exécution.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">4</div>
+      <div class="prio-text"><strong>Medicine ball → augmenter distance + passes en cloche</strong><br><em>Trop facile en S01, hausser le challenge.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">5</div>
+      <div class="prio-text"><strong>Routine V2 → intégrer les 4 corrections</strong><br><em>Retester dès S02 et recueillir le feedback des filles.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">6</div>
+      <div class="prio-text"><strong>Skating skills → transfert actif jambe porteuse</strong><br><em>Fil rouge technique de la saison.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">7</div>
+      <div class="prio-text"><strong>Planifier VMA test</strong><br><em>Points de côté en S01 = niveau cardio à quantifier rapidement.</em></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer" style="margin-top:20px;"><span>SYNCHROLEARN</span> · DÉBRIEF S01 · Saison 2025–26</div>
+
+</body>
+</html>
