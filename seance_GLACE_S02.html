@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Séance Glace — S02</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root {
+  --bg:#080e1c;--surface:#0f1828;--surface2:#162035;--border:#1a2b48;
+  --ice:#00c8e8;--ice2:#0097b0;--text:#e8f0fc;--text2:#a0b4cc;--muted:#6a7d9e;
+  --green:#1de9a0;--orange:#ff9f2e;--red:#ff4f6a;--yellow:#ffd84a;--purple:#b388ff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);padding-bottom:50px;}
+
+.header{background:linear-gradient(135deg,#060e22,#0a1e3d,#00233d);padding:24px 16px 18px;border-bottom:2px solid var(--ice);position:relative;overflow:hidden;}
+.header::before{content:'⛸';position:absolute;font-size:140px;right:-10px;top:-20px;opacity:.06;}
+.badge{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--ice);border:1px solid var(--ice);padding:2px 7px;border-radius:2px;display:inline-block;margin-bottom:7px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;color:#fff;line-height:1;}
+h1 span{color:var(--ice);}
+.meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;}
+.meta-item{font-size:12px;color:var(--muted);}
+.meta-item strong{color:var(--text);font-weight:500;}
+
+/* CORRECTIONS */
+.corrections{margin:14px 14px 0;background:rgba(0,200,232,.05);border:1px solid rgba(0,200,232,.2);border-left:3px solid var(--ice);border-radius:8px;padding:11px 13px;}
+.corrections h3{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;color:var(--ice);margin-bottom:8px;}
+.corr-item{font-size:12px;line-height:1.7;padding-left:14px;position:relative;color:var(--text2);}
+.corr-item::before{content:'→';position:absolute;left:0;color:var(--ice);}
+
+/* TIMELINE BAR */
+.total-bar{margin:14px 14px 0;display:flex;border-radius:6px;overflow:hidden;height:7px;}
+.seg-a{background:var(--green);flex:15;}
+.seg-b{background:var(--ice);flex:20;}
+.seg-c{background:var(--orange);flex:25;}
+.seg-d{background:var(--purple);flex:15;}
+.seg-e{background:var(--yellow);flex:15;}
+.total-label{margin:5px 14px 0;display:flex;gap:8px;flex-wrap:wrap;font-size:10px;color:var(--muted);}
+
+/* BLOCKS */
+.timeline{padding:14px 14px 0;display:flex;flex-direction:column;gap:10px;}
+.block{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.block-header{display:flex;align-items:center;gap:11px;padding:13px 14px;cursor:pointer;user-select:none;}
+.block-header:active{background:var(--surface2);}
+.time-pill{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;background:var(--surface2);border:1px solid var(--border);padding:3px 9px;border-radius:20px;white-space:nowrap;min-width:52px;text-align:center;}
+.block-title{flex:1;font-weight:600;font-size:14px;}
+.block-sub{font-size:11px;color:var(--muted);margin-top:1px;font-weight:400;}
+.chevron{color:var(--muted);font-size:11px;transition:transform .25s;}
+.block.open .chevron{transform:rotate(180deg);}
+.block-body{display:none;border-top:1px solid var(--border);padding:13px 14px;}
+.block.open .block-body{display:block;}
+
+.block.routine .time-pill{color:var(--green);}
+.block.routine .block-title::before{content:'🟢 ';}
+.block.skating .time-pill{color:var(--ice);}
+.block.skating .block-title::before{content:'🔵 ';}
+.block.wheel .time-pill{color:var(--orange);}
+.block.wheel .block-title::before{content:'🟠 ';}
+.block.twizzle .time-pill{color:var(--purple);}
+.block.twizzle .block-title::before{content:'🟣 ';}
+.block.fun .time-pill{color:var(--yellow);}
+.block.fun .block-title::before{content:'⭐ ';}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:7px;}
+.step{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:var(--surface2);border-radius:7px;}
+.step-num{font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--ice);min-width:18px;line-height:1.4;flex-shrink:0;}
+.step-text{font-size:12.5px;line-height:1.65;}
+.step-text strong{color:var(--text);font-weight:600;}
+.step-text em{color:var(--muted);font-style:normal;font-size:11.5px;}
+
+/* NOTES BOXES */
+.tip{margin-top:6px;font-size:11.5px;color:var(--ice);padding-left:8px;border-left:2px solid var(--ice);}
+.warn{margin-top:6px;font-size:11.5px;color:var(--orange);padding-left:8px;border-left:2px solid var(--orange);}
+.new{margin-top:6px;font-size:11.5px;color:var(--green);padding-left:8px;border-left:2px solid var(--green);}
+.cue{margin-top:6px;font-size:11.5px;color:var(--yellow);padding-left:8px;border-left:2px solid var(--yellow);}
+.crit{margin-top:6px;font-size:11.5px;color:var(--red);padding-left:8px;border-left:2px solid var(--red);}
+
+/* TOURS ROUTINE */
+.tours{display:flex;flex-direction:column;gap:7px;}
+.tour{border-radius:8px;border:1px solid var(--border);overflow:hidden;}
+.tour-head{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);}
+.tour-num{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--ice);line-height:1;min-width:28px;}
+.tour-name{font-weight:600;font-size:13px;flex:1;}
+.tour-tag{font-size:10px;color:var(--muted);background:rgba(0,200,232,.07);padding:2px 7px;border-radius:10px;border:1px solid rgba(0,200,232,.15);}
+.tour-tag.new-tag{color:var(--green);background:rgba(29,233,160,.07);border-color:rgba(29,233,160,.2);}
+.tour-body{padding:10px 12px;font-size:12.5px;line-height:1.7;}
+
+/* CERCLE BOX */
+.cercle-box{margin-top:12px;background:rgba(0,200,232,.04);border:1px solid rgba(0,200,232,.18);border-radius:8px;padding:11px 12px;}
+.cercle-box h4{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;color:var(--ice);margin-bottom:7px;}
+.cercle-item{font-size:12.5px;line-height:1.7;padding-left:14px;position:relative;}
+.cercle-item::before{content:'→';position:absolute;left:0;color:var(--ice);}
+
+/* PROGRESSION TWIZZLE */
+.twiz-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;}
+.twiz-step{background:var(--surface2);border-radius:7px;padding:8px 10px;text-align:center;}
+.twiz-num{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--ice);line-height:1;}
+.twiz-label{font-size:11px;color:var(--muted);margin-top:2px;}
+.twiz-arrow{text-align:center;color:var(--muted);font-size:18px;padding:2px 0;}
+
+/* WHEEL POSITIONS */
+.wheel-positions{display:flex;flex-direction:column;gap:7px;margin-top:8px;}
+.pos-item{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:var(--surface2);border-radius:7px;}
+.pos-badge{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:1px;padding:3px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0;}
+.pos-pivot{color:var(--yellow);background:rgba(255,216,74,.1);border:1px solid rgba(255,216,74,.25);}
+.pos-ext{color:var(--purple);background:rgba(179,136,255,.1);border:1px solid rgba(179,136,255,.25);}
+.pos-inter{color:var(--green);background:rgba(29,233,160,.1);border:1px solid rgba(29,233,160,.25);}
+.pos-text{font-size:12px;line-height:1.6;}
+
+/* SPIRALE STEPS */
+.spirale-steps{display:flex;flex-direction:column;gap:8px;margin-top:8px;}
+.spirale-step{border-radius:9px;border:1px solid var(--border);overflow:hidden;}
+.spirale-head{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);}
+.spirale-num{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--yellow);line-height:1;min-width:28px;}
+.spirale-name{font-weight:600;font-size:13px;flex:1;}
+.spirale-tag{font-size:10px;padding:2px 7px;border-radius:8px;}
+.tag-safe{color:var(--green);background:rgba(29,233,160,.1);border:1px solid rgba(29,233,160,.25);}
+.tag-prog{color:var(--orange);background:rgba(255,159,46,.1);border:1px solid rgba(255,159,46,.25);}
+.tag-full{color:var(--yellow);background:rgba(255,216,74,.1);border:1px solid rgba(255,216,74,.25);}
+.spirale-body{padding:10px 12px;font-size:12.5px;line-height:1.75;}
+
+.prise-box{background:rgba(0,200,232,.05);border:1px solid rgba(0,200,232,.2);border-radius:7px;padding:10px 12px;margin-top:8px;font-size:12.5px;line-height:1.7;}
+.prise-box strong{color:var(--ice);}
+
+.cond-box{background:rgba(255,159,46,.05);border:1px solid rgba(255,159,46,.2);border-left:3px solid var(--orange);border-radius:7px;padding:9px 12px;font-size:12px;color:#d4aa60;line-height:1.6;margin-top:8px;}
+.cond-box strong{color:var(--orange);}
+
+hr.div{border:none;border-top:1px solid var(--border);margin:10px 0;}
+
+.notes-box{margin:14px 14px 0;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+.notes-box h3{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;color:var(--ice);margin-bottom:8px;}
+.notes-line{font-size:12px;color:var(--muted);line-height:2.4;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">SYNCHROLEARN · SÉANCE GLACE</div>
+  <h1>SÉANCE <span>GLACE — S02</span></h1>
+  <div class="meta">
+    <div class="meta-item">📅 <strong>Saison 2025–26</strong></div>
+    <div class="meta-item">👥 <strong>~22–25 filles</strong> · Juniors + Seniors</div>
+    <div class="meta-item">⏱ <strong>90 min</strong></div>
+    <div class="meta-item">🎯 <strong>Routine V2 · Wheel · Twizzles · Spirale</strong></div>
+  </div>
+</div>
+
+<div class="corrections">
+  <h3>✅ Corrections intégrées depuis S01</h3>
+  <div class="corr-item">Routine : autonome avec corrections — vitesse entre exercices, T2/T3 plus rapides, directions carrées T5, bras libres T5</div>
+  <div class="corr-item" style="margin-top:5px;">Skating skills : transfert actif jambe porteuse — fil rouge technique de la saison</div>
+  <div class="corr-item" style="margin-top:5px;">Move élément : timing exact passage au croisement des lignes</div>
+</div>
+
+<div class="total-bar" style="margin-top:14px;">
+  <div class="seg-a"></div>
+  <div class="seg-b"></div>
+  <div class="seg-c"></div>
+  <div class="seg-d"></div>
+  <div class="seg-e"></div>
+</div>
+<div class="total-label">
+  <span>🟢 Routine 15'</span>
+  <span>🔵 Skating 20'</span>
+  <span>🟠 Wheel 25'</span>
+  <span>🟣 Twizzles 15'</span>
+  <span>⭐ Spirale 15'</span>
+</div>
+
+<div class="timeline">
+
+  <!-- ROUTINE V2 -->
+  <div class="block routine open">
+    <div class="block-header" onclick="toggle(this)">
+      <div class="time-pill">15 min</div>
+      <div><div class="block-title">Routine d'échauffement — V2</div><div class="block-sub">Autonome · Corrections S01 intégrées · Feedback collectif à la fin</div></div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="block-body">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">Elles exécutent la routine seules en appliquant les corrections — tu observes sans interrompre. Feedback collectif de 2 min à la fin.</div>
+
+      <div class="tours">
+        <div class="tour">
+          <div class="tour-head"><div class="tour-num">T1</div><div class="tour-name">Marche avant → marche arrière</div><div class="tour-tag">Mise en route</div></div>
+          <div class="tour-body">Aller marche avant, retour marche arrière. Tempo calme.
+            <div class="tip">→ Observer : qui a intégré la notion de transfert actif jambe porteuse depuis S01.</div>
+          </div>
+        </div>
+        <div class="tour">
+          <div class="tour-head"><div class="tour-num">T2</div><div class="tour-name">Croisé avant — vitesse</div><div class="tour-tag new-tag">V2 : PLUS RAPIDE</div></div>
+          <div class="tour-body">Croisés avant, poussée franche, recherche de vitesse. <strong>Nettement plus rapide qu'en S01.</strong>
+            <div class="new">→ V2 : tempo élevé dès le départ, pas progressif.</div>
+          </div>
+        </div>
+        <div class="tour">
+          <div class="tour-head"><div class="tour-num">T3</div><div class="tour-name">Croisé arrière — très bas, vitesse</div><div class="tour-tag new-tag">V2 : PLUS RAPIDE</div></div>
+          <div class="tour-body">Centre de gravité très bas, amplitude maximale. <strong>Vitesse élevée comme T2.</strong>
+            <div class="new">→ V2 : pas de départ à l'arrêt entre T2 et T3 — garder la vitesse acquise.</div>
+          </div>
+        </div>
+        <div class="tour">
+          <div class="tour-head"><div class="tour-num">T4</div><div class="tour-name">Fente profonde loeb avant / arrière</div><div class="tour-tag">Mobilité</div></div>
+          <div class="tour-body">Aller fente avant, retour fente arrière. Placement soigné.
+            <div class="tip">→ Après T2/T3 rapides, T4 est un moment de contrôle — buste droit, jambe libre tendue.</div>
+          </div>
+        </div>
+        <div class="tour">
+          <div class="tour-head"><div class="tour-num">T5</div><div class="tour-name">Croisé arrière + 3 avant · haut du corps</div><div class="tour-tag new-tag">V2 : BRAS LIBRES</div></div>
+          <div class="tour-body">Croisé arrière : penché avant, toucher la glace. 3 avant : ouverture franche du buste et des bras.
+            <div class="new">→ V2 : <strong>bras vraiment libres et expressifs</strong> — pas plaqués au corps. Le haut du corps doit vivre.</div>
+            <div class="new">→ V2 : <strong>rester carré dans les directions</strong> tout au long — pas de dérive.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cercle-box" style="margin-top:10px;">
+        <h4>⭕ Phase collective — Cercle en ligne de 4</h4>
+        <div class="cercle-item">Croisé avant sur le cercle · <strong>2 cercles dans chaque sens</strong></div>
+        <div class="cercle-item">Croisé arrière poussé-poussé amplitude maximale · <strong>2 cercles dans chaque sens</strong></div>
+        <div class="tip" style="margin-top:8px;">→ Feedback collectif 2 min : "Qu'est-ce qu'on garde, qu'est-ce qu'on améliore ?" Laisser les filles s'exprimer.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKATING SKILLS -->
+  <div class="block skating open">
+    <div class="block-header" onclick="toggle(this)">
+      <div class="time-pill">20 min</div>
+      <div><div class="block-title">Skating Skills</div><div class="block-sub">Marche avant jambe porteuse → introduction marche arrière</div></div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="block-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Marche avant — transfert actif jambe porteuse — 10 min</strong><br>
+          En ligne de 4, tempo progressif. Fil rouge S01 : <strong>pousser depuis la jambe porteuse, puis transférer</strong> — pas tomber d'une jambe à l'autre en fléchissant à l'atterrissage.<br>
+          <em>10 min suffisent — elles connaissent le travail, pas besoin de s'y attarder.</em>
+          <div class="tip">→ Observer qui a progressé depuis S01. Nommer les progrès — ça renforce le comportement.</div>
+          <div class="cue">👁 Consigne clé : "La jambe porteuse travaille jusqu'au bout de la poussée. On ne fléchit pas à l'atterrissage."</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Introduction marche arrière — 10 min</strong><br>
+          Même formation ligne de 4, même logique de tempo. Principe identique : <strong>jambe porteuse active, transfert contrôlé.</strong><br>
+          <em>Ne pas rester trop longtemps — introduire, laisser une sensation positive, passer à la suite.</em>
+          <div class="warn">→ Si ça s'effondre rapidement : revenir sur la marche avant 2-3 min et finir sur une réussite.</div>
+          <div class="tip">→ Certaines seniors peuvent servir de référence visuelle pour les juniors — les mettre en avant de ligne.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHEEL — TRAVELING ELEMENT -->
+  <div class="block wheel open">
+    <div class="block-header" onclick="toggle(this)">
+      <div class="time-pill">25 min</div>
+      <div><div class="block-title">Traveling Element — Wheel</div><div class="block-sub">Toutes les positions · Changement de place · Pas spécifiques</div></div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="block-body">
+
+      <div style="background:var(--surface2);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;line-height:1.7;">
+        <strong style="color:var(--ice);">Organisation :</strong> plusieurs wheels en parallèle selon le nombre de filles. Objectif : <strong>chaque fille comprend chaque position</strong> — pas juste la sienne. Mixer les niveaux dans chaque wheel.
+      </div>
+
+      <div class="sec-title" style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;color:var(--orange);margin-bottom:8px;">PHASE 1 — Découverte des positions (10 min)</div>
+      <div class="wheel-positions">
+        <div class="pos-item">
+          <div class="pos-badge pos-pivot">PIVOT</div>
+          <div class="pos-text">Centre de la wheel. Tient les deux voisines. <strong>Ne bouge presque pas</strong> — c'est le point fixe autour duquel tout tourne. Travail : résister à la force centrifuge sans se laisser tirer.</div>
+        </div>
+        <div class="pos-item">
+          <div class="pos-badge pos-inter">INTERMÉDIAIRE</div>
+          <div class="pos-text">Position entre pivot et extérieur. <strong>Transmet la force</strong> des deux côtés. Travail : garder le bras tendu des deux côtés, rester dans l'axe de la ligne.</div>
+        </div>
+        <div class="pos-item">
+          <div class="pos-badge pos-ext">EXTÉRIEUR</div>
+          <div class="pos-text">Bout de la ligne. <strong>Vitesse maximale</strong> — c'est elle qui parcourt le plus de distance. Travail : pousser fort pour maintenir la vitesse de la wheel, ne pas lâcher la prise.</div>
+        </div>
+      </div>
+      <div class="tip" style="margin-top:8px;">→ Laisser 2-3 rotations par position avant de changer. Elles doivent sentir la différence.</div>
+
+      <hr class="div">
+
+      <div class="sec-title" style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;color:var(--orange);margin-bottom:8px;">PHASE 2 — Changement de place pendant le traveling (15 min)</div>
+
+      <div style="font-size:12.5px;line-height:1.7;margin-bottom:10px;">Les pivots deviennent extérieurs et inversement — <strong>pendant que la wheel tourne</strong>. Séquence de pas pour effectuer le changement :</div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>3 dehors avant droit</strong> — initier le déplacement vers la nouvelle position</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Croisé arrière lean</strong> — s'incliner dans la courbe pour prendre la trajectoire</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text"><strong>Chassé</strong> — rétablir l'équilibre et reprendre la vitesse</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text"><strong>Reprendre les pas classiques de wheel</strong> — 1 croisé lent · 2 croisés rapides</div>
+        </div>
+      </div>
+
+      <div class="warn" style="margin-top:10px;">→ Commencer la séquence de changement lentement, wheel quasi arrêtée si besoin. La vitesse viendra après.</div>
+      <div class="tip">→ Si le changement est trop compliqué : d'abord juste marquer les positions sans les pas — "tu vas là, toi tu vas là" — puis ajouter les pas.</div>
+    </div>
+  </div>
+
+  <!-- TWIZZLES -->
+  <div class="block twizzle open">
+    <div class="block-header" onclick="toggle(this)">
+      <div class="time-pill">15 min</div>
+      <div><div class="block-title">Twizzles — Progression individuelle</div><div class="block-sub">Dedans avant → dehors arrière · Features conditionnelles</div></div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="block-body">
+
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">Travail individuel. Chaque fille à son rythme — pas de pression sur le nombre de tours. Qualité de l'axe de rotation avant tout.</div>
+
+      <div class="sec-title" style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;color:var(--purple);margin-bottom:6px;">DEDANS AVANT</div>
+      <div class="twiz-grid">
+        <div class="twiz-step"><div class="twiz-num" style="color:var(--purple);">1D · 1G</div><div class="twiz-label">Base</div></div>
+        <div class="twiz-step"><div class="twiz-num" style="color:var(--purple);">2D · 2G</div><div class="twiz-label">Consolidation</div></div>
+        <div class="twiz-step"><div class="twiz-num" style="color:var(--purple);">3D · 3G</div><div class="twiz-label">Progression</div></div>
+        <div class="twiz-step"><div class="twiz-num" style="color:var(--purple);">4D · 4G</div><div class="twiz-label">Objectif S02</div></div>
+      </div>
+      <div class="twiz-arrow">↺ Recommencer 1D · 1G si l'axe se perd</div>
+
+      <div class="sec-title" style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;color:var(--purple);margin-bottom:6px;margin-top:10px;">DEHORS ARRIÈRE</div>
+      <div class="twiz-grid">
+        <div class="twiz-step"><div class="twiz-num" style="color:var(--ice);">1D · 1G</div><div class="twiz-label">Introduction</div></div>
+        <div class="twiz-step"><div class="twiz-num" style="color:var(--ice);">2D · 2G</div><div class="twiz-label">Consolidation</div></div>
+        <div class="twiz-step"><div class="twiz-num" style="color:var(--ice);">3D · 3G</div><div class="twiz-label">Progression</div></div>
+        <div class="twiz-step"><div class="twiz-num" style="color:var(--ice);">4D · 4G</div><div class="twiz-label">Si maîtrisé</div></div>
+      </div>
+
+      <div class="cond-box">
+        <strong>⏰ CONDITIONNEL — si le temps le permet</strong><br>
+        Features : <strong>bras</strong> — ajouter une position de bras tenue pendant la rotation.<br>
+        Features : <strong>jambe libre sur le côté</strong> — vérifier si elles maîtrisent sans perdre l'axe.
+      </div>
+
+      <div class="tip" style="margin-top:8px;">→ Observer les asymétries D/G — info utile pour les tests formels et la construction du programme.</div>
+      <div class="cue">👁 Consigne clé : "L'axe de rotation reste vertical. Si tu te penches, tu perds des tours."</div>
+    </div>
+  </div>
+
+  <!-- SPIRALE DE LA MORT -->
+  <div class="block fun open">
+    <div class="block-header" onclick="toggle(this)">
+      <div class="time-pill">15 min</div>
+      <div><div class="block-title">⭐ Fun finale — Spirale de la mort</div><div class="block-sub">Introduction progressive · Pair élément junior obligatoire</div></div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="block-body">
+
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.7;">Élément acrobatique qu'elles adorent. L'objectif aujourd'hui c'est de <strong>comprendre la physique avant le geste</strong> — la force centrifuge tient la patineuse basse, pas la force musculaire de la partenaire haute.</div>
+
+      <div class="prise-box">
+        <strong>🤝 Prise de main :</strong><br>
+        Celle en l'air → donne sa <strong>main gauche</strong><br>
+        Celle en haut → attrape avec sa <strong>main gauche</strong> + pose le <strong>bras droit sur l'avant-bras</strong><br>
+        <em>Prise à mémoriser avant de commencer — l'expliquer à sec hors glace si besoin.</em>
+      </div>
+
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;color:var(--yellow);margin:12px 0 8px;">PROGRESSION — 4 ÉTAPES</div>
+
+      <div class="spirale-steps">
+
+        <div class="spirale-step">
+          <div class="spirale-head">
+            <div class="spirale-num">1</div>
+            <div class="spirale-name">Aigle face à face — sentir la force centrifuge</div>
+            <div class="spirale-tag tag-safe">SÉCURISÉ</div>
+          </div>
+          <div class="spirale-body">Les deux en position aigle (bras levés, jambes tendues), se tenant face à face par les mains. <strong>Tourner ensemble et se laisser pencher en arrière.</strong><br><br>
+          Objectif : comprendre que c'est la <strong>tension entre les deux</strong> qui crée l'équilibre — pas la force. Plus on se penche en arrière, plus c'est stable.
+          <div class="new">→ Consigne clé : "Laisse-toi aller en arrière, fais confiance à la force. Tu n'as pas besoin de te retenir."</div>
+          </div>
+        </div>
+
+        <div class="spirale-step">
+          <div class="spirale-head">
+            <div class="spirale-num">2</div>
+            <div class="spirale-name">Position asymétrique — sans descendre</div>
+            <div class="spirale-tag tag-prog">PROGRESSION</div>
+          </div>
+          <div class="spirale-body">Prise de main correcte (voir ci-dessus). Celle du haut : <strong>en aigle, se penche en arrière</strong>. Celle du bas : <strong>sur le pied extérieur, se penche sur la droite</strong> — sans descendre, juste pour sentir la force centrifuge dans cette position.
+          <div class="tip">→ Isoler la prise et le placement avant d'ajouter la descente — une chose à la fois.</div>
+          <div class="cue">👁 Vérifier que le pied d'appui est bien le pied extérieur — erreur classique de mettre le mauvais pied.</div>
+          </div>
+        </div>
+
+        <div class="spirale-step">
+          <div class="spirale-head">
+            <div class="spirale-num">3</div>
+            <div class="spirale-name">Position basse — shoot the duck sans inclinaison</div>
+            <div class="spirale-tag tag-prog">PROGRESSION</div>
+          </div>
+          <div class="spirale-body">Celle du bas passe en <strong>position basse (shoot the duck)</strong> — jambe libre croisée autour de la jambe porteuse — <strong>sans s'incliner à l'intérieur pour l'instant.</strong><br><br>
+          Objectif : sentir la force centrifuge en étant basse, comprendre que la vitesse suffit à maintenir la position.
+          <div class="new">→ La vitesse de rotation doit augmenter légèrement ici — expliquer que c'est la vitesse qui tient, pas la force.</div>
+          <div class="warn">→ Si elle se sent partir : augmenter la vitesse, pas se contracter. C'est contre-intuitif — insister sur ce point.</div>
+          </div>
+        </div>
+
+        <div class="spirale-step">
+          <div class="spirale-head">
+            <div class="spirale-num">4</div>
+            <div class="spirale-name">Spirale complète — descente avec inclinaison</div>
+            <div class="spirale-tag tag-full">OBJECTIF</div>
+          </div>
+          <div class="spirale-body">Même position de départ qu'étape 2. <strong>Accélérer l'élan → descendre progressivement en s'inclinant vers l'intérieur</strong> → arriver au plus bas possible en gardant la glace.
+          <div class="tip">→ Commencer par descendre à mi-hauteur — ne pas forcer jusqu'au sol au premier essai.</div>
+          <div class="crit">→ Sécurité : si la patineuse du bas lâche la main, elle tombe vers l'extérieur. La partenaire haute doit tenir fermement avec les deux bras.</div>
+          <div class="new">→ Célébrer chaque réussite — même partielle. C'est l'élément "wow" de la séance.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="cond-box" style="margin-top:10px;">
+        <strong>⏰ Si le temps le permet</strong> — essayer en changeant les rôles. Chaque fille doit expérimenter les deux positions pour comprendre l'élément de l'intérieur.
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="notes-box">
+  <h3>📝 Notes post-séance</h3>
+  <div class="notes-line">
+    Nb présentes : ___ &nbsp;|&nbsp; Routine V2 : ⬜ Corrections intégrées &nbsp;⬜ À retravailler<br>
+    Marche arrière : ⬜ Bien passée &nbsp;⬜ Difficile → revenir S03<br>
+    Wheel : positions comprises : ⬜ Toutes &nbsp;⬜ Partiellement · Changement de place : ⬜ Réussi &nbsp;⬜ À continuer<br>
+    Twizzles : niveau général dedans avant : ___ tours · dehors arrière : ___ tours<br>
+    Spirale : étape atteinte : ⬜ 1 &nbsp;⬜ 2 &nbsp;⬜ 3 &nbsp;⬜ 4 · Binômes à noter : _____________<br>
+    Ajustements S03 : ____________________________________________
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:18px;font-size:11px;color:var(--muted);font-family:'Bebas Neue',sans-serif;letter-spacing:1px;">
+  <span style="color:var(--ice);">SYNCHROLEARN</span> · GLACE · S02 · Saison 2025–26
+</div>
+
+<script>
+function toggle(h){h.parentElement.classList.toggle('open');}
+</script>
+</body>
+</html>

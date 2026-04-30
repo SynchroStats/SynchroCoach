@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Séance PP — S02</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root {
+  --bg:#07101f;--surface:#0f1f35;--surface2:#162840;--border:#1e3352;
+  --ice:#00c8e8;--ice2:#0097b0;--text:#e8f0fc;--text2:#a0b4cc;--muted:#5a7090;
+  --green:#1de9a0;--orange:#ff9f2e;--red:#ff4f6a;--yellow:#ffd84a;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);padding-bottom:50px;}
+
+.header{background:linear-gradient(135deg,#0d1b3e,#0b2a4a,#003d5c);padding:24px 16px 18px;border-bottom:2px solid var(--ice);position:relative;overflow:hidden;}
+.header::before{content:'🏋';position:absolute;font-size:140px;right:-10px;top:-25px;opacity:.05;}
+.badge{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--ice);border:1px solid var(--ice);padding:2px 7px;border-radius:2px;display:inline-block;margin-bottom:7px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;color:#fff;line-height:1;}
+h1 span{color:var(--ice);}
+.meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;}
+.meta-item{font-size:12px;color:var(--muted);}
+.meta-item strong{color:var(--text);font-weight:500;}
+
+/* CORRECTIONS BANNER */
+.corrections{margin:14px 14px 0;background:rgba(0,200,232,.05);border:1px solid rgba(0,200,232,.2);border-left:3px solid var(--ice);border-radius:8px;padding:11px 13px;}
+.corrections h3{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;color:var(--ice);margin-bottom:8px;}
+.corr-item{font-size:12px;line-height:1.7;padding-left:14px;position:relative;color:var(--text2);}
+.corr-item::before{content:'→';position:absolute;left:0;color:var(--ice);}
+
+/* TIMELINE BAR */
+.total-bar{margin:14px 14px 0;display:flex;border-radius:6px;overflow:hidden;height:7px;}
+.seg-green{background:var(--green);flex:12;}
+.seg-orange{background:var(--orange);flex:14;}
+.seg-blue{background:var(--ice);flex:32;}
+.total-label{margin:5px 14px 0;display:flex;justify-content:space-between;font-size:10px;color:var(--muted);}
+
+/* BLOCKS */
+.timeline{padding:14px 14px 0;display:flex;flex-direction:column;gap:10px;}
+.block{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.block-header{display:flex;align-items:center;gap:11px;padding:13px 14px;cursor:pointer;user-select:none;}
+.block-header:active{background:var(--surface2);}
+.time-pill{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;background:var(--surface2);border:1px solid var(--border);color:var(--ice);padding:3px 9px;border-radius:20px;white-space:nowrap;min-width:52px;text-align:center;}
+.block-title{flex:1;font-weight:600;font-size:14px;}
+.block-sub{font-size:11px;color:var(--muted);margin-top:1px;font-weight:400;}
+.chevron{color:var(--muted);font-size:11px;transition:transform .25s;}
+.block.open .chevron{transform:rotate(180deg);}
+.block-body{display:none;border-top:1px solid var(--border);padding:13px 14px;}
+.block.open .block-body{display:block;}
+
+.block.warmup .time-pill{color:var(--green);}
+.block.warmup .block-title::before{content:'🟢 ';}
+.block.gainage .time-pill{color:var(--orange);}
+.block.gainage .block-title::before{content:'🟡 ';}
+.block.circuit .time-pill{color:var(--ice);}
+.block.circuit .block-title::before{content:'🔵 ';}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:7px;}
+.step{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:var(--surface2);border-radius:7px;}
+.step-num{font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--ice);min-width:18px;line-height:1.4;flex-shrink:0;}
+.step-text{font-size:12.5px;line-height:1.65;}
+.step-text strong{color:var(--text);font-weight:600;}
+.step-text em{color:var(--muted);font-style:normal;font-size:11.5px;}
+
+/* ATELIERS */
+.ateliers{display:flex;flex-direction:column;gap:8px;}
+.atelier{border-radius:8px;border:1px solid var(--border);overflow:hidden;}
+.atelier-head{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);}
+.atelier-num{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--orange);line-height:1;}
+.atelier-name{font-weight:600;font-size:13px;flex:1;}
+.atelier-tag{font-size:10px;color:var(--muted);background:rgba(255,255,255,.05);padding:2px 7px;border-radius:10px;}
+.atelier-body{padding:10px 12px;font-size:12.5px;line-height:1.7;}
+.tip{margin-top:6px;font-size:11.5px;color:var(--ice);padding-left:8px;border-left:2px solid var(--ice);}
+.warn{margin-top:6px;font-size:11.5px;color:var(--orange);padding-left:8px;border-left:2px solid var(--orange);}
+.new{margin-top:6px;font-size:11.5px;color:var(--green);padding-left:8px;border-left:2px solid var(--green);}
+.cue{margin-top:6px;font-size:11.5px;color:var(--yellow);padding-left:8px;border-left:2px solid var(--yellow);}
+
+/* FORMAT BOX */
+.format-box{background:var(--surface2);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12.5px;line-height:1.7;}
+.format-box strong{color:var(--ice);}
+
+/* STATIONS */
+.stations{display:flex;flex-direction:column;gap:8px;}
+.station{border-radius:8px;border:1px solid var(--border);overflow:hidden;}
+.station-head{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);}
+.station-num{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--ice);line-height:1;}
+.station-name{font-weight:600;font-size:13px;flex:1;}
+.station-tag{font-size:10px;color:var(--muted);background:rgba(0,200,232,.07);padding:2px 7px;border-radius:10px;border:1px solid rgba(0,200,232,.15);}
+.station-tag.new-tag{color:var(--green);background:rgba(29,233,160,.07);border-color:rgba(29,233,160,.2);}
+.station-tag.pap-tag{color:var(--yellow);background:rgba(255,216,74,.07);border-color:rgba(255,216,74,.2);}
+.station-body{padding:10px 12px;font-size:12.5px;line-height:1.7;}
+
+/* CIRCUIT CHIPS */
+.circuit-chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px;}
+.chip{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;border:1px solid;}
+.chip-blue{color:var(--ice);border-color:rgba(0,200,232,.3);background:rgba(0,200,232,.07);}
+.chip-green{color:var(--green);border-color:rgba(29,233,160,.3);background:rgba(29,233,160,.07);}
+.chip-orange{color:var(--orange);border-color:rgba(255,159,46,.3);background:rgba(255,159,46,.07);}
+.chip-yellow{color:var(--yellow);border-color:rgba(255,216,74,.3);background:rgba(255,216,74,.07);}
+
+.pap-arrow{text-align:center;font-size:11px;color:var(--yellow);padding:4px 0;letter-spacing:1px;font-family:'Bebas Neue',sans-serif;}
+
+hr.div{border:none;border-top:1px solid var(--border);margin:10px 0;}
+
+/* NOTES BOX */
+.notes-box{margin:14px 14px 0;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+.notes-box h3{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;color:var(--ice);margin-bottom:8px;}
+.notes-line{font-size:12px;color:var(--muted);line-height:2.4;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">SYNCHROLEARN · PRÉPARATION PHYSIQUE</div>
+  <h1>SÉANCE <span>PP — S02</span></h1>
+  <div class="meta">
+    <div class="meta-item">📅 <strong>Saison 2025–26</strong></div>
+    <div class="meta-item">👥 <strong>~18–22 filles</strong> · Hétérogène</div>
+    <div class="meta-item">⏱ <strong>~60 min</strong></div>
+    <div class="meta-item">🎯 <strong>Corrections S01 + activation fessier</strong></div>
+  </div>
+</div>
+
+<div class="corrections">
+  <h3>✅ Corrections intégrées depuis S01</h3>
+  <div class="corr-item">Planche : <strong>plot dans le bas du dos</strong> pour contrôle proprioceptif du bassin</div>
+  <div class="corr-item" style="margin-top:5px;">Medball unipodal : <strong>distance augmentée + passes en cloche</strong></div>
+  <div class="corr-item" style="margin-top:5px;">Fentes supprimées → <strong>squats élastique fessier moyen</strong> à la place</div>
+  <div class="corr-item" style="margin-top:5px;">S3→S4 : <strong>enchaînement PAP</strong> — squats élastique activent le fessier avant les box jumps</div>
+  <div class="corr-item" style="margin-top:5px;">S5 : <strong>pause 2 sec</strong> à l'atterrissage — qualité avant quantité</div>
+</div>
+
+<div class="total-bar" style="margin-top:14px;">
+  <div class="seg-green"></div>
+  <div class="seg-orange"></div>
+  <div class="seg-blue"></div>
+</div>
+<div class="total-label">
+  <span>🟢 Échauff. 12'</span>
+  <span>🟡 Gainage 14'</span>
+  <span>🔵 Circuit ~32'</span>
+</div>
+
+<div class="timeline">
+
+  <!-- ÉCHAUFFEMENT -->
+  <div class="block warmup open">
+    <div class="block-header" onclick="toggle(this)">
+      <div class="time-pill">12 min</div>
+      <div><div class="block-title">Échauffement</div><div class="block-sub">Mobilité articulaire → Gamme athlétique</div></div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="block-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Mobilité articulaire en cercle — 5 min</strong><br>
+          Chevilles → genoux → hanches → colonne → épaules → nuque.<br>
+          <em>Même structure que S01. Elles connaissent — aller plus vite sur la mise en place.</em></div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Gamme athlétique en slalom — 7 min</strong><br>
+          Talons-fesses · Genoux hauts · Pas chassés · Skipping · Foulées bondissantes · Carioca<br>
+          <em>2 longueurs par exercice, retour trot. Observer si les points de côté réapparaissent — indicateur cardio de base.</em></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAINAGE -->
+  <div class="block gainage open">
+    <div class="block-header" onclick="toggle(this)">
+      <div class="time-pill">14 min</div>
+      <div><div class="block-title">Blindage abdo-lombaire</div><div class="block-sub">3 ateliers · 6 sous-groupes · 30''/30''</div></div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="block-body">
+      <div class="format-box">
+        <strong>Format identique S01</strong> — 3 groupes × 2 sous-groupes = 6 sous-groupes.<br>
+        Sous-groupe A travaille 30'' → 5'' changement → Sous-groupe B travaille 30'' → rotation.<br>
+        <em>Les leaders gèrent le chrono. Tu circules pour corriger.</em>
+      </div>
+      <div class="ateliers">
+
+        <div class="atelier">
+          <div class="atelier-head">
+            <div class="atelier-num">A1</div>
+            <div class="atelier-name">Planche + balle de tennis</div>
+            <div class="atelier-tag">Anti-rotation</div>
+          </div>
+          <div class="atelier-body">En cercle, position planche. Se passer la balle en croisant.
+            <div class="new">→ NOUVEAU : <strong>plot posé dans le bas du dos</strong> avant de commencer. Si le plot tombe = bassin qui s'effondre. Consigne avant chaque 30'' : "bassin horizontal, plot en place, ensuite on passe la balle."</div>
+            <div class="tip">→ Observer : qui perd le plot dès la première passe vs qui maintient. Feedback individuel en passant.</div>
+          </div>
+        </div>
+
+        <div class="atelier">
+          <div class="atelier-head">
+            <div class="atelier-num">A2</div>
+            <div class="atelier-name">Unipodal + medicine ball</div>
+            <div class="atelier-tag">Équilibre + double tâche</div>
+          </div>
+          <div class="atelier-body">En cercle sur 1 pied. Se passer le medball. Alterner la jambe d'appui entre les 30''.
+            <div class="new">→ NOUVEAU : <strong>augmenter la distance entre filles</strong> + passes en <strong>cloche</strong> (trajectoire haute) — le temps de vol plus long force une déstabilisation plus longue à gérer.</div>
+            <div class="tip">→ Si trop facile même avec la distance : ajouter les yeux fermés à la réception.</div>
+          </div>
+        </div>
+
+        <div class="atelier">
+          <div class="atelier-head">
+            <div class="atelier-num">A3</div>
+            <div class="atelier-name">Arabesque en ligne + passage sous la jambe</div>
+            <div class="atelier-tag">Stabilité + synchronisation</div>
+          </div>
+          <div class="atelier-body">En ligne, arabesque tenue. La voisine passe sous la jambe simultanément.
+            <div class="tip">→ Elles connaissent cet atelier — hausser l'exigence : arabesque plus haute, passage plus coordonné.</div>
+            <div class="warn">→ Seul : bout de ligne pour voir toute la rangée.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- CIRCUIT -->
+  <div class="block circuit open">
+    <div class="block-header" onclick="toggle(this)">
+      <div class="time-pill">~32 min</div>
+      <div><div class="block-title">Circuit — PAP intégré</div><div class="block-sub">5 stations · 4 tours · 40s/20s · Pause 2 min inter-tour</div></div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="block-body">
+
+      <div class="circuit-chips">
+        <div class="chip chip-blue">⏱ 40s travail / 20s rotation</div>
+        <div class="chip chip-green">🔄 4 tours = 26 min</div>
+        <div class="chip chip-orange">☕ Pause 2 min entre tours</div>
+        <div class="chip chip-yellow">⚡ S3→S4 enchaînement PAP</div>
+      </div>
+
+      <div class="format-box" style="margin-bottom:12px;">
+        <strong>Amorce :</strong> 1 groupe commence sur S3 (squats élastique) pendant que les autres s'installent. Ensuite tout le monde tourne normalement. Comme ça chaque groupe passe systématiquement par S3 juste avant S4.
+      </div>
+
+      <div class="stations">
+
+        <div class="station">
+          <div class="station-head">
+            <div class="station-num">S1</div>
+            <div class="station-name">Step touch latéral rapide 4m D/G</div>
+            <div class="station-tag">Aérobie + coordination</div>
+          </div>
+          <div class="station-body">Déplacement latéral rapide sur 4m, pas chassés, bras actifs. Maintenir le rythme sur les 40 sec.
+            <div class="tip">✓ Proche de la gestuelle glace — faire le lien verbalement.</div>
+          </div>
+        </div>
+
+        <div class="station">
+          <div class="station-head">
+            <div class="station-num">S2</div>
+            <div class="station-name">TRX Row incliné / Pompes bras surélevés</div>
+            <div class="station-tag">Force haut du corps</div>
+          </div>
+          <div class="station-body"><strong>Avec TRX :</strong> tirade en rangée, corps incliné. Plus horizontal = plus difficile.<br>
+          <strong>Sans TRX :</strong> pompes bras surélevés sur banc.
+            <div class="warn">→ Point faible majeur S01. Observer la progression — est-ce qu'elles gèrent mieux qu'en S01 ?</div>
+            <div class="tip">✓ Qualité d'exécution avant le nombre de reps.</div>
+          </div>
+        </div>
+
+        <div class="station">
+          <div class="station-head">
+            <div class="station-num">S3</div>
+            <div class="station-name">Squats élastique — activation fessier moyen</div>
+            <div class="station-tag new-tag">NOUVEAU · PAP</div>
+          </div>
+          <div class="station-body">Élastique autour des genoux. Squat profond, genoux qui <strong>poussent activement sur l'élastique</strong> — ne pas laisser les genoux rentrer vers l'intérieur. Tempo lent et contrôlé, pas de vitesse.
+            <div class="new">→ OBJECTIF : activer le fessier moyen dans la fenêtre PAP (3–8 min) avant S4. Pas un exercice de cardio — un exercice d'activation.</div>
+            <div class="cue">👁 Corriger immédiatement le valgus. C'est exactement l'erreur observée en S01 sur les box jumps.</div>
+            <div class="tip">✓ ~10–12 reps propres > 20 reps en valgus.</div>
+          </div>
+        </div>
+
+        <div class="pap-arrow">⚡ PAP — S3 nourrit S4 ⚡</div>
+
+        <div class="station">
+          <div class="station-head">
+            <div class="station-num">S4</div>
+            <div class="station-name">Box Jump coordonné à 2 — unipodal</div>
+            <div class="station-tag pap-tag">Explosivité · Reçoit PAP</div>
+          </div>
+          <div class="station-body">Binômes sur boxes. Saut unilatéral coordonné — partir et atterrir ensemble. Progression si réception propre.
+            <div class="new">→ OBJECTIF S02 : observer si le valgus à la réception est réduit grâce à S3. C'est le test de l'effet PAP.</div>
+            <div class="cue">👁 Réception genou dans l'axe — corriger immédiatement le valgus résiduel.</div>
+            <div class="tip">✓ Novices : step-up unilatéral propre avant de sauter.</div>
+          </div>
+        </div>
+
+        <div class="station">
+          <div class="station-head">
+            <div class="station-num">S5</div>
+            <div class="station-name">Squat profond → saut → atterrissage unipodal</div>
+            <div class="station-tag">Puissance + stabilité</div>
+          </div>
+          <div class="station-body">Squat profond → impulsion maximale → atterrissage 1 pied → <strong>tenir 2 sec immobile</strong>. Alterner le pied d'atterrissage.
+            <div class="new">→ NOUVEAU : <strong>pause 2 sec obligatoire</strong> à l'atterrissage annoncée avant le tour. "On ne repart pas avant d'être stable."</div>
+            <div class="tip">✓ Observer asymétrie D/G — info pour les tests formels.</div>
+            <div class="cue">👁 Toujours le tirage par la nuque ? → rappel : l'impulsion vient des jambes, les bras accompagnent.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <hr class="div">
+      <p style="font-size:11.5px;color:var(--muted);">
+        <strong style="color:var(--text);">1 sifflet</strong> = rotation. <strong style="color:var(--text);">2 sifflets</strong> = pause inter-tour.<br>
+        Groupes de 3–4 par station. Toutes tournent dans le même sens.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<!-- NOTES -->
+<div class="notes-box">
+  <h3>📝 Notes post-séance</h3>
+  <div class="notes-line">
+    Nb présentes : ___ &nbsp;|&nbsp; Points de côté gamme : ⬜ Moins qu'en S01 &nbsp;⬜ Pareil &nbsp;⬜ Plus<br>
+    Plot planche : qui perd le contrôle → ________________________________<br>
+    Valgus S4 : ⬜ Nettement réduit &nbsp;⬜ Légèrement mieux &nbsp;⬜ Pareil qu'en S01<br>
+    Effet PAP S3→S4 observable : ⬜ Oui &nbsp;⬜ Non &nbsp;⬜ Trop tôt pour conclure<br>
+    Pompes S2 : progression vs S01 : ⬜ Oui &nbsp;⬜ Non<br>
+    Tours circuit réalisés : ⬜ 3 &nbsp;⬜ 4 &nbsp;|&nbsp; Ajustements S03 : _________________
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:18px;font-size:11px;color:var(--muted);font-family:'Bebas Neue',sans-serif;letter-spacing:1px;">
+  <span style="color:var(--ice);">SYNCHROLEARN</span> · PP · S02 · Saison 2025–26
+</div>
+
+<script>
+function toggle(h){h.parentElement.classList.toggle('open');}
+</script>
+</body>
+</html>
