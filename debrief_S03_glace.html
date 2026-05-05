@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Débrief S03 — Glace</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root {
+  --bg:#090d18;--surface:#111826;--surface2:#172035;--border:#1c2b45;
+  --ice:#00c8e8;--text:#e8f0fc;--muted:#6a7d9e;--text2:#a0b4cc;
+  --green:#1de9a0;--orange:#ff9f2e;--red:#ff4f6a;--yellow:#ffd84a;--purple:#b388ff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);padding-bottom:50px;}
+.header{background:linear-gradient(135deg,#060d1e,#0a1a38,#002840);padding:22px 16px 16px;border-bottom:2px solid var(--ice);position:relative;overflow:hidden;}
+.header::before{content:'📋';position:absolute;font-size:120px;right:-10px;top:-20px;opacity:.04;}
+.badge{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--ice);border:1px solid var(--ice);padding:2px 7px;border-radius:2px;display:inline-block;margin-bottom:6px;}
+.badge-exc{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--orange);border:1px solid var(--orange);padding:2px 7px;border-radius:2px;display:inline-block;margin-bottom:6px;margin-left:6px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:3px;color:#fff;line-height:1;}
+h1 span{color:var(--ice);}
+.meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;}
+.meta-item{font-size:12px;color:var(--muted);}
+.meta-item strong{color:var(--text);font-weight:500;}
+.tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
+.tab-btn{flex:1;font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:1.5px;color:var(--muted);padding:12px 8px;text-align:center;cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;transition:all .2s;}
+.tab-btn.active{color:var(--ice);border-bottom-color:var(--ice);}
+.panel{display:none;padding:14px;}
+.panel.active{display:block;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:9px;}
+.card-head{display:flex;align-items:flex-start;gap:10px;padding:12px 13px;}
+.card-icon{font-size:17px;flex-shrink:0;margin-top:1px;}
+.card-title{font-weight:600;font-size:13px;flex:1;line-height:1.4;}
+.card-body{border-top:1px solid var(--border);padding:11px 13px;font-size:12.5px;line-height:1.8;color:var(--text2);}
+.card-body strong{color:var(--text);}
+.badge-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;white-space:nowrap;flex-shrink:0;}
+.tag-green{color:var(--green);background:rgba(29,233,160,.1);border:1px solid rgba(29,233,160,.25);}
+.tag-orange{color:var(--orange);background:rgba(255,159,46,.1);border:1px solid rgba(255,159,46,.25);}
+.tag-red{color:var(--red);background:rgba(255,79,106,.1);border:1px solid rgba(255,79,106,.25);}
+.tag-ice{color:var(--ice);background:rgba(0,200,232,.08);border:1px solid rgba(0,200,232,.2);}
+.tag-purple{color:var(--purple);background:rgba(179,136,255,.1);border:1px solid rgba(179,136,255,.25);}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--orange);padding:8px 0 5px;}
+.sec-title:first-child{padding-top:0;}
+.prio-list{display:flex;flex-direction:column;gap:7px;}
+.prio-item{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 12px;}
+.prio-num{font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--orange);line-height:1;min-width:20px;}
+.prio-text{font-size:12.5px;line-height:1.6;}
+.prio-text strong{color:var(--text);}
+.prio-text em{color:var(--muted);font-style:normal;font-size:11.5px;}
+.insight-box{background:rgba(179,136,255,.05);border:1px solid rgba(179,136,255,.2);border-left:3px solid var(--purple);border-radius:8px;padding:11px 13px;margin-bottom:9px;font-size:12.5px;line-height:1.7;color:var(--text2);}
+.insight-box strong{color:var(--purple);}
+.science-box{background:rgba(0,200,232,.05);border:1px solid rgba(0,200,232,.2);border-left:3px solid var(--ice);border-radius:8px;padding:11px 13px;margin-bottom:9px;font-size:12.5px;line-height:1.7;}
+.science-box strong{color:var(--ice);}
+.corr-item{font-size:12.5px;line-height:1.7;padding-left:14px;position:relative;color:var(--text2);margin-bottom:5px;}
+.corr-item::before{content:'→';position:absolute;left:0;color:var(--ice);}
+.corr-item.valid::before{color:var(--green);}
+.corr-item.add::before{content:'+';color:var(--yellow);}
+.pp-box{background:rgba(255,159,46,.05);border:1px solid rgba(255,159,46,.2);border-left:3px solid var(--orange);border-radius:8px;padding:11px 13px;margin-bottom:9px;font-size:12.5px;line-height:1.7;color:#d4aa60;}
+.pp-box strong{color:var(--orange);}
+hr.div{border:none;border-top:1px solid var(--border);margin:10px 0;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="badge">SYNCHROLEARN · DÉBRIEF</div>
+    <div class="badge-exc">COURS EXCEPTIONNEL</div>
+  </div>
+  <h1>BILAN <span>S03 — GLACE</span></h1>
+  <div class="meta">
+    <div class="meta-item">📅 <strong>Lundi 4 mai 2026</strong></div>
+    <div class="meta-item">⏱ <strong>18h15–19h30 · HASA</strong></div>
+    <div class="meta-item">👥 <strong>Harmonia</strong> · Cours exceptionnel</div>
+    <div class="meta-item">⚠️ <strong>Sans préparation de séance</strong></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="show('glace')">⛸️ Glace</button>
+  <button class="tab-btn" onclick="show('pirouette')">🌀 Pirouettes</button>
+  <button class="tab-btn" onclick="show('pp')">🏋️ PP à intégrer</button>
+  <button class="tab-btn" onclick="show('s04')">🎯 S04</button>
+</div>
+
+<!-- GLACE -->
+<div class="panel active" id="panel-glace">
+
+  <div class="sec-title">Contexte</div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">ℹ️</div><div class="card-title">Cours exceptionnel — pas de préparation</div><div class="badge-tag tag-orange">CONTEXTE</div></div>
+    <div class="card-body">Cours exceptionnel lundi 4 mai à la place d'Olympia. Autre coach principale présente — intégration progressive à la démarche en cours. Séance sans fiche préparée, contenu improvisé mais cohérent avec les acquis S01–S02.</div>
+  </div>
+
+  <div class="sec-title">Rozcvička — Routine</div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Auto-organisation confirmée</div><div class="badge-tag tag-green">ACQUIS</div></div>
+    <div class="card-body">Routine faite seules à nouveau. <strong>Fatigue visible à la fin des croisés</strong> — c'est positif : le cardio commence à travailler. Pas d'alarme, c'est une adaptation normale en début de saison.</div>
+  </div>
+
+  <div class="sec-title">Skating Skills — Marche arrière</div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Corrections S02 bien intégrées</div><div class="badge-tag tag-green">PROGRÈS CLAIR</div></div>
+    <div class="card-body">Flexion sur la jambe porteuse, poussée, transfert — <strong>nettement mieux qu'en S02.</strong> Le travail de fond commence à payer. C'est un des acquis les plus importants de ces 3 premières séances.</div>
+  </div>
+
+  <div class="sec-title">Croisés sur le cercle</div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">⚠️</div><div class="card-title">2e poussée — jambe croisée non tendue</div><div class="badge-tag tag-orange">À CORRIGER</div></div>
+    <div class="card-body">La jambe en position croisée n'est pas tendue — la poussée est insuffisante. <strong>La jambe croisée doit s'étendre complètement</strong> pour générer une vraie poussée. Sans extension = sans force = patinage de traîne.
+    <div style="margin-top:6px;font-size:11.5px;color:var(--ice);padding-left:8px;border-left:2px solid var(--ice);">→ Consigne : "La jambe qui croise doit se tendre jusqu'au bout de l'orteil avant de revenir."</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">⚠️</div><div class="card-title">Croisé lent / croisés rapides — pas de contraste</div><div class="badge-tag tag-orange">À TRAVAILLER</div></div>
+    <div class="card-body">Le 1 croisé lent et les 2 croisés rapides ont le même rythme. <strong>Pas de contraste = pas d'esthétique.</strong> Le croisé lent doit être vraiment suspendu — tenir la position croisée sur la glisse, ne pas repartir immédiatement.
+    <div style="margin-top:6px;font-size:11.5px;color:var(--ice);padding-left:8px;border-left:2px solid var(--ice);">→ Consigne : "Sur le lent, tu comptes 2 temps avant de croiser. Sur les rapides, tu croises directement."</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🔴</div><div class="card-title">Poids du corps — sur les pointes en arrière</div><div class="badge-tag tag-red">PROBLÈME FONDAMENTAL</div></div>
+    <div class="card-body">Dès qu'on ajoute des pas (3 arrières, 2 arrières), le poids passe sur l'avant de la lame. Résultat : <strong>marche sur la glace au lieu de glisse.</strong> Les flexions disparaissent, les poussées aussi.<br><br>
+    C'est le même problème que sur la marche arrière mais qui réapparaît dès qu'on ajoute de la complexité. <strong>Le poids doit rester dans la direction de la glisse — en arrière, c'est le talon qui porte, pas la pointe.</strong>
+    <div style="margin-top:6px;font-size:11.5px;color:var(--ice);padding-left:8px;border-left:2px solid var(--ice);">→ Fil rouge technique : tout ce qu'on travaille sur les exercices simples doit survivre quand on complexifie.</div>
+    </div>
+  </div>
+
+  <div class="sec-title">FM — Aigle, Arabesque, Bilman</div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">💡</div><div class="card-title">Arabesque — flexibilité passive ≠ force active</div><div class="badge-tag tag-ice">DIAGNOSTIC CLÉ</div></div>
+    <div class="card-body"><strong>Observation importante :</strong> elles sont toutes très flexibles passivement (jambe montée à la main = très haut) mais activement (jambe levée seule) la hauteur est bien moindre.<br><br>
+    C'est un problème de <strong>force des muscles fessiers et des ischio-jambiers proximaux</strong> — pas de flexibilité. Le travail sur la flexibilité serait contre-productif ici. <strong>Il faut travailler la force active de levée de jambe.</strong>
+    <div style="margin-top:6px;font-size:11.5px;color:var(--orange);padding-left:8px;border-left:2px solid var(--orange);">→ À intégrer en PP : renforcement fessier + exercices d'élévation active de jambe en extension.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">💡</div><div class="card-title">Aigle — mobilité de hanche à développer</div><div class="badge-tag tag-ice">PP</div></div>
+    <div class="card-body">L'ouverture de hanche nécessaire pour l'aigle demande une mobilité spécifique en rotation externe de hanche. <strong>À travailler en PP</strong> — pas en répétant l'aigle sur la glace mais via des exercices de mobilité ciblés.</div>
+  </div>
+
+  <div class="sec-title">Pas techniques — Hockey cross / Counter</div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">💡</div><div class="card-title">Hockey cross — trop difficile pour l'instant</div><div class="badge-tag tag-orange">OBJECTIF FUTUR</div></div>
+    <div class="card-body">Contrôle des hanches/épaules insuffisant pour contrer la sur-rotation. Le dehors arrière vers dehors avant surtout — <strong>exercice trop challengeant pour le niveau actuel.</strong><br><br>
+    <strong>Bonne utilisation pédagogique :</strong> montrer comme objectif, créer de l'aspiration. "C'est là qu'on veut arriver." Ne pas en faire un exercice de séance standard pour l'instant.</div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Counter — mieux adapté au niveau</div><div class="badge-tag tag-green">À REPRENDRE</div></div>
+    <div class="card-body">Moins de sur-rotation que le hockey cross. Difficultés sur les directions au début — surtout les plus jeunes — mais ça s'est amélioré avec l'explication. <strong>À intégrer progressivement dans les prochaines séances.</strong></div>
+  </div>
+
+</div>
+
+<!-- PIROUETTES -->
+<div class="panel" id="panel-pirouette">
+
+  <div class="sec-title">Tes corrections — validation scientifique</div>
+
+  <div class="science-box">
+    <strong>✅ Tes 3 corrections sont bioméchaniquement correctes</strong>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Épaules à droite + lancer du bras gauche</div><div class="badge-tag tag-green">VALIDÉ</div></div>
+    <div class="card-body">Tu crées une <strong>pré-tension rotatoire (torque de stockage)</strong> avant le lancer. Principe universel dans tous les sports rotatifs — plus la tension avant le release est grande, plus l'élan est puissant. C'est exactement ça.</div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Mouvement de brasse pour le bras gauche</div><div class="badge-tag tag-green">VALIDÉ</div></div>
+    <div class="card-body">L'ouverture forte du bras crée le <strong>moment angulaire</strong> nécessaire à l'entrée en rotation. Même principe que le lancer de bras en solo. La comparaison "brasse" est une excellente image pédagogique — à garder.</div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Poids sur le petit orteil / carre dehors</div><div class="badge-tag tag-green">VALIDÉ</div></div>
+    <div class="card-body">Maintenir la <strong>carre dehors avant</strong> jusqu'au passé est essentiel. Tomber sur la carre dedans = perte de l'axe. "Rester sur le petit orteil" est une bonne image concrète qui ancre la sensation proprioceptive.</div>
+  </div>
+
+  <div class="sec-title">Correction supplémentaire à ajouter</div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">➕</div><div class="card-title">Hanche droite fermée pendant le dehors avant</div><div class="badge-tag tag-yellow">AJOUTER</div></div>
+    <div class="card-body">C'est probablement <strong>la cause racine du dehors avant "trop droit"</strong> que tu décris. Si la hanche libre (droite) s'ouvre en anticipation de la rotation, elles tournent avant le passé et perdent l'axe.<br><br>
+    <strong>Consigne :</strong> "Pendant le dehors avant, garde la hanche droite fermée et pointée vers l'avant — ne tourne pas la hanche avant d'avoir fait le passé."<br><br>
+    La séquence correcte : dehors avant courbe (hanche fermée) → 3 avant → passé → <em>puis</em> rotation des hanches.
+    <div style="margin-top:6px;font-size:11.5px;color:var(--yellow);padding-left:8px;border-left:2px solid var(--yellow);">→ Si elles comprennent ça, le dehors avant deviendra naturellement plus courbé sans avoir à le forcer.</div>
+    </div>
+  </div>
+
+  <div class="sec-title">Résumé des corrections pirouette — à utiliser en séance</div>
+  <div class="insight-box">
+    <strong>💬 Séquence des consignes en ordre :</strong><br>
+    <strong>1.</strong> "Épaules à droite avant de partir"<br>
+    <strong>2.</strong> "Hanche droite fermée, pointée vers l'avant"<br>
+    <strong>3.</strong> "Lance le bras gauche fort — comme une brasse"<br>
+    <strong>4.</strong> "Reste sur le petit orteil, ne tombe pas à droite"
+  </div>
+
+</div>
+
+<!-- PP À INTÉGRER -->
+<div class="panel" id="panel-pp">
+
+  <div class="pp-box">
+    <strong>🏋️ Observations glace → implications PP</strong><br>
+    Cette séance a révélé deux besoins physiques clairs à intégrer en préparation physique.
+  </div>
+
+  <div class="sec-title">1. Force active arabesque</div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🔴</div><div class="card-title">Flexibilité passive >> flexibilité active</div><div class="badge-tag tag-red">PRIORITÉ</div></div>
+    <div class="card-body"><strong>Diagnostic :</strong> toutes très flexibles passivement mais la force pour lever la jambe activement est insuffisante. Ce n'est pas un problème de souplesse — c'est un problème de force.<br><br>
+    <strong>Exercices à intégrer en PP :</strong><br>
+    — Élévation de jambe en extension (debout, allongé)<br>
+    — Good mornings avec élastique<br>
+    — Hip hinge unilatéral avec levée de jambe libre<br>
+    — Arabesque contre le mur (feedback proprioceptif)
+    <div style="margin-top:6px;font-size:11.5px;color:var(--orange);padding-left:8px;border-left:2px solid var(--orange);">→ Ne pas travailler la flexibilité passive — elle est déjà là. Travailler la force en fin d'amplitude.</div>
+    </div>
+  </div>
+
+  <div class="sec-title">2. Mobilité de hanche — rotation externe</div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🟡</div><div class="card-title">Ouverture de hanche pour l'aigle</div><div class="badge-tag tag-orange">À INTÉGRER</div></div>
+    <div class="card-body"><strong>Exercices à intégrer en PP :</strong><br>
+    — Étirement pigeon (rotation externe hanche)<br>
+    — Squat sumo profond tenu<br>
+    — Rotation externe hanche allongé sur le dos (figure 4)<br>
+    — Échauffement : marche canard (mobilité active rotation externe)
+    </div>
+  </div>
+
+  <div class="sec-title">3. Mobilité complémentaire arabesque</div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">💡</div><div class="card-title">Psoas jambe porteuse + mobilité épaule + courbure dos</div><div class="badge-tag tag-ice">À PLANIFIER</div></div>
+    <div class="card-body">Pour une arabesque haute de qualité il faut combiner :<br>
+    — <strong>Psoas allongé</strong> sur la jambe porteuse (pour permettre l'extension lombaire sans compensation)<br>
+    — <strong>Mobilité thoracique</strong> en extension (courbure du dos)<br>
+    — <strong>Rotation externe épaule</strong> (placement du bras)<br><br>
+    Ces 3 éléments peuvent être travaillés en 5–7 min d'étirements ciblés en fin de séance PP.
+    </div>
+  </div>
+
+</div>
+
+<!-- S04 -->
+<div class="panel" id="panel-s04">
+
+  <div class="sec-title">Priorités S04 — Glace</div>
+  <div class="prio-list">
+    <div class="prio-item">
+      <div class="prio-num">1</div>
+      <div class="prio-text"><strong>Croisés — extension jambe croisée</strong><br><em>"La jambe qui croise se tend jusqu'au bout de l'orteil avant de revenir."</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">2</div>
+      <div class="prio-text"><strong>Croisé lent — tenir la position sur la glisse</strong><br><em>"Sur le lent, tu comptes 2 temps avant de croiser."</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">3</div>
+      <div class="prio-text"><strong>Poids en arrière — talon pas pointe</strong><br><em>Fil rouge : ce qu'on apprend sur les exercices simples doit survivre quand on complexifie.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">4</div>
+      <div class="prio-text"><strong>Pirouettes — hanche droite fermée pendant le dehors avant</strong><br><em>Correction supplémentaire validée à ajouter aux consignes existantes.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">5</div>
+      <div class="prio-text"><strong>Counter — continuer la progression</strong><br><em>S'est amélioré en S03, à consolider.</em></div>
+    </div>
+  </div>
+
+  <div class="insight-box" style="margin-top:14px;">
+    <strong>💡 Note sur le contexte coaching</strong><br>
+    Séance sans préparation mais contenu cohérent avec la progression. L'intégration de l'autre coach principale est un processus — continuer à proposer des structures claires que tu peux partager progressivement. La démarche SynchroLearn peut être un outil pour aligner les deux approches.
+  </div>
+
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('panel-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
