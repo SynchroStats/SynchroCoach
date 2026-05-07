@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Débrief S04 — Glace</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --bg:#090d18;--surface:#111826;--surface2:#172035;--border:#1c2b45;
+  --ice:#00c8e8;--text:#e8f0fc;--muted:#6a7d9e;--text2:#a0b4cc;
+  --green:#1de9a0;--orange:#ff9f2e;--red:#ff4f6a;--yellow:#ffd84a;--purple:#b388ff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);padding-bottom:50px;}
+.header{background:linear-gradient(135deg,#060d1e,#0a1a38,#002840);padding:22px 16px 16px;border-bottom:2px solid var(--ice);position:relative;overflow:hidden;}
+.header::before{content:'📋';position:absolute;font-size:120px;right:-10px;top:-20px;opacity:.04;}
+.badge{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--ice);border:1px solid var(--ice);padding:2px 7px;border-radius:2px;display:inline-block;margin-bottom:6px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:3px;color:#fff;line-height:1;}
+h1 span{color:var(--ice);}
+.meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;}
+.meta-item{font-size:12px;color:var(--muted);}
+.meta-item strong{color:var(--text);font-weight:500;}
+.tabs{display:flex;overflow-x:auto;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:1px;color:var(--muted);padding:12px 10px;white-space:nowrap;cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;transition:all .2s;flex-shrink:0;}
+.tab-btn.active{color:var(--ice);border-bottom-color:var(--ice);}
+.panel{display:none;padding:14px;}
+.panel.active{display:block;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:9px;}
+.card-head{display:flex;align-items:flex-start;gap:10px;padding:12px 13px;}
+.card-icon{font-size:17px;flex-shrink:0;margin-top:1px;}
+.card-title{font-weight:600;font-size:13px;flex:1;line-height:1.4;}
+.card-body{border-top:1px solid var(--border);padding:11px 13px;font-size:12.5px;line-height:1.8;color:var(--text2);}
+.card-body strong{color:var(--text);}
+.badge-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;white-space:nowrap;flex-shrink:0;}
+.tag-green{color:var(--green);background:rgba(29,233,160,.1);border:1px solid rgba(29,233,160,.25);}
+.tag-orange{color:var(--orange);background:rgba(255,159,46,.1);border:1px solid rgba(255,159,46,.25);}
+.tag-red{color:var(--red);background:rgba(255,79,106,.1);border:1px solid rgba(255,79,106,.25);}
+.tag-ice{color:var(--ice);background:rgba(0,200,232,.08);border:1px solid rgba(0,200,232,.2);}
+.tag-purple{color:var(--purple);background:rgba(179,136,255,.1);border:1px solid rgba(179,136,255,.25);}
+.tag-yellow{color:var(--yellow);background:rgba(255,216,74,.1);border:1px solid rgba(255,216,74,.25);}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--orange);padding:8px 0 5px;}
+.sec-title:first-child{padding-top:0;}
+.prio-list{display:flex;flex-direction:column;gap:7px;}
+.prio-item{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 12px;}
+.prio-num{font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--orange);line-height:1;min-width:20px;}
+.prio-text{font-size:12.5px;line-height:1.6;}
+.prio-text strong{color:var(--text);}
+.prio-text em{color:var(--muted);font-style:normal;font-size:11.5px;}
+.insight-box{background:rgba(179,136,255,.05);border:1px solid rgba(179,136,255,.2);border-left:3px solid var(--purple);border-radius:8px;padding:11px 13px;margin-bottom:9px;font-size:12.5px;line-height:1.7;color:var(--text2);}
+.insight-box strong{color:var(--purple);}
+.highlight-box{background:rgba(255,216,74,.05);border:1px solid rgba(255,216,74,.25);border-left:3px solid var(--yellow);border-radius:8px;padding:11px 13px;margin-bottom:9px;font-size:12.5px;line-height:1.7;color:#d4c87a;}
+.highlight-box strong{color:var(--yellow);}
+
+/* PAIR ELEMENTS TABLE */
+.pair-table{width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:12px;}
+.pair-table th{background:var(--surface2);color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:1px;padding:7px 9px;text-align:left;border-bottom:1px solid var(--border);}
+.pair-table td{padding:8px 9px;border-bottom:1px solid rgba(30,51,82,.5);vertical-align:top;}
+.pair-table td:first-child{font-weight:600;color:var(--text);font-size:12px;}
+.pair-table td:not(:first-child){font-size:11.5px;color:var(--text2);}
+.level-chip{display:inline-block;font-size:10px;padding:2px 7px;border-radius:8px;white-space:nowrap;}
+.lv-easy{color:var(--green);background:rgba(29,233,160,.1);border:1px solid rgba(29,233,160,.25);}
+.lv-med{color:var(--orange);background:rgba(255,159,46,.1);border:1px solid rgba(255,159,46,.25);}
+.lv-hard{color:var(--red);background:rgba(255,79,106,.1);border:1px solid rgba(255,79,106,.25);}
+.lv-highlight{color:var(--yellow);background:rgba(255,216,74,.1);border:1px solid rgba(255,216,74,.25);}
+
+hr.div{border:none;border-top:1px solid var(--border);margin:10px 0;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">SYNCHROLEARN · DÉBRIEF</div>
+  <h1>BILAN <span>S04 — GLACE</span></h1>
+  <div class="meta">
+    <div class="meta-item">📅 <strong>Sezóna 2025–26</strong></div>
+    <div class="meta-item">👥 <strong>Harmonia</strong></div>
+    <div class="meta-item">⏱ <strong>90 min</strong></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="show('croise')">🔵 Croisés</button>
+  <button class="tab-btn" onclick="show('wheel')">🟠 Wheel</button>
+  <button class="tab-btn" onclick="show('pairs')">🤝 Pairs</button>
+  <button class="tab-btn" onclick="show('sauts')">🟣 Sauts</button>
+  <button class="tab-btn" onclick="show('s05')">🎯 S05</button>
+</div>
+
+<!-- CROISÉS -->
+<div class="panel active" id="panel-croise">
+
+  <div class="sec-title">Résultat séance</div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Séquence complexe apprise et maîtrisée collectivement</div><div class="badge-tag tag-green">BON RÉSULTAT</div></div>
+    <div class="card-body">
+      Séquence travaillée : <strong>croisé avant → mohawk → changement de carre → croisé par-dessus → croisé arrière → passage avant rapide</strong>.<br><br>
+      Long à apprendre mais maîtrisée ensemble à la fin. C'est une vraie avancée — une séquence de pas complexe intégrée collectivement en une séance.
+    </div>
+  </div>
+
+  <div class="sec-title">Prochaine étape</div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🎯</div><div class="card-title">Phase de qualité — appliquer toutes les corrections</div><div class="badge-tag tag-ice">S05 +</div></div>
+    <div class="card-body">
+      Maintenant que la séquence est connue, travailler la qualité sur chaque pas :<br><br>
+      <strong>1.</strong> Extension jambe croisée jusqu'à l'orteil<br>
+      <strong>2.</strong> Contraste lent/rapides<br>
+      <strong>3.</strong> Poids sur le talon en arrière<br>
+      <strong>4.</strong> Passage avant rapide — vraiment léger et tonique, pas lourd
+      <div style="margin-top:8px;font-size:11.5px;color:var(--ice);padding-left:8px;border-left:2px solid var(--ice);">→ La séquence est le vecteur — les corrections s'appliquent dessus maintenant.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- WHEEL -->
+<div class="panel" id="panel-wheel">
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Toutes les positions — 4 branches — tout le monde</div><div class="badge-tag tag-green">ACQUIS</div></div>
+    <div class="card-body">Traveling en 4 branches avec rotation complète des positions. <strong>Quasiment tout le monde a fait toutes les places.</strong> La compréhension globale de la wheel est maintenant solide.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">⏳</div><div class="card-title">Changement de place — encore reporté</div><div class="badge-tag tag-orange">PRIORITÉ S05</div></div>
+    <div class="card-body">Pas encore eu le temps. <strong>C'est la priorité absolue à la prochaine séance wheel.</strong> Le principe est acquis, les positions sont connues — il n'y a plus d'excuse pour ne pas le faire en S05.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">💡</div><div class="card-title">Prochaine étape après changement de place — Features</div><div class="badge-tag tag-ice">PLANIFIER</div></div>
+    <div class="card-body">Une fois le changement de place acquis, ajouter des <strong>features dans la wheel</strong> : position de bras, arabesques, bends... C'est ce qui fait la différence sur le Difficulty Score en Synchro9 notamment.</div>
+  </div>
+
+</div>
+
+<!-- PAIR ÉLÉMENTS -->
+<div class="panel" id="panel-pairs">
+
+  <div class="sec-title">Tableau récap — éléments explorés en S04</div>
+
+  <div style="overflow-x:auto;margin-bottom:12px;">
+    <table class="pair-table">
+      <thead>
+        <tr>
+          <th>Élément</th>
+          <th>Description</th>
+          <th>Niveau</th>
+          <th>État</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Arabesque pivot</td>
+          <td>Voltigeuse arabesque dehors arrière · Porteur aigle 2 pieds</td>
+          <td><span class="level-chip lv-easy">BASE</span></td>
+          <td>Acquis — base solide</td>
+        </tr>
+        <tr>
+          <td>Canadienne</td>
+          <td>Porteur sur pointe (toe pick) · Voltigeuse en arabesque</td>
+          <td><span class="level-chip lv-hard">DIFFICILE</span></td>
+          <td>À développer — équilibre porteur instable</td>
+        </tr>
+        <tr>
+          <td>Royale dedans avant</td>
+          <td>Voltigeuse en royale (dedans avant) · Pivot simple</td>
+          <td><span class="level-chip lv-med">MOYEN</span></td>
+          <td>Bien — à consolider</td>
+        </tr>
+        <tr>
+          <td>Combinaison arabesque → royale</td>
+          <td>Arabesque → 3 dehors arrière → royale</td>
+          <td><span class="level-chip lv-med">MOYEN</span></td>
+          <td>Prometteur — transitions à fluidifier</td>
+        </tr>
+        <tr>
+          <td>Combo + twizzle</td>
+          <td>Arabesque → royale → twizzle avec changement de bras</td>
+          <td><span class="level-chip lv-hard">DIFFICILE</span></td>
+          <td>Travail en cours — changement de bras clé</td>
+        </tr>
+        <tr>
+          <td>Hydroblading</td>
+          <td>Voltigeuse en hydroblading · Porteur en pivot</td>
+          <td><span class="level-chip lv-hard">DIFFICILE</span></td>
+          <td>1–2 paires excellentes</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="highlight-box">
+    <strong>⭐ HIGHLIGHT À CONSERVER — Hydroblading</strong><br>
+    1–2 paires très bonnes. Élément visuellement très fort, idéal pour un highlighting dans un programme. <strong>À noter qui sont ces paires</strong> pour construction du programme futur.
+  </div>
+
+  <div class="sec-title">Points techniques à travailler</div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🔴</div><div class="card-title">Canadiennes — équilibre porteur sur pointe</div><div class="badge-tag tag-red">À DÉVELOPPER</div></div>
+    <div class="card-body">Difficile car le porteur doit maintenir son équilibre sur la pointe (toe pick) tout en gérant la rotation. <strong>Travailler l'équilibre sur pointe séparément</strong> avant de combiner avec la voltigeuse.</div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">⚠️</div><div class="card-title">Transitions fluides entre les positions</div><div class="badge-tag tag-orange">À TRAVAILLER</div></div>
+    <div class="card-body">Les transitions arabesque → royale manquent de fluidité. Le 3 dehors arrière de transition doit être <strong>technique et propre</strong> — pas juste fonctionnel. C'est lui qui fait la qualité de l'élément.</div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">⚠️</div><div class="card-title">Twizzle avec changement de bras entre partenaires</div><div class="badge-tag tag-orange">CLÉ</div></div>
+    <div class="card-body">Le changement de bras pendant le twizzle est le moment le plus complexe de la combinaison. <strong>Travailler d'abord le changement de bras statique</strong> (arrêté) avant de l'intégrer dans la rotation.</div>
+  </div>
+
+</div>
+
+<!-- SAUTS -->
+<div class="panel" id="panel-sauts">
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Axel — majorité maîtrise</div><div class="badge-tag tag-green">BON NIVEAU</div></div>
+    <div class="card-body">Bonne base générale. Certaines encore en apprentissage mais le niveau global est satisfaisant pour cette période de saison.</div>
+  </div>
+
+  <div class="sec-title">Corrections techniques Axel identifiées</div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🔴</div><div class="card-title">Jambe libre — monte avant de passer devant</div><div class="badge-tag tag-red">CORRECTION CLÉ</div></div>
+    <div class="card-body">La jambe libre monte vers le haut <strong>comme si elle montait une marche</strong> au lieu de passer rapidement devant le corps en arc de cercle. Résultat : rotation tardive, saut plus court.
+    <div style="margin-top:8px;font-size:11.5px;color:var(--ice);padding-left:8px;border-left:2px solid var(--ice);">→ Consigne : "La jambe libre passe <em>devant</em> en arc de cercle — pas en marche. Elle part du sol et passe devant le genou d'appui."</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🔴</div><div class="card-title">Rotation avant l'élévation</div><div class="badge-tag tag-red">CORRECTION CLÉ</div></div>
+    <div class="card-body">Elles commencent à tourner <strong>avant de s'élever</strong> — le corps part en rotation au sol avant d'avoir utilisé toute la poussée vers le haut. Résultat : saut bas, rotation bancale.
+    <div style="margin-top:8px;font-size:11.5px;color:var(--ice);padding-left:8px;border-left:2px solid var(--ice);">→ Consigne : "Monte d'abord, tourne ensuite. Le décollage doit être vertical avant d'être rotatif."</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">⚠️</div><div class="card-title">Bras et jambe libre — trop larges en rotation</div><div class="badge-tag tag-orange">CLASSIQUE</div></div>
+    <div class="card-body">Bras et jambe libre décrivent de grands cercles au lieu de rester proches du corps. <strong>Plus les masses sont proches de l'axe, plus la rotation est rapide</strong> — c'est le principe de conservation du moment cinétique.
+    <div style="margin-top:8px;font-size:11.5px;color:var(--ice);padding-left:8px;border-left:2px solid var(--ice);">→ Consigne : "En l'air, tu te serres — coudes près du corps, jambe libre croisée devant. Comme si tu te réchauffais."</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- S05 -->
+<div class="panel" id="panel-s05">
+
+  <div class="sec-title">Priorités S05 — Glace</div>
+  <div class="prio-list">
+    <div class="prio-item">
+      <div class="prio-num">1</div>
+      <div class="prio-text"><strong>Croisés arrière — leans profonds + séquence S04</strong><br><em>Grands leans très amples d'abord, puis reprendre la séquence complète avec qualité de poussée.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">2</div>
+      <div class="prio-text"><strong>Wheel — changement de place OBLIGATOIRE</strong><br><em>Plus d'excuse — positions connues, principe acquis. On le fait en S05.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">3</div>
+      <div class="prio-text"><strong>Pair éléments — transitions fluides + canadiennes</strong><br><em>Équilibre porteur sur pointe à travailler séparément. Changement de bras twizzle statique d'abord.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">4</div>
+      <div class="prio-text"><strong>Axel — 3 corrections à annoncer avant chaque série</strong><br><em>Jambe libre devant · Monter avant tourner · Serrer en l'air.</em></div>
+    </div>
+  </div>
+
+  <div class="highlight-box" style="margin-top:14px;">
+    <strong>⭐ À noter pour le programme</strong><br>
+    Identifier et noter les 2 paires excellentes en hydroblading — potentiel highlighting fort dans un programme futur.
+  </div>
+
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('panel-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
