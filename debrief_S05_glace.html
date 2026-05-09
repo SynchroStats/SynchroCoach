@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Débrief S05 — Glace</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --bg:#090d18;--surface:#111826;--surface2:#172035;--border:#1c2b45;
+  --ice:#00c8e8;--text:#e8f0fc;--muted:#6a7d9e;--text2:#a0b4cc;
+  --green:#1de9a0;--orange:#ff9f2e;--red:#ff4f6a;--yellow:#ffd84a;--purple:#b388ff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);padding-bottom:50px;}
+.header{background:linear-gradient(135deg,#060d1e,#0a1a38,#002840);padding:22px 16px 16px;border-bottom:2px solid var(--ice);position:relative;overflow:hidden;}
+.header::before{content:'📋';position:absolute;font-size:120px;right:-10px;top:-20px;opacity:.04;}
+.badge{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--ice);border:1px solid var(--ice);padding:2px 7px;border-radius:2px;display:inline-block;margin-bottom:6px;}
+.badge-ctx{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--orange);border:1px solid var(--orange);padding:2px 7px;border-radius:2px;display:inline-block;margin-bottom:6px;margin-left:6px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:3px;color:#fff;line-height:1;}
+h1 span{color:var(--ice);}
+.meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;}
+.meta-item{font-size:12px;color:var(--muted);}
+.meta-item strong{color:var(--text);font-weight:500;}
+.tabs{display:flex;overflow-x:auto;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:1px;color:var(--muted);padding:12px 10px;white-space:nowrap;cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;transition:all .2s;flex-shrink:0;}
+.tab-btn.active{color:var(--ice);border-bottom-color:var(--ice);}
+.panel{display:none;padding:14px;}
+.panel.active{display:block;}
+.ctx-box{background:rgba(255,159,46,.05);border:1px solid rgba(255,159,46,.2);border-left:3px solid var(--orange);border-radius:8px;padding:11px 13px;margin-bottom:9px;font-size:12.5px;line-height:1.7;color:#d4aa60;}
+.ctx-box strong{color:var(--orange);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:9px;}
+.card-head{display:flex;align-items:flex-start;gap:10px;padding:12px 13px;}
+.card-icon{font-size:17px;flex-shrink:0;margin-top:1px;}
+.card-title{font-weight:600;font-size:13px;flex:1;line-height:1.4;}
+.card-body{border-top:1px solid var(--border);padding:11px 13px;font-size:12.5px;line-height:1.8;color:var(--text2);}
+.card-body strong{color:var(--text);}
+.badge-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;white-space:nowrap;flex-shrink:0;}
+.tag-green{color:var(--green);background:rgba(29,233,160,.1);border:1px solid rgba(29,233,160,.25);}
+.tag-orange{color:var(--orange);background:rgba(255,159,46,.1);border:1px solid rgba(255,159,46,.25);}
+.tag-red{color:var(--red);background:rgba(255,79,106,.1);border:1px solid rgba(255,79,106,.25);}
+.tag-ice{color:var(--ice);background:rgba(0,200,232,.08);border:1px solid rgba(0,200,232,.2);}
+.tag-yellow{color:var(--yellow);background:rgba(255,216,74,.1);border:1px solid rgba(255,216,74,.25);}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--orange);padding:8px 0 5px;}
+.sec-title:first-child{padding-top:0;}
+.prio-list{display:flex;flex-direction:column;gap:7px;}
+.prio-item{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 12px;}
+.prio-num{font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--orange);line-height:1;min-width:20px;}
+.prio-text{font-size:12.5px;line-height:1.6;}
+.prio-text strong{color:var(--text);}
+.prio-text em{color:var(--muted);font-style:normal;font-size:11.5px;}
+.step-seq{background:var(--surface2);border-radius:8px;padding:11px 13px;margin-bottom:8px;}
+.step-seq h4{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:1px;color:var(--ice);margin-bottom:8px;}
+.step-seq-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:4px;}
+.step-chip{font-size:11px;font-weight:600;padding:4px 9px;border-radius:15px;background:var(--surface);border:1px solid var(--border);color:var(--text2);}
+.step-chip.key{color:var(--ice);border-color:rgba(0,200,232,.3);background:rgba(0,200,232,.07);}
+.step-chip.hard{color:var(--orange);border-color:rgba(255,159,46,.3);background:rgba(255,159,46,.07);}
+.insight-box{background:rgba(179,136,255,.05);border:1px solid rgba(179,136,255,.2);border-left:3px solid var(--purple);border-radius:8px;padding:11px 13px;margin-bottom:9px;font-size:12.5px;line-height:1.7;color:var(--text2);}
+.insight-box strong{color:var(--purple);}
+hr.div{border:none;border-top:1px solid var(--border);margin:10px 0;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="badge">SYNCHROLEARN · DÉBRIEF</div>
+    <div class="badge-ctx">SÉANCE ATYPIQUE</div>
+  </div>
+  <h1>BILAN <span>S05 — GLACE</span></h1>
+  <div class="meta">
+    <div class="meta-item">📅 <strong>Sezóna 2025–26</strong></div>
+    <div class="meta-item">👥 <strong>Harmonia + 2 nouveaux</strong></div>
+    <div class="meta-item">⏱ <strong>90 min</strong></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="show('ctx')">⚠️ Contexte</button>
+  <button class="tab-btn" onclick="show('pivot')">🟠 Pivoting</button>
+  <button class="tab-btn" onclick="show('steps')">🔵 Séries de pas</button>
+  <button class="tab-btn" onclick="show('arab')">🔴 Arabesque</button>
+  <button class="tab-btn" onclick="show('s06')">🎯 S06</button>
+</div>
+
+<!-- CONTEXTE -->
+<div class="panel active" id="panel-ctx">
+
+  <div class="ctx-box">
+    <strong>⚠️ Séance atypique — retours limités</strong><br>
+    Filmage universitaire (drone) pendant 20 min → groupes séparés → observation réduite. 2 nouveaux venus essayer. Contenu riche malgré les contraintes.
+  </div>
+
+  <div class="sec-title">Ce qui a été fait</div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Échauffement</div><div class="badge-tag tag-green">ACQUIS</div></div>
+    <div class="card-body">Routine auto-organisée, se déroule bien. Aucune remarque particulière.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">↗️</div><div class="card-title">Croisés — séquence S04 redéveloppée</div><div class="badge-tag tag-ice">LIMITÉ</div></div>
+    <div class="card-body">La séquence (croisé avant + mohawk + changement de carre + croisé par-dessus + chassé + croisé arrière) a été retravaillée et un peu développée. <strong>Pas de retour précis possible</strong> — groupes séparés, observation très limitée. À analyser à la prochaine séance normale.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Pair éléments — montrés aux nouveaux</div><div class="badge-tag tag-green">BON</div></div>
+    <div class="card-body">Les éléments explorés en S04 montrés aux 2 nouveaux. <strong>Bonne base à développer</strong> — besoin de plus de vitesse et d'impact visuel. D'autres options à explorer. À retravailler pour que ce soit plus impressionnant.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">💡</div><div class="card-title">2 nouveaux skaters — intégration</div><div class="badge-tag tag-ice">À SUIVRE</div></div>
+    <div class="card-body">Première séance avec les 2 nouveaux. Beaucoup de choses à gérer simultanément — séance chargée. <strong>Prévoir une vraie séance d'intégration</strong> quand le contexte sera plus stable.</div>
+  </div>
+
+</div>
+
+<!-- PIVOTING BLOCK -->
+<div class="panel" id="panel-pivot">
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Principe expliqué et compris</div><div class="badge-tag tag-green">BONNE SÉANCE</div></div>
+    <div class="card-body">Explication des rotations et du fonctionnement du pivoting block. Travail en demi-groupe d'abord puis équipe complète. <strong>Résultat positif à la fin.</strong> C'était une vraie séance de construction.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">📈</div><div class="card-title">Progression travaillée — niveau 4</div><div class="badge-tag tag-ice">STRUCTURÉ</div></div>
+    <div class="card-body">
+      Progression par paliers sur une ligne :<br><br>
+      <strong>1.</strong> Rocker — base, maîtrise collective<br>
+      <strong>2.</strong> Bracket — plus complexe, travaillé en ligne<br>
+      <strong>3.</strong> Contre-rocker — si vitesse suffisante<br>
+      <strong>4.</strong> Twizzle — objectif niveau 4, conditionnel
+      <div style="margin-top:8px;font-size:11.5px;color:var(--ice);padding-left:8px;border-left:2px solid var(--ice);">→ C'est la bonne progression — ne pas vouloir aller trop vite sur le niveau 4.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🎯</div><div class="card-title">Prochaine étape — plusieurs lignes ensemble</div><div class="badge-tag tag-orange">S06</div></div>
+    <div class="card-body">Travail fait ligne par ligne uniquement. <strong>La vraie difficulté du pivoting block en synchro c'est la coordination entre les lignes</strong> — chaque ligne doit être au même endroit au même moment. C'est l'objectif S06.</div>
+  </div>
+
+</div>
+
+<!-- SÉRIES DE PAS -->
+<div class="panel" id="panel-steps">
+
+  <div class="sec-title">Séquences travaillées</div>
+
+  <div class="step-seq">
+    <h4>SÉRIE A — Pied droit</h4>
+    <div class="step-seq-row">
+      <span class="step-chip">2× dedans arrière</span>
+      <span class="step-chip key">Rocker</span>
+      <span class="step-chip hard">Bracket</span>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:4px;">Série sur carres intérieures → rocker → bracket</div>
+  </div>
+
+  <div class="step-seq">
+    <h4>SÉRIE B — Pied gauche</h4>
+    <div class="step-seq-row">
+      <span class="step-chip">2× dedans avant</span>
+      <span class="step-chip key">Rocker</span>
+      <span class="step-chip hard">Contre-rocker</span>
+      <span class="step-chip hard">Twizzle</span>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:4px;">Série sur carres intérieures → rocker → contre-rocker → twizzle</div>
+  </div>
+
+  <div class="sec-title">Points techniques à travailler</div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🔴</div><div class="card-title">Genou et placement des carres</div><div class="badge-tag tag-red">PRIORITÉ</div></div>
+    <div class="card-body">Placement du genou insuffisant — la carre n'est pas assez creusée pour que les pas aient de la qualité. <strong>Sans genou, pas de carre. Sans carre, pas de lobe.</strong></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🔴</div><div class="card-title">Organisation géométrique des lobes</div><div class="badge-tag tag-red">FONDAMENTAL</div></div>
+    <div class="card-body">Elles ne vont pas assez d'un lobe à l'autre — la trace sur la glace devrait décrire des lobes clairs et alternés. Sans cette organisation spatiale, les pas manquent de lisibilité et de qualité aux yeux des juges.
+    <div style="margin-top:8px;font-size:11.5px;color:var(--ice);padding-left:8px;border-left:2px solid var(--ice);">→ Consigne : "Chaque pas doit aller chercher le bout du lobe avant de revenir. Pas de raccourci entre les pas."</div>
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <strong>💡 Principe à verbaliser</strong><br>
+    La qualité d'une série de pas se lit sur la glace — les traces doivent raconter une histoire géométrique claire. Un rocker bien fait laisse une trace en S sur deux lobes distincts. C'est ce qu'il faut viser.
+  </div>
+
+</div>
+
+<!-- ARABESQUE -->
+<div class="panel" id="panel-arab">
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🔴</div><div class="card-title">Arabesques actives — point faible majeur confirmé</div><div class="badge-tag tag-red">URGENT</div></div>
+    <div class="card-body">Arabesques très basses en actif. <strong>Confirmation du diagnostic S03</strong> : flexibilité passive disponible, force active manquante. Ce n'est pas la souplesse le problème — c'est la force des fessiers et ischios pour maintenir la jambe en extension.<br><br>
+    <strong>Beaucoup de travail à faire, surtout en PP.</strong></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🏋️</div><div class="card-title">Plan PP — à renforcer dès S04 PP</div><div class="badge-tag tag-orange">ACTION</div></div>
+    <div class="card-body">
+      Exercices déjà introduits en S03 PP (pont fessier unilatéral + arabesque élastique) à <strong>augmenter en volume et en régularité</strong>.<br><br>
+      <strong>À ajouter :</strong><br>
+      — Élévation jambe tendue debout (hip extension) sans et avec élastique<br>
+      — Arabesque contre le mur (feedback proprioceptif)<br>
+      — Good morning avec élastique ou barre légère<br><br>
+      <strong>À intégrer sur glace :</strong> arabesque tenue 5 secondes sur chaque pied en début de skating skills — observation systématique de la progression.
+    </div>
+  </div>
+
+</div>
+
+<!-- S06 -->
+<div class="panel" id="panel-s06">
+
+  <div class="sec-title">Priorités S06 — Glace</div>
+  <div class="prio-list">
+    <div class="prio-item">
+      <div class="prio-num">1</div>
+      <div class="prio-text"><strong>Pivoting block — plusieurs lignes ensemble</strong><br><em>C'est le vrai défi du pivoting block en synchro. Coordination inter-lignes à construire.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">2</div>
+      <div class="prio-text"><strong>Croisés arrière — grands leans</strong><br><em>Pas encore eu le temps en S05. Très ample et très profond — outil pour développer l'engagement des jambes.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">3</div>
+      <div class="prio-text"><strong>Séries de pas — lobes et genou</strong><br><em>"Chaque pas va chercher le bout du lobe." Travailler lentement pour que la géométrie s'installe.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">4</div>
+      <div class="prio-text"><strong>Arabesque tenue 5s — mesure de progression</strong><br><em>En début de skating skills. Observer l'évolution séance par séance grâce au travail PP.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">5</div>
+      <div class="prio-text"><strong>Wheel — changement de place</strong><br><em>Reporté depuis S04. À faire impérativement si le temps le permet.</em></div>
+    </div>
+  </div>
+
+  <div class="insight-box" style="margin-top:14px;">
+    <strong>💡 Note sur la saison</strong><br>
+    S05 était atypique mais productive. Les séquences de pas et le pivoting block posent des bases techniques solides pour la suite. Le principal chantier reste l'arabesque active — c'est un travail de fond qui demande des semaines de PP régulière avant de se voir sur glace.
+  </div>
+
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('panel-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
