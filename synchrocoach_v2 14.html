@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SynchroCoach">
+<title>SynchroCoach</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+:root {
+  --bg:#07101f; --bg2:#0a1628; --surface:#0f1f35; --surface2:#162840; --surface3:#1c324e;
+  --border:#1e3352; --border2:#264470;
+  --ice:#00c8e8; --ice2:#0097b0; --iceglow:rgba(0,200,232,0.15);
+  --text:#e8f0fc; --text2:#a0b4cc; --muted:#5a7090;
+  --green:#1de9a0; --orange:#ff9f2e; --red:#ff4f6a; --yellow:#ffd84a; --purple:#b388ff;
+  --nav-h:62px; --safe-b:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;}
+.app{display:flex;flex-direction:column;height:100dvh;}
+.app-body{flex:1;overflow:hidden;position:relative;}
+.tab{display:none;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--nav-h) + var(--safe-b) + 16px);}
+.tab.active{display:block;}
+
+/* TOP BAR */
+.topbar{background:rgba(10,22,40,0.97);border-bottom:1px solid var(--border);padding:13px 16px 11px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10;backdrop-filter:blur(12px);}
+.topbar-logo{font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:3px;color:var(--ice);line-height:1;}
+.topbar-logo span{color:var(--text2);font-size:13px;letter-spacing:1px;}
+.topbar-right{margin-left:auto;display:flex;gap:7px;align-items:center;}
+.topbar-badge{font-size:10px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);padding:3px 8px;border-radius:10px;font-family:'Bebas Neue',sans-serif;letter-spacing:1px;}
+
+/* BOTTOM NAV */
+.bottomnav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav-h) + var(--safe-b));background:rgba(7,16,31,0.97);border-top:1px solid var(--border);backdrop-filter:blur(16px);display:flex;align-items:flex-start;padding-top:8px;z-index:100;}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 2px;cursor:pointer;border:none;background:none;color:var(--muted);transition:color .2s;}
+.nav-btn.active{color:var(--ice);}
+.nav-icon{font-size:19px;line-height:1;}
+.nav-label{font-size:9px;font-weight:600;letter-spacing:.8px;font-family:'Bebas Neue',sans-serif;}
+.nav-btn.active .nav-icon{filter:drop-shadow(0 0 5px var(--ice));}
+
+/* SHARED */
+.page-header{padding:18px 14px 12px;}
+.page-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:var(--text);}
+.page-title span{color:var(--ice);}
+.section-label{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:2px;color:var(--muted);padding:10px 14px 5px;}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:11px;overflow:hidden;margin:0 14px 9px;}
+.card-head{display:flex;align-items:center;gap:10px;padding:12px 13px;}
+.card-icon{font-size:17px;}
+.card-title{font-weight:600;font-size:13px;flex:1;}
+.card-sub{font-size:11px;color:var(--muted);margin-top:1px;font-weight:400;}
+.card-body{border-top:1px solid var(--border);padding:11px 13px;font-size:12.5px;line-height:1.7;}
+
+.badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:8px;white-space:nowrap;}
+.badge-green{color:var(--green);background:rgba(29,233,160,.1);border:1px solid rgba(29,233,160,.25);}
+.badge-orange{color:var(--orange);background:rgba(255,159,46,.1);border:1px solid rgba(255,159,46,.25);}
+.badge-red{color:var(--red);background:rgba(255,79,106,.1);border:1px solid rgba(255,79,106,.25);}
+.badge-ice{color:var(--ice);background:rgba(0,200,232,.08);border:1px solid rgba(0,200,232,.2);}
+.badge-muted{color:var(--muted);background:var(--surface2);border:1px solid var(--border);}
+.badge-purple{color:var(--purple);background:rgba(179,136,255,.1);border:1px solid rgba(179,136,255,.25);}
+
+.btn{display:inline-flex;align-items:center;gap:5px;padding:9px 15px;border-radius:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;transition:all .2s;}
+.btn-primary{background:var(--ice);color:var(--bg);}
+.btn-primary:active{background:var(--ice2);}
+.btn-ghost{background:var(--surface2);color:var(--text2);border:1px solid var(--border);}
+.btn-ghost:active{background:var(--surface3);}
+.btn-danger{background:rgba(255,79,106,.1);color:var(--red);border:1px solid rgba(255,79,106,.3);}
+.btn-sm{padding:6px 11px;font-size:11px;}
+
+/* CALENDAR */
+.cal-filter-btn{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:1px;padding:5px 11px;border-radius:15px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);cursor:pointer;transition:all .2s;}
+.cal-filter-btn.active{background:rgba(0,200,232,.1);border-color:var(--ice);color:var(--ice);}
+.cal-day{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:0;}
+.cal-day-head{display:flex;align-items:center;gap:10px;padding:10px 13px;background:var(--surface2);}
+.cal-day-name{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:var(--text);flex:1;}
+.cal-day-date{font-size:11px;color:var(--muted);}
+.cal-day-head.today{background:rgba(0,200,232,.08);}
+.cal-day-head.today .cal-day-name{color:var(--ice);}
+.cal-sessions{display:flex;flex-direction:column;gap:0;}
+.cal-session{display:flex;align-items:center;gap:10px;padding:9px 13px;border-top:1px solid var(--border);cursor:pointer;transition:background .15s;}
+.cal-session:active{background:var(--surface2);}
+.cal-session.harmonia{border-left:3px solid var(--green);}
+.cal-session.olympia{border-left:3px solid var(--ice);}
+.cal-session.other{border-left:3px solid var(--border);cursor:default;}
+.cal-session.pause{border-left:3px solid var(--muted);opacity:.5;cursor:default;}
+.cal-time{font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--muted);min-width:82px;}
+.cal-info{flex:1;}
+.cal-title{font-size:13px;font-weight:600;color:var(--text);}
+.cal-sub{font-size:10.5px;color:var(--muted);margin-top:1px;}
+.cal-badge{font-size:10px;padding:2px 7px;border-radius:8px;white-space:nowrap;}
+.badge-harmonia{color:var(--green);background:rgba(29,233,160,.1);border:1px solid rgba(29,233,160,.25);}
+.badge-olympia{color:var(--ice);background:rgba(0,200,232,.08);border:1px solid rgba(0,200,232,.2);}
+.badge-other{color:var(--muted);background:var(--surface2);border:1px solid var(--border);}
+.badge-pause{color:var(--muted);background:var(--surface2);border:1px solid var(--border);}
+.cal-link{font-size:10px;color:var(--ice);margin-left:4px;}
+.cal-empty{padding:10px 13px;font-size:12px;color:var(--muted);font-style:italic;border-top:1px solid var(--border);}
+
+.divider{border:none;border-top:1px solid var(--border);margin:9px 0;}
+
+/* INNER TABS */
+.inner-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface);overflow-x:auto;}
+.inner-tabs::-webkit-scrollbar{display:none;}
+.itab{flex:1;text-align:center;padding:10px 8px;font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:1px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;}
+.itab.active{color:var(--ice);border-bottom-color:var(--ice);}
+.ipanel{display:none;}
+.ipanel.active{display:block;}
+
+/* STATS */
+.stats-row{display:flex;gap:8px;padding:0 14px 12px;flex-wrap:wrap;}
+.stat-chip{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 13px;flex:1;min-width:75px;}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--ice);line-height:1;}
+.stat-lbl{font-size:10px;color:var(--muted);margin-top:2px;}
+
+/* HERO */
+.hero{margin:14px;background:linear-gradient(135deg,#0a1f3a,#0d2e50,#0a2840);border:1px solid var(--border2);border-radius:13px;padding:18px;position:relative;overflow:hidden;}
+.hero::before{content:'⛸';position:absolute;right:-10px;top:-20px;font-size:90px;opacity:.06;}
+.hero-label{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--ice);margin-bottom:3px;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;line-height:1.1;color:var(--text);}
+.hero-sub{font-size:12px;color:var(--text2);margin-top:7px;line-height:1.5;}
+.hero-actions{display:flex;gap:7px;margin-top:13px;flex-wrap:wrap;}
+
+/* QUICK GRID */
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 14px 10px;}
+.quick-btn{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:13px 11px;cursor:pointer;text-align:left;transition:border-color .2s;display:block;width:100%;}
+.quick-btn:active{background:var(--surface2);}
+.qb-icon{font-size:20px;margin-bottom:5px;}
+.qb-label{font-weight:600;font-size:12px;color:var(--text);}
+.qb-sub{font-size:10px;color:var(--muted);margin-top:1px;}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:flex-end;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:20px 20px 0 0;padding:20px 16px calc(20px + var(--safe-b));width:100%;max-height:88vh;overflow-y:auto;animation:slideUp .25s ease;}
+@keyframes slideUp{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--text);margin-bottom:15px;}
+.modal-close{float:right;background:var(--surface2);border:none;color:var(--muted);font-size:16px;width:28px;height:28px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
+/* FORMS */
+.form-group{margin-bottom:13px;}
+.form-label{font-size:11px;color:var(--muted);letter-spacing:.8px;font-weight:600;margin-bottom:5px;display:block;font-family:'Bebas Neue',sans-serif;}
+.form-input{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;}
+.form-input:focus{border-color:var(--ice);}
+textarea.form-input{resize:vertical;min-height:70px;}
+.form-row{display:flex;gap:8px;}
+.form-row .form-group{flex:1;}
+
+/* CHECKBOXES CATS */
+.cat-checks{display:flex;flex-wrap:wrap;gap:6px;}
+.cat-check{display:flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:6px 10px;cursor:pointer;transition:all .15s;}
+.cat-check.selected{background:rgba(0,200,232,.1);border-color:var(--ice);}
+.cat-check input{display:none;}
+.cat-check span{font-size:12px;font-weight:500;}
+
+/* PRESENCE */
+.presence-list{padding:0 14px;}
+.athlete-row{display:flex;align-items:center;gap:8px;padding:9px 11px;background:var(--surface);border:1px solid var(--border);border-radius:9px;margin-bottom:6px;}
+.ath-code{font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--muted);min-width:40px;}
+.ath-name{flex:1;font-size:13px;font-weight:500;}
+.ath-cats{display:flex;gap:3px;flex-wrap:wrap;}
+.pres-btn{width:33px;height:33px;border-radius:50%;border:2px solid var(--border);background:none;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;}
+.pres-btn.present{background:rgba(29,233,160,.15);border-color:var(--green);}
+.pres-btn.absent{background:rgba(255,79,106,.12);border-color:var(--red);}
+.pres-btn.injury{background:rgba(255,159,46,.12);border-color:var(--orange);}
+
+/* TESTS DEDICATED */
+.test-type-bar{display:flex;overflow-x:auto;gap:6px;padding:10px 14px;border-bottom:1px solid var(--border);}
+.test-type-bar::-webkit-scrollbar{display:none;}
+.test-type-btn{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:1px;padding:5px 11px;border-radius:15px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0;}
+.test-type-btn.active{background:rgba(0,200,232,.1);border-color:var(--ice);color:var(--ice);}
+
+.test-ranking{padding:0 14px;}
+.test-rank-item{display:flex;align-items:center;gap:10px;padding:9px 11px;background:var(--surface);border:1px solid var(--border);border-radius:9px;margin-bottom:6px;cursor:pointer;}
+.test-rank-item:active{background:var(--surface2);}
+.rank-pos{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--border2);min-width:28px;line-height:1;}
+.rank-pos.gold{color:var(--yellow);}
+.rank-pos.silver{color:#a0a0b8;}
+.rank-pos.bronze{color:#c8824a;}
+.rank-info{flex:1;}
+.rank-name{font-size:13px;font-weight:600;}
+.rank-cat{font-size:10px;color:var(--muted);}
+.rank-val{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--ice);}
+.rank-unit{font-size:10px;color:var(--muted);}
+.rank-nodata{color:var(--border2);font-size:12px;font-style:italic;}
+
+/* SUMMARY TABLE */
+.summary-table{overflow-x:auto;padding:0 14px;}
+table.sum-tbl{width:100%;border-collapse:collapse;font-size:11.5px;}
+.sum-tbl th{background:var(--surface2);color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:1px;padding:7px 8px;text-align:center;border-bottom:1px solid var(--border);}
+.sum-tbl th:first-child{text-align:left;}
+.sum-tbl td{padding:7px 8px;border-bottom:1px solid rgba(30,51,82,.5);text-align:center;color:var(--text2);}
+.sum-tbl td:first-child{text-align:left;font-weight:600;color:var(--text);}
+.pct-high{color:var(--green);font-weight:700;}
+.pct-mid{color:var(--orange);}
+.pct-low{color:var(--red);}
+
+/* RESOURCE LINK */
+.resource-link{display:flex;align-items:center;gap:11px;padding:13px 13px;text-decoration:none;color:var(--text);}
+.resource-link:active{background:var(--surface2);}
+.res-icon{font-size:20px;}
+.res-title{font-weight:600;font-size:13px;}
+.res-sub{font-size:11px;color:var(--muted);}
+.res-arrow{margin-left:auto;color:var(--muted);}
+
+/* PLANNING */
+.phase-block{border-radius:10px;overflow:hidden;margin:0 14px 9px;border:1px solid var(--border);}
+.phase-head{padding:11px 13px;display:flex;align-items:center;gap:9px;}
+.phase-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.phase-name{font-weight:600;font-size:13px;flex:1;}
+.phase-dates{font-size:11px;color:var(--muted);}
+.phase-body{border-top:1px solid var(--border);padding:9px 13px;font-size:12px;line-height:1.7;color:var(--text2);}
+.phase-active{border-color:var(--ice);}
+.phase-active .phase-head{background:rgba(0,200,232,.05);}
+
+/* EXPORT/IMPORT BAR */
+.data-bar{display:flex;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--surface);}
+
+/* SESSION FILE BTN */
+.session-item{display:flex;align-items:center;gap:11px;padding:12px 13px;cursor:pointer;}
+.session-item:active{background:var(--surface2);}
+.s-num{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--border2);min-width:34px;line-height:1;}
+.s-info{flex:1;}
+.s-title{font-weight:600;font-size:13px;}
+.s-meta{font-size:11px;color:var(--muted);margin-top:1px;}
+
+/* EMPTY */
+.empty-state{text-align:center;padding:36px 20px;color:var(--muted);}
+.empty-icon{font-size:36px;margin-bottom:9px;opacity:.4;}
+.empty-state p{font-size:13px;line-height:1.6;}
+
+/* PRESENCE TYPE TOGGLE */
+.pres-type-toggle{display:flex;gap:0;margin:10px 14px 0;border-radius:8px;overflow:hidden;border:1px solid var(--border);}
+.ptt-btn{flex:1;padding:9px;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;color:var(--muted);cursor:pointer;background:var(--surface);border:none;transition:all .2s;}
+.ptt-btn.active{background:rgba(0,200,232,.1);color:var(--ice);}
+
+/* ALERT */
+.alert-box{margin:0 14px 10px;background:rgba(255,159,46,.08);border:1px solid rgba(255,159,46,.25);border-left:3px solid var(--orange);border-radius:8px;padding:9px 12px;font-size:12px;color:#d4aa60;line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="app-body">
+
+<!-- ═══════════════════ TAB: ACCUEIL ═══════════════════ -->
+<div class="tab active" id="tab-home">
+  <div class="topbar">
+    <div><div class="topbar-logo">SYNCHRO<span>COACH</span></div></div>
+    <div class="topbar-right">
+      <div class="topbar-badge" id="home-phase-badge">SAISON 25–26</div>
+    </div>
+  </div>
+  <div class="hero">
+    <div class="hero-label">TABLEAU DE BORD</div>
+    <div class="hero-title">Bienvenue,<br>Coach Frantz</div>
+    <div class="hero-sub" id="home-sub">Phase 1 — Reprise générale en cours</div>
+    <div class="hero-actions">
+      <button class="btn btn-primary" onclick="switchTab('athletes');switchInner('athletes','presence')">✅ Présences</button>
+      <button class="btn btn-ghost" onclick="switchTab('seances')">📋 Séances</button>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-chip"><div class="stat-val" id="stat-ath">—</div><div class="stat-lbl">ATHLÈTES</div></div>
+    <div class="stat-chip"><div class="stat-val" id="stat-ses">1</div><div class="stat-lbl">SÉANCES</div></div>
+    <div class="stat-chip"><div class="stat-val" id="stat-comp">—</div><div class="stat-lbl">J. COMP.</div></div>
+    <div class="stat-chip"><div class="stat-val" id="stat-pres">—</div><div class="stat-lbl">PRÉSENCE MOY.</div></div>
+  </div>
+  <div class="section-label">ACCÈS RAPIDE</div>
+  <div class="quick-grid">
+    <button class="quick-btn" onclick="switchTab('athletes');switchInner('athletes','presence')"><div class="qb-icon">✅</div><div class="qb-label">Faire la présence</div><div class="qb-sub">PP ou Glace</div></button>
+    <button class="quick-btn" onclick="switchTab('seances')"><div class="qb-icon">📄</div><div class="qb-label">Fiche du jour</div><div class="qb-sub">PP + Glace</div></button>
+    <button class="quick-btn" onclick="switchTab('athletes');switchInner('athletes','tests')"><div class="qb-icon">📊</div><div class="qb-label">Tests physiques</div><div class="qb-sub">Classements</div></button>
+    <button class="quick-btn" onclick="switchTab('planning')"><div class="qb-icon">📅</div><div class="qb-label">Planning saison</div><div class="qb-sub">Phases + compét.</div></button>
+  </div>
+  <div class="section-label">PRIORITÉS S04</div>
+  <div class="card"><div class="card-head"><div class="card-icon">🔵</div><div class="card-title">Croisés — extension + contraste lent/rapides</div><div class="badge badge-ice">GLACE</div></div><div class="card-body">Extension jambe croisée jusqu'à l'orteil. Tenir le lent 2 temps. Poids sur le talon en arrière.</div></div>
+  <div class="card"><div class="card-head"><div class="card-icon">🟣</div><div class="card-title">Sauts — synchronisation décollage + réception</div><div class="badge badge-ice">GLACE</div></div><div class="card-body">Flip · Boucle · Axel. Toutes décollent et atterrissent au même moment.</div></div>
+  <div class="card"><div class="card-head"><div class="card-icon">🔴</div><div class="card-title">Arabesque — force active (pas flexibilité)</div><div class="badge badge-red">PP + GLACE</div></div><div class="card-body">Flexibles passivement mais manquent de force pour lever la jambe activement. À travailler en PP.</div></div>
+</div>
+
+<!-- ═══════════════════ TAB: SÉANCES ═══════════════════ -->
+<div class="tab" id="tab-seances">
+  <div class="topbar">
+    <div class="topbar-logo">SÉANCES</div>
+    <div class="topbar-right">
+      <button class="btn btn-ghost btn-sm" onclick="alert('Prochainement : créer une fiche depuis l\'app.')">+ Nouvelle</button>
+    </div>
+  </div>
+  <div class="inner-tabs">
+    <button class="itab active" onclick="switchInner('seances','pp')">PP</button>
+    <button class="itab" onclick="switchInner('seances','glace')">GLACE</button>
+    <button class="itab" onclick="switchInner('seances','debriefs')">DÉBRIEFS</button>
+  </div>
+  <div class="ipanel active" id="seances-pp">
+    <div class="card" style="cursor:pointer;margin-top:12px;" onclick="openFile('seance_PP_S01.html')">
+      <div class="session-item"><div class="s-num">01</div><div class="s-info"><div class="s-title">Séance PP — S01</div><div class="s-meta">23 avril · ~18 filles · 60 min</div></div><div class="badge badge-green">FAIT</div></div>
+    </div>
+    <div class="card" style="cursor:pointer;" onclick="openFile('seance_PP_S02.html')">
+      <div class="session-item"><div class="s-num">02</div><div class="s-info"><div class="s-title">Séance PP — S02</div><div class="s-meta">30 avril · PAP fessier · Valgus</div></div><div class="badge badge-green">FAIT</div></div>
+    </div>
+    <div class="card" style="cursor:pointer;" onclick="openFile('seance_PP_S03.html')">
+      <div class="session-item"><div class="s-num">03</div><div class="s-info"><div class="s-title">Séance PP — S03</div><div class="s-meta">7 mai · HDC · Squat barre · Arabesque active</div></div><div class="badge badge-green">FAIT</div></div>
+    </div>
+    <div id="extra-pp"></div>
+    <div style="padding:4px 14px 10px;"><button class="btn btn-ghost" style="width:100%;" onclick="alert('Prochainement')">+ Ajouter séance PP</button></div>
+  </div>
+  <div class="ipanel" id="seances-glace">
+    <div class="card" style="cursor:pointer;margin-top:12px;" onclick="openFile('seance_GLACE_S01.html')">
+      <div class="session-item"><div class="s-num">01</div><div class="s-info"><div class="s-title">Séance Glace — S01</div><div class="s-meta">Jeu. 23 avril · PADOK · 90 min</div></div><div class="badge badge-green">FAIT</div></div>
+    </div>
+    <div class="card" style="cursor:pointer;" onclick="openFile('seance_GLACE_S02.html')">
+      <div class="session-item"><div class="s-num">02</div><div class="s-info"><div class="s-title">Séance Glace — S02</div><div class="s-meta">Jeu. 30 avril · PADOK · Wheel · Twizzles · Spirale</div></div><div class="badge badge-green">FAIT</div></div>
+    </div>
+    <div class="card" style="cursor:pointer;" onclick="openFile('debrief_S03_glace.html')">
+      <div class="session-item"><div class="s-num">03</div><div class="s-info"><div class="s-title">Séance Glace — S03</div><div class="s-meta">Lun. 4 mai · HASA · Exceptionnel</div></div><div class="badge badge-green">FAIT</div></div>
+    </div>
+    <div class="card" style="cursor:pointer;" onclick="openFile('seance_GLACE_S04.html')">
+      <div class="session-item"><div class="s-num">04</div><div class="s-info"><div class="s-title">Séance Glace — S04</div><div class="s-meta">Mer. 6 mai · HASA · Croisés · Wheel · Sauts</div></div><div class="badge badge-green">FAIT</div></div>
+    </div>
+    <div class="card" style="cursor:pointer;" onclick="openFile('debrief_S05_glace.html')">
+      <div class="session-item"><div class="s-num">05</div><div class="s-info"><div class="s-title">Séance Glace — S05</div><div class="s-meta">Jeu. 7 mai · PADOK · Pivoting · Séries de pas</div></div><div class="badge badge-green">FAIT</div></div>
+    </div>
+    <div id="extra-glace"></div>
+    <div style="padding:4px 14px 10px;"><button class="btn btn-ghost" style="width:100%;" onclick="alert('Prochainement')">+ Ajouter séance Glace</button></div>
+  </div>
+  <div class="ipanel" id="seances-debriefs">
+    <div class="card" style="cursor:pointer;margin-top:12px;" onclick="openFile('debrief_S01.html')">
+      <div class="session-item"><div class="s-num">01</div><div class="s-info"><div class="s-title">Débrief S01</div><div class="s-meta">Cardio faible · Force HDC priorité</div></div><div class="badge badge-green">COMPLET</div></div>
+    </div>
+    <div class="card" style="cursor:pointer;" onclick="openFile('debrief_S02.html')">
+      <div class="session-item"><div class="s-num">02</div><div class="s-info"><div class="s-title">Débrief S02</div><div class="s-meta">PAP validé · Wheel · Spirale</div></div><div class="badge badge-green">COMPLET</div></div>
+    </div>
+    <div class="card" style="cursor:pointer;" onclick="openFile('debrief_S03_glace.html')">
+      <div class="session-item"><div class="s-num">03</div><div class="s-info"><div class="s-title">Débrief S03 — Glace</div><div class="s-meta">4 mai · Croisés · Arabesque · Pirouettes</div></div><div class="badge badge-green">COMPLET</div></div>
+    </div>
+    <div class="card" style="cursor:pointer;" onclick="openFile('debrief_PP_S03.html')">
+      <div class="session-item"><div class="s-num">03</div><div class="s-info"><div class="s-title">Débrief PP — S03</div><div class="s-meta">7 mai · Squat barre · Gainage · Circuit</div></div><div class="badge badge-green">COMPLET</div></div>
+    </div>
+    <div class="card" style="cursor:pointer;" onclick="openFile('debrief_S04_glace.html')">
+      <div class="session-item"><div class="s-num">04</div><div class="s-info"><div class="s-title">Débrief S04 — Glace</div><div class="s-meta">6 mai · Séquence croisés · Pair éléments · Axel</div></div><div class="badge badge-green">COMPLET</div></div>
+    </div>
+    <div class="card" style="cursor:pointer;" onclick="openFile('debrief_S05_glace.html')">
+      <div class="session-item"><div class="s-num">05</div><div class="s-info"><div class="s-title">Débrief S05 — Glace</div><div class="s-meta">7 mai · Pivoting block · Séries de pas · Arabesque</div></div><div class="badge badge-green">COMPLET</div></div>
+    </div>
+    <div id="extra-debriefs"></div>
+    <div style="padding:4px 14px 10px;"><button class="btn btn-ghost" style="width:100%;" onclick="alert('Prochainement')">+ Nouveau débrief</button></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ TAB: ATHLÈTES ═══════════════════ -->
+<div class="tab" id="tab-athletes">
+  <div class="topbar">
+    <div class="topbar-logo">ATHLÈTES</div>
+    <div class="topbar-right">
+      <button class="btn btn-ghost btn-sm" onclick="openExport()">💾 Export</button>
+      <button class="btn btn-primary btn-sm" onclick="openAddAthlete()">+ Ajouter</button>
+    </div>
+  </div>
+  <div class="inner-tabs">
+    <button class="itab active" onclick="switchInner('athletes','roster')">EFFECTIF</button>
+    <button class="itab" onclick="switchInner('athletes','presence')">PRÉSENCES</button>
+    <button class="itab" onclick="switchInner('athletes','tests')">TESTS</button>
+    <button class="itab" onclick="switchInner('athletes','summary')">BILAN</button>
+  </div>
+
+  <!-- EFFECTIF -->
+  <div class="ipanel active" id="athletes-roster">
+    <div id="roster-list" style="margin-top:10px;"></div>
+    <div class="empty-state" id="roster-empty"><div class="empty-icon">👥</div><p>Aucune athlète encore.<br>Appuie sur + pour commencer.</p></div>
+  </div>
+
+  <!-- PRÉSENCES -->
+  <div class="ipanel" id="athletes-presence">
+    <div class="pres-type-toggle">
+      <button class="ptt-btn active" id="ptt-pp" onclick="setPresType('PP')">🏋️ PP</button>
+      <button class="ptt-btn" id="ptt-glace" onclick="setPresType('Glace')">⛸️ GLACE</button>
+    </div>
+    <div style="display:flex;gap:8px;padding:10px 14px 0;align-items:center;">
+      <select class="form-input" id="pres-session-sel" style="flex:1;" onchange="renderPresence()">
+        <option value="S01">Séance S01</option>
+      </select>
+      <button class="btn btn-ghost btn-sm" onclick="renderPresenceSummary();switchInner('athletes','summary')">📊 Bilan</button>
+    </div>
+    <div style="display:flex;gap:12px;padding:6px 14px 4px;font-size:11px;">
+      <span style="color:var(--green);">✅ Présente</span>
+      <span style="color:var(--red);">❌ Absente</span>
+      <span style="color:var(--orange);">🤕 Blessée</span>
+    </div>
+    <div class="presence-list" id="pres-list"></div>
+    <div class="empty-state" id="pres-empty"><div class="empty-icon">✅</div><p>Ajoute d'abord des athlètes.</p></div>
+    <div style="padding:8px 14px;">
+      <button class="btn btn-primary" style="width:100%;" onclick="savePresence()">💾 Sauvegarder les présences</button>
+    </div>
+  </div>
+
+  <!-- TESTS -->
+  <div class="ipanel" id="athletes-tests">
+    <div style="padding:10px 14px 0;display:flex;gap:8px;align-items:center;">
+      <select class="form-input" id="test-session-sel" style="flex:1;" onchange="renderTests()">
+        <option value="S00">Tests initiaux</option>
+        <option value="S01">Post S01</option>
+      </select>
+      <select class="form-input" id="test-cat-filter" style="flex:1;" onchange="renderTests()">
+        <option value="">Toutes catégories</option>
+        <option value="Junior">Junior</option>
+        <option value="Senior">Senior</option>
+        <option value="Novice">Novice</option>
+        <option value="Synchro9">Synchro9</option>
+      </select>
+    </div>
+    <div class="test-type-bar" id="test-type-bar"></div>
+    <div class="test-ranking" id="test-ranking"></div>
+    <div class="empty-state" id="tests-empty"><div class="empty-icon">📊</div><p>Aucune athlète ou aucune donnée.</p></div>
+  </div>
+
+  <!-- BILAN PRÉSENCES -->
+  <div class="ipanel" id="athletes-summary">
+    <div style="padding:10px 14px 6px;font-size:12px;color:var(--muted);">Taux de présence par athlète sur toutes les séances enregistrées.</div>
+    <div class="summary-table" id="summary-table"></div>
+    <div class="empty-state" id="summary-empty"><div class="empty-icon">📋</div><p>Aucune donnée de présence.</p></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ TAB: PLANNING ═══════════════════ -->
+<div class="tab" id="tab-planning">
+  <div class="topbar">
+    <div class="topbar-logo">PLANNING</div>
+    <div class="topbar-right">
+      <div class="topbar-badge" id="cal-phase-label">PHASE 1</div>
+    </div>
+  </div>
+  <div class="inner-tabs">
+    <button class="itab active" onclick="switchInner('planning','calendrier')">CALENDRIER</button>
+    <button class="itab" onclick="switchInner('planning','phases')">PHASES</button>
+    <button class="itab" onclick="switchInner('planning','comps')">COMPÉTITIONS</button>
+  </div>
+
+  <!-- CALENDRIER -->
+  <div class="ipanel active" id="planning-calendrier">
+
+    <!-- FILTER + NAV -->
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 14px 6px;">
+      <button onclick="calNav(-1)" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:16px;">‹</button>
+      <div id="cal-week-label" style="flex:1;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1px;color:var(--text);"></div>
+      <button onclick="calNav(1)" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:16px;">›</button>
+      <button onclick="calGoToday()" style="background:rgba(0,200,232,.1);border:1px solid rgba(0,200,232,.3);color:var(--ice);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:11px;font-family:'Bebas Neue',sans-serif;letter-spacing:1px;">AUJ.</button>
+    </div>
+
+    <!-- TEAM FILTER -->
+    <div style="display:flex;gap:6px;padding:0 14px 8px;">
+      <button class="cal-filter-btn active" id="filter-all" onclick="calFilter('all')">Toutes</button>
+      <button class="cal-filter-btn" id="filter-harmonia" onclick="calFilter('harmonia')">🟢 Harmonia</button>
+      <button class="cal-filter-btn" id="filter-olympia" onclick="calFilter('olympia')">🔵 Olympia</button>
+    </div>
+
+    <!-- PHASE BANNER -->
+    <div id="cal-phase-banner" style="margin:0 14px 8px;padding:8px 12px;border-radius:8px;font-size:12px;line-height:1.6;"></div>
+
+    <!-- DAYS -->
+    <div id="cal-days" style="padding:0 14px;display:flex;flex-direction:column;gap:8px;"></div>
+
+  </div>
+
+  <!-- PHASES -->
+  <div class="ipanel" id="planning-phases">
+    <div style="padding:10px 14px;font-size:12px;color:var(--muted);line-height:1.7;">Phases indicatives — à compléter avec les dates de compétition.</div>
+    <div class="phase-block phase-active">
+      <div class="phase-head"><div class="phase-dot" style="background:var(--green)"></div><div class="phase-name">Phase 1 — Reprise générale</div><div class="phase-dates">Mai–Juin 2026</div></div>
+      <div class="phase-body">Reconstruction physique. Tests initiaux. Routine. Skating skills de base.<br><span style="color:var(--ice);">→ En cours</span></div>
+    </div>
+    <div class="phase-block">
+      <div class="phase-head"><div class="phase-dot" style="background:var(--ice)"></div><div class="phase-name">Phase 2 — Développement</div><div class="phase-dates">À définir</div></div>
+      <div class="phase-body">Montée en charge. Éléments de compétition. Renforcement ciblé.</div>
+    </div>
+    <div class="phase-block">
+      <div class="phase-head"><div class="phase-dot" style="background:var(--orange)"></div><div class="phase-name">Phase 3 — Accumulation</div><div class="phase-dates">À définir</div></div>
+      <div class="phase-body">Volume maximal. Programmes complets. Endurance spécifique.</div>
+    </div>
+    <div class="phase-block">
+      <div class="phase-head"><div class="phase-dot" style="background:var(--yellow)"></div><div class="phase-name">Phase 4 — Affûtage</div><div class="phase-dates">À définir</div></div>
+      <div class="phase-body">Volume réduit, intensité maintenue. Simulations compétition.</div>
+    </div>
+    <div class="phase-block">
+      <div class="phase-head"><div class="phase-dot" style="background:var(--purple)"></div><div class="phase-name">Phase 5 — Compétitions</div><div class="phase-dates">À définir</div></div>
+      <div class="phase-body">Maintien de forme. Récupération inter-compétitions.</div>
+    </div>
+  </div>
+
+  <!-- COMPETITIONS -->
+  <div class="ipanel" id="planning-comps">
+    <div id="comp-list" style="margin-top:10px;"></div>
+    <div style="padding:4px 14px 10px;"><button class="btn btn-ghost" style="width:100%;" onclick="openModal('modal-comp')">+ Ajouter une compétition</button></div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════ TAB: RESSOURCES ═══════════════════ -->
+<div class="tab" id="tab-ressources">
+  <div class="topbar"><div class="topbar-logo">RESSOURCES</div></div>
+  <div class="inner-tabs">
+    <button class="itab active" onclick="switchInner('ressources','musique')">MUSIQUE</button>
+    <button class="itab" onclick="switchInner('ressources','regl')">RÈGLEMENT</button>
+    <button class="itab" onclick="switchInner('ressources','liens')">LIENS</button>
+  </div>
+  <div class="ipanel active" id="ressources-musique">
+    <div style="padding:10px 14px 4px;font-size:12px;color:var(--muted);">Appuie pour ouvrir directement.</div>
+    <div id="music-list"></div>
+    <div style="padding:4px 14px 10px;"><button class="btn btn-ghost" style="width:100%;" onclick="openModal('modal-music')">+ Ajouter musique / playlist</button></div>
+  </div>
+  <div class="ipanel" id="ressources-regl">
+    <div class="card" style="margin-top:10px;cursor:pointer;" onclick="openFile('regl_WBP_2627.html')">
+      <a class="resource-link"><div class="res-icon">📋</div><div><div class="res-title">WBP 2026/27</div><div class="res-sub">Well Balanced Program · ISU Comm. 2779</div></div><div class="res-arrow">↗</div></a>
+    </div>
+    <div class="card" style="cursor:pointer;" onclick="openFile('regl_SOV_2026.html')">
+      <a class="resource-link"><div class="res-icon">📊</div><div><div class="res-title">Scale of Values 2026</div><div class="res-sub">Tous niveaux + downgrades · ISU Comm. 2776</div></div><div class="res-arrow">↗</div></a>
+    </div>
+    <div class="card" style="cursor:pointer;" onclick="openFile('regl_Synchro9_WBP_2627.html')">
+      <a class="resource-link"><div class="res-icon">9️⃣</div><div><div class="res-title">WBP Synchro9 2026/27–27/28</div><div class="res-sub">Programme complet verbatim · ISU Comm. 2784</div></div><div class="res-arrow">↗</div></a>
+    </div>
+    <div class="card" style="cursor:pointer;" onclick="openFile('analyse_Synchro9_coaching.html')">
+      <a class="resource-link"><div class="res-icon">🧠</div><div><div class="res-title">Analyse Synchro9 — Coaching</div><div class="res-sub">Tactique · Scoring · Profil équipe · En cours</div></div><div class="res-arrow">↗</div></a>
+    </div>
+    <div id="custom-reglements"></div>
+    <div style="padding:4px 14px 10px;"><button class="btn btn-ghost" style="width:100%;" onclick="openLinkModal('reglements','📖 Ajouter un règlement')">+ Ajouter document</button></div>
+  </div>
+  <div class="ipanel" id="ressources-liens">
+    <div class="card" style="margin-top:10px;">
+      <a class="resource-link" href="https://synchrostats.github.io" target="_blank"><div class="res-icon">📊</div><div><div class="res-title">SynchroStats</div><div class="res-sub">Plateforme analytics synchro</div></div><div class="res-arrow">↗</div></a>
+    </div>
+    <div id="custom-links"></div>
+    <div style="padding:4px 14px 10px;"><button class="btn btn-ghost" style="width:100%;" onclick="openLinkModal('links','🔗 Ajouter un lien')">+ Ajouter lien</button></div>
+  </div>
+</div>
+
+</div><!-- end app-body -->
+
+<!-- BOTTOM NAV -->
+<nav class="bottomnav">
+  <button class="nav-btn active" onclick="switchTab('home')" id="nav-home"><div class="nav-icon">🏠</div><div class="nav-label">Accueil</div></button>
+  <button class="nav-btn" onclick="switchTab('seances')" id="nav-seances"><div class="nav-icon">📋</div><div class="nav-label">Séances</div></button>
+  <button class="nav-btn" onclick="switchTab('athletes')" id="nav-athletes"><div class="nav-icon">👥</div><div class="nav-label">Athlètes</div></button>
+  <button class="nav-btn" onclick="switchTab('planning')" id="nav-planning"><div class="nav-icon">📅</div><div class="nav-label">Planning</div></button>
+  <button class="nav-btn" onclick="switchTab('ressources')" id="nav-ressources"><div class="nav-icon">🔗</div><div class="nav-label">Ressources</div></button>
+</nav>
+</div>
+
+<!-- ═══════════ MODALS ═══════════ -->
+
+<!-- ATHLETE -->
+<div class="modal-overlay" id="modal-athlete">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-athlete')">✕</button>
+    <div class="modal-title" id="modal-athlete-title">Ajouter une athlète</div>
+    <input type="hidden" id="athlete-edit-idx" value="-1">
+    <div class="form-group"><label class="form-label">Code (ex: AK-01)</label><input class="form-input" id="ath-code" placeholder="AK-01"/></div>
+    <div class="form-group"><label class="form-label">Année de naissance</label><input class="form-input" id="ath-year" type="number" placeholder="2008"/></div>
+    <div class="form-group">
+      <label class="form-label">Catégories</label>
+      <div class="cat-checks" id="cat-checks">
+        <div class="cat-check" onclick="toggleCat(this,'Junior')"><span>Junior</span></div>
+        <div class="cat-check" onclick="toggleCat(this,'Senior')"><span>Senior</span></div>
+        <div class="cat-check" onclick="toggleCat(this,'Novice')"><span>Novice</span></div>
+        <div class="cat-check" onclick="toggleCat(this,'Synchro9')"><span>Synchro9</span></div>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Notes (blessures, observations)</label><textarea class="form-input" id="ath-notes" placeholder="Ex: surveiller genou droit"></textarea></div>
+    <button class="btn btn-primary" style="width:100%;" onclick="saveAthlete()">Enregistrer</button>
+  </div>
+</div>
+
+<!-- TEST ENTRY -->
+<div class="modal-overlay" id="modal-test">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-test')">✕</button>
+    <div class="modal-title" id="modal-test-title">Tests physiques</div>
+    <input type="hidden" id="test-ath-idx">
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Écart droit (cm)</label><input class="form-input" id="t-split-r" type="number" placeholder="—"/></div>
+      <div class="form-group"><label class="form-label">Écart gauche (cm)</label><input class="form-input" id="t-split-l" type="number" placeholder="—"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Écart facial (cm)</label><input class="form-input" id="t-split-f" type="number" placeholder="—"/></div>
+      <div class="form-group"><label class="form-label">Arabesque D (°)</label><input class="form-input" id="t-arab-r" type="number" placeholder="—"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Arabesque G (°)</label><input class="form-input" id="t-arab-l" type="number" placeholder="—"/></div>
+      <div class="form-group"><label class="form-label">Squat 1RM (kg)</label><input class="form-input" id="t-squat" type="number" placeholder="—"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Max pompes</label><input class="form-input" id="t-pushup" type="number" placeholder="—"/></div>
+      <div class="form-group"><label class="form-label">Max tractions</label><input class="form-input" id="t-pullup" type="number" placeholder="—"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">VMA (km/h)</label><input class="form-input" id="t-vma" type="number" step="0.1" placeholder="—"/></div>
+      <div class="form-group"><label class="form-label">Saut D (cm)</label><input class="form-input" id="t-jump-r" type="number" placeholder="—"/></div>
+    </div>
+    <div class="form-group"><label class="form-label">Saut G (cm)</label><input class="form-input" id="t-jump-l" type="number" placeholder="—"/></div>
+    <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="saveTest()">Enregistrer</button>
+  </div>
+</div>
+
+<!-- COMPETITION -->
+<div class="modal-overlay" id="modal-comp">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-comp')">✕</button>
+    <div class="modal-title">Ajouter une compétition</div>
+    <div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="comp-name" placeholder="Ex: Nationals Juniors"/></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="comp-date" type="date"/></div>
+      <div class="form-group"><label class="form-label">Lieu</label><input class="form-input" id="comp-loc" placeholder="Ville"/></div>
+    </div>
+    <div class="form-group"><label class="form-label">Importance</label>
+      <select class="form-input" id="comp-level"><option value="A">A — Championnat majeur</option><option value="B">B — Compétition importante</option><option value="C">C — Préparatoire</option></select>
+    </div>
+    <button class="btn btn-primary" style="width:100%;" onclick="saveComp()">Ajouter</button>
+  </div>
+</div>
+
+<!-- MUSIC -->
+<div class="modal-overlay" id="modal-music">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-music')">✕</button>
+    <div class="modal-title">Ajouter une musique</div>
+    <div class="form-group"><label class="form-label">Titre</label><input class="form-input" id="music-title" placeholder="Ex: Warm-up 25-26"/></div>
+    <div class="form-group"><label class="form-label">Lien (Spotify, YouTube...)</label><input class="form-input" id="music-url" type="url" placeholder="https://..."/></div>
+    <div class="form-group"><label class="form-label">Catégorie</label>
+      <select class="form-input" id="music-cat"><option>Échauffement PP</option><option>Échauffement glace</option><option>Programme compétition</option><option>Programme exhibition</option><option>Autre</option></select>
+    </div>
+    <button class="btn btn-primary" style="width:100%;" onclick="saveMusic()">Ajouter</button>
+  </div>
+</div>
+
+<!-- GENERIC LINK -->
+<div class="modal-overlay" id="modal-link">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-link')">✕</button>
+    <div class="modal-title" id="modal-link-title">Ajouter un lien</div>
+    <input type="hidden" id="link-type">
+    <div class="form-group"><label class="form-label">Titre</label><input class="form-input" id="link-title" placeholder="Titre"/></div>
+    <div class="form-group"><label class="form-label">URL</label><input class="form-input" id="link-url" type="url" placeholder="https://..."/></div>
+    <button class="btn btn-primary" style="width:100%;" onclick="saveLink()">Ajouter</button>
+  </div>
+</div>
+
+<!-- EXPORT/IMPORT -->
+<div class="modal-overlay" id="modal-export">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-export')">✕</button>
+    <div class="modal-title">Données — Export / Import</div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:12.5px;color:var(--text2);line-height:1.7;margin-bottom:12px;">
+        <strong style="color:var(--text);">Export</strong> : télécharge toutes tes données en JSON. Garde ce fichier comme sauvegarde.
+      </div>
+      <button class="btn btn-primary" style="width:100%;" onclick="exportData()">⬇️ Exporter toutes les données</button>
+    </div>
+    <div class="divider"></div>
+    <div style="margin-top:12px;">
+      <div style="font-size:12.5px;color:var(--text2);line-height:1.7;margin-bottom:12px;">
+        <strong style="color:var(--text);">Import</strong> : réimporte un fichier JSON exporté précédemment. <span style="color:var(--red);">⚠️ Écrase les données actuelles.</span>
+      </div>
+      <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importData(event)">
+      <button class="btn btn-ghost" style="width:100%;" onclick="document.getElementById('import-file').click()">⬆️ Importer depuis fichier</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════
+// STORAGE
+// ══════════════════════════════════════
+const db = {
+  get:(k,d)=>{if(d===undefined)d=[];try{const v=JSON.parse(localStorage.getItem('sc_'+k));return v!==null&&v!==undefined?v:d;}catch(e){return d;}},
+  set:(k,v)=>localStorage.setItem('sc_'+k,JSON.stringify(v)),
+};
+
+const TEST_FIELDS = [
+  {id:'t-split-r', key:'split_r', label:'Écart droit', unit:'cm', desc:'Flexibilité'},
+  {id:'t-split-l', key:'split_l', label:'Écart gauche', unit:'cm', desc:'Flexibilité'},
+  {id:'t-split-f', key:'split_f', label:'Écart facial', unit:'cm', desc:'Flexibilité'},
+  {id:'t-arab-r', key:'arab_r', label:'Arabesque D', unit:'°', desc:'Flexibilité active'},
+  {id:'t-arab-l', key:'arab_l', label:'Arabesque G', unit:'°', desc:'Flexibilité active'},
+  {id:'t-squat', key:'squat', label:'Squat 1RM', unit:'kg', desc:'Force'},
+  {id:'t-pushup', key:'pushup', label:'Max pompes', unit:'', desc:'Force'},
+  {id:'t-pullup', key:'pullup', label:'Max tractions', unit:'', desc:'Force'},
+  {id:'t-vma', key:'vma', label:'VMA', unit:'km/h', desc:'Endurance'},
+  {id:'t-jump-r', key:'jump_r', label:'Saut D', unit:'cm', desc:'Explosivité'},
+  {id:'t-jump-l', key:'jump_l', label:'Saut G', unit:'cm', desc:'Explosivité'},
+];
+
+const SESSIONS_DEFAULT = ['S01','S02','S03','S04','S05','S06'];
+let currentPresType = 'PP';
+let currentTestType = TEST_FIELDS[0].key;
+
+// ══════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.getElementById('nav-'+name).classList.add('active');
+  if(name==='athletes'){renderRoster();renderPresence();renderTests();}
+  if(name==='planning'){renderComps();renderCalendar();}
+  if(name==='ressources'){renderMusic();renderCustomLinks();renderCustomReglements();}
+  if(name==='home'){updateHomeStats();}
+}
+
+function switchInner(tab, panel){
+  const cont = document.getElementById('tab-'+tab);
+  const itabs = cont.querySelectorAll('.itab');
+  const ipanels = cont.querySelectorAll('.ipanel');
+  const map={pp:0,glace:1,debriefs:2,roster:0,presence:1,tests:2,summary:3,calendrier:0,phases:1,comps:2,musique:0,regl:1,liens:2};
+  const idx=map[panel];
+  itabs.forEach((t,i)=>{t.classList.toggle('active',i===idx);ipanels[i].classList.toggle('active',i===idx);});
+  if(panel==='presence')renderPresence();
+  if(panel==='tests'){buildTestTypesBar();renderTests();}
+  if(panel==='summary')renderPresenceSummary();
+  if(panel==='calendrier')renderCalendar();
+  if(panel==='comps')renderComps();
+  if(panel==='musique')renderMusic();
+}
+
+// ══════════════════════════════════════
+// HOME
+// ══════════════════════════════════════
+function updateHomeStats(){
+  const aths=db.get('athletes');
+  document.getElementById('stat-ath').textContent=aths.length||'—';
+  const comps=db.get('competitions');
+  const future=comps.filter(c=>new Date(c.date)>=new Date()).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  if(future.length){
+    const days=Math.ceil((new Date(future[0].date)-new Date())/(864e5));
+    document.getElementById('stat-comp').textContent=days+'j';
+    document.getElementById('home-sub').textContent=`Prochaine compét : ${future[0].name} dans ${days} jours`;
+  }
+  // avg presence
+  if(aths.length){
+    const sessions=db.get('sessions',['S01']);
+    let total=0,count=0;
+    sessions.forEach(s=>{
+      ['PP','Glace'].forEach(type=>{
+        const p=db.get('pres_'+type+'_'+s,{});
+        aths.forEach((_,i)=>{if(p[i]){count++;if(p[i]==='present')total++;}});
+      });
+    });
+    document.getElementById('stat-pres').textContent=count?Math.round(total/count*100)+'%':'—';
+  }
+}
+
+// ══════════════════════════════════════
+// ATHLETES
+// ══════════════════════════════════════
+function renderRoster(){
+  const aths=db.get('athletes');
+  const list=document.getElementById('roster-list');
+  const empty=document.getElementById('roster-empty');
+  if(!aths.length){list.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  list.innerHTML=aths.map((a,i)=>`
+    <div class="card">
+      <div class="card-head">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--muted);min-width:22px;">${String(i+1).padStart(2,'0')}</div>
+        <div style="flex:1;">
+          <div class="card-title">${a.code}</div>
+          <div class="card-sub">${a.cats?.join(' · ')||'—'} ${a.year?'· '+a.year:''}</div>
+        </div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;max-width:120px;">${(a.cats||[]).map(c=>`<span class="badge badge-${catColor(c)}">${c}</span>`).join('')}</div>
+        <button onclick="openEditAthlete(${i})" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;padding:3px 5px;">✏️</button>
+        <button onclick="openEditTestFor(${i})" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;padding:3px 5px;">📊</button>
+        <button onclick="deleteAthlete(${i})" style="background:none;border:none;color:var(--red);font-size:13px;cursor:pointer;padding:3px 5px;">✕</button>
+      </div>
+      ${a.notes?`<div class="card-body" style="font-size:11px;color:var(--muted);">${a.notes}</div>`:''}
+    </div>`).join('');
+}
+
+function catColor(c){return{Junior:'ice',Senior:'purple',Novice:'orange',Synchro9:'green'}[c]||'muted';}
+
+function toggleCat(el,val){
+  el.classList.toggle('selected');
+  el.dataset.val=val;
+}
+
+function openAddAthlete(){
+  document.getElementById('athlete-edit-idx').value=-1;
+  document.getElementById('modal-athlete-title').textContent='Ajouter une athlète';
+  document.getElementById('ath-code').value='';
+  document.getElementById('ath-year').value='';
+  document.getElementById('ath-notes').value='';
+  document.querySelectorAll('.cat-check').forEach(el=>el.classList.remove('selected'));
+  openModal('modal-athlete');
+}
+
+function openEditAthlete(i){
+  const a=db.get('athletes')[i];
+  document.getElementById('athlete-edit-idx').value=i;
+  document.getElementById('modal-athlete-title').textContent='Modifier '+a.code;
+  document.getElementById('ath-code').value=a.code;
+  document.getElementById('ath-year').value=a.year||'';
+  document.getElementById('ath-notes').value=a.notes||'';
+  document.querySelectorAll('.cat-check').forEach(el=>{
+    const sel=(a.cats||[]).includes(el.dataset.val);
+    el.classList.toggle('selected',sel);
+  });
+  openModal('modal-athlete');
+}
+
+function saveAthlete(){
+  const code=document.getElementById('ath-code').value.trim();
+  if(!code)return;
+  const cats=[...document.querySelectorAll('.cat-check.selected')].map(el=>el.dataset.val);
+  const obj={code,year:document.getElementById('ath-year').value,cats,notes:document.getElementById('ath-notes').value.trim()};
+  const aths=db.get('athletes');
+  const idx=parseInt(document.getElementById('athlete-edit-idx').value);
+  if(idx>=0)aths[idx]=obj; else aths.push(obj);
+  db.set('athletes',aths);
+  // Ensure session exists in list
+  const sessions=db.get('sessions',['S01']);
+  db.set('sessions',sessions);
+  closeModal('modal-athlete');
+  renderRoster();
+  updateHomeStats();
+}
+
+function deleteAthlete(i){
+  if(!confirm('Supprimer cette athlète ?'))return;
+  const aths=db.get('athletes');aths.splice(i,1);db.set('athletes',aths);renderRoster();updateHomeStats();
+}
+
+// ══════════════════════════════════════
+// PRESENCES
+// ══════════════════════════════════════
+function setPresType(type){
+  currentPresType=type;
+  document.getElementById('ptt-pp').classList.toggle('active',type==='PP');
+  document.getElementById('ptt-glace').classList.toggle('active',type==='Glace');
+  renderPresence();
+}
+
+function renderPresence(){
+  const aths=db.get('athletes');
+  const session=document.getElementById('pres-session-sel').value;
+  const presences=db.get('pres_'+currentPresType+'_'+session,{});
+  const list=document.getElementById('pres-list');
+  const empty=document.getElementById('pres-empty');
+  if(!aths.length){list.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  const present=Object.values(presences).filter(v=>v==='present').length;
+  const absent=Object.values(presences).filter(v=>v==='absent').length;
+  const injury=Object.values(presences).filter(v=>v==='injury').length;
+  list.innerHTML=`<div style="display:flex;gap:10px;padding:8px 0 6px;font-size:11px;">
+    <span style="color:var(--green);">✅ ${present}</span>
+    <span style="color:var(--red);">❌ ${absent}</span>
+    <span style="color:var(--orange);">🤕 ${injury}</span>
+    <span style="color:var(--muted);">⬜ ${aths.length-present-absent-injury} non marquées</span>
+  </div>`+
+  aths.map((a,i)=>{
+    const s=presences[i]||'none';
+    return `<div class="athlete-row">
+      <div class="ath-code">${a.code}</div>
+      <div class="ath-name" style="flex:1;">${(a.cats||[]).map(c=>`<span class="badge badge-${catColor(c)}" style="font-size:9px;padding:1px 5px;">${c[0]}</span>`).join('')}</div>
+      <button class="pres-btn ${s==='present'?'present':''}" onclick="setPres(${i},'present','${session}')" title="Présente">✅</button>
+      <button class="pres-btn ${s==='absent'?'absent':''}" onclick="setPres(${i},'absent','${session}')" title="Absente">❌</button>
+      <button class="pres-btn ${s==='injury'?'injury':''}" onclick="setPres(${i},'injury','${session}')" title="Blessée">🤕</button>
+    </div>`;
+  }).join('');
+}
+
+function setPres(idx,status,session){
+  const p=db.get('pres_'+currentPresType+'_'+session,{});
+  p[idx]=p[idx]===status?'none':status;
+  db.set('pres_'+currentPresType+'_'+session,p);
+  renderPresence();
+}
+
+function savePresence(){
+  const session=document.getElementById('pres-session-sel').value;
+  const aths=db.get('athletes');
+  const p=db.get('pres_'+currentPresType+'_'+session,{});
+  const cnt=Object.values(p).filter(v=>v==='present').length;
+  alert(`✅ Présences ${currentPresType} ${session} sauvegardées — ${cnt}/${aths.length} présentes`);
+  // Add session to list
+  const sessions=db.get('sessions',['S01']);
+  if(!sessions.includes(session)){sessions.push(session);db.set('sessions',sessions);}
+  updateHomeStats();
+}
+
+function addSession(num){
+  ['pres-session-sel','test-session-sel'].forEach(function(id){
+    const sel=document.getElementById(id);
+    if(sel&&![...sel.options].find(function(o){return o.value===num;})){
+      const opt=document.createElement('option');
+      opt.value=num;
+      opt.textContent=id==='test-session-sel'?'Post '+num:'Séance '+num;
+      sel.appendChild(opt);
+    }
+  });
+}
+
+// ══════════════════════════════════════
+// PRESENCE SUMMARY
+// ══════════════════════════════════════
+function renderPresenceSummary(){
+  const aths=db.get('athletes');
+  const sessions=db.get('sessions',SESSIONS_DEFAULT);
+  const wrap=document.getElementById('summary-table');
+  const empty=document.getElementById('summary-empty');
+  if(!aths.length){wrap.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+
+  // Build data
+  const rows=aths.map((a,i)=>{
+    let totalPP=0,presPP=0,totalG=0,presG=0;
+    sessions.forEach(s=>{
+      const pp=db.get('pres_PP_'+s,{});
+      const gl=db.get('pres_Glace_'+s,{});
+      if(pp[i]&&pp[i]!=='none'){totalPP++;if(pp[i]==='present')presPP++;}
+      if(gl[i]&&gl[i]!=='none'){totalG++;if(gl[i]==='present')presG++;}
+    });
+    const pctPP=totalPP?Math.round(presPP/totalPP*100):null;
+    const pctG=totalG?Math.round(presG/totalG*100):null;
+    const total=presPP+presG;const totalSes=totalPP+totalG;
+    const pctTot=totalSes?Math.round(total/totalSes*100):null;
+    return{code:a.code,cats:a.cats,pctPP,pctG,pctTot,total,totalSes};
+  }).sort((a,b)=>{const av=a.pctTot!==null?a.pctTot:-1;const bv=b.pctTot!==null?b.pctTot:-1;return bv-av;});
+
+  const pctClass=p=>p===null?'':p>=80?'pct-high':p>=60?'pct-mid':'pct-low';
+  const fmt=p=>p===null?'—':p+'%';
+
+  wrap.innerHTML=`<table class="sum-tbl">
+    <thead><tr><th>Athlète</th><th>PP</th><th>Glace</th><th>Total</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr>
+      <td>${r.code}<br><span style="font-size:9px;color:var(--muted);">${(r.cats||[]).join('·')}</span></td>
+      <td class="${pctClass(r.pctPP)}">${fmt(r.pctPP)}</td>
+      <td class="${pctClass(r.pctG)}">${fmt(r.pctG)}</td>
+      <td class="${pctClass(r.pctTot)}" style="font-weight:700;">${fmt(r.pctTot)}</td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+// ══════════════════════════════════════
+// TESTS
+// ══════════════════════════════════════
+function buildTestTypesBar(){
+  const bar=document.getElementById('test-type-bar');
+  bar.innerHTML=TEST_FIELDS.map(f=>`
+    <button class="test-type-btn ${f.key===currentTestType?'active':''}" onclick="selectTestType('${f.key}')">${f.label}</button>
+  `).join('');
+}
+
+function selectTestType(key){
+  currentTestType=key;
+  buildTestTypesBar();
+  renderTests();
+}
+
+function renderTests(){
+  buildTestTypesBar();
+  const aths=db.get('athletes');
+  const session=document.getElementById('test-session-sel').value;
+  const catFilter=document.getElementById('test-cat-filter').value;
+  const ranking=document.getElementById('test-ranking');
+  const empty=document.getElementById('tests-empty');
+
+  let filtered=aths.map((a,i)=>({...a,idx:i}));
+  if(catFilter)filtered=filtered.filter(a=>(a.cats||[]).includes(catFilter));
+
+  if(!filtered.length){ranking.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+
+  const field=TEST_FIELDS.find(f=>f.key===currentTestType);
+
+  const withData=filtered.map(a=>{
+    const tests=db.get('tests_'+a.idx+'_'+session,{});
+    return{...a,val:tests[field.key]||null};
+  }).sort((a,b)=>{
+    if(a.val===null&&b.val===null)return 0;
+    if(a.val===null)return 1;
+    if(b.val===null)return -1;
+    return b.val-a.val;
+  });
+
+  ranking.innerHTML=`<div style="padding:8px 0 6px;font-size:11px;color:var(--muted);">${field.desc} · ${field.label} · Séance ${session} · Tri décroissant</div>`+
+  withData.map((a,rank)=>{
+    const cls=rank===0?'gold':rank===1?'silver':rank===2?'bronze':'';
+    return `<div class="test-rank-item" onclick="openEditTestFor(${a.idx})">
+      <div class="rank-pos ${cls}">${String(rank+1).padStart(2,'0')}</div>
+      <div class="rank-info">
+        <div class="rank-name">${a.code}</div>
+        <div class="rank-cat">${(a.cats||[]).join(' · ')}</div>
+      </div>
+      ${a.val!==null
+        ?`<div><div class="rank-val">${a.val}</div><div class="rank-unit">${field.unit}</div></div>`
+        :`<div class="rank-nodata">non saisi</div>`}
+    </div>`;
+  }).join('');
+}
+
+function openEditTestFor(i){
+  const aths=db.get('athletes');
+  const session=document.getElementById('test-session-sel')?document.getElementById('test-session-sel').value:'S00';
+  const tests=db.get('tests_'+i+'_'+session,{});
+  document.getElementById('modal-test-title').textContent=aths[i].code+' — Tests '+session;
+  document.getElementById('test-ath-idx').value=i;
+  TEST_FIELDS.forEach(f=>{document.getElementById(f.id).value=tests[f.key]||'';});
+  openModal('modal-test');
+}
+
+function saveTest(){
+  const i=document.getElementById('test-ath-idx').value;
+  const session=document.getElementById('test-session-sel')?document.getElementById('test-session-sel').value:'S00';
+  const tests={};
+  TEST_FIELDS.forEach(f=>{const v=document.getElementById(f.id).value;if(v)tests[f.key]=parseFloat(v)||v;});
+  db.set('tests_'+i+'_'+session,tests);
+  closeModal('modal-test');
+  renderTests();
+}
+
+// ══════════════════════════════════════
+// CALENDAR
+// ══════════════════════════════════════
+// Sessions fixes tirées du planning mai/juin 2026
+// Jours : 0=dim,1=lun,2=mar,3=mer,4=jeu,5=ven,6=sam
+const FIXED_SESSIONS = [
+  // ── SÉANCES PASSÉES — dates exactes ──────────────────────────
+  // 23/04 — PP S01 + Glace S01
+  {day:4, team:'harmonia', type:'pp',    time:'17:30–18:30', title:'PP S01', location:'PADOK',
+   files:[{label:'📄 Fiche',file:'seance_PP_S01.html'},{label:'📋 Débrief',file:'debrief_S01.html'}], exceptDate:'2026-04-23'},
+  {day:4, team:'harmonia', type:'glace', time:'19:00–20:30', title:'Glace S01', location:'PADOK',
+   files:[{label:'📄 Fiche',file:'seance_GLACE_S01.html'},{label:'📋 Débrief',file:'debrief_S01.html'}], exceptDate:'2026-04-23'},
+  // 30/04 — PP S02 + Glace S02
+  {day:4, team:'harmonia', type:'pp',    time:'17:30–18:30', title:'PP S02', location:'PADOK',
+   files:[{label:'📄 Fiche',file:'seance_PP_S02.html'},{label:'📋 Débrief',file:'debrief_S02.html'}], exceptDate:'2026-04-30'},
+  {day:4, team:'harmonia', type:'glace', time:'19:00–20:30', title:'Glace S02', location:'PADOK',
+   files:[{label:'📄 Fiche',file:'seance_GLACE_S02.html'},{label:'📋 Débrief',file:'debrief_S02.html'}], exceptDate:'2026-04-30'},
+  // 04/05 — Glace S03 (exceptionnel)
+  {day:1, team:'harmonia', type:'glace', time:'18:15–19:30', title:'Glace S03 — Exceptionnel', location:'HASA',
+   files:[{label:'📋 Débrief',file:'debrief_S03_glace.html'}], exceptDate:'2026-05-04'},
+  // 06/05 — Glace S04
+  {day:3, team:'harmonia', type:'glace', time:'19:35–21:05', title:'Glace S04', location:'HASA',
+   files:[{label:'📄 Fiche',file:'seance_GLACE_S04.html'},{label:'📋 Débrief',file:'debrief_S04_glace.html'}], exceptDate:'2026-05-06'},
+  // 07/05 — PP S03 + Glace S05
+  {day:4, team:'harmonia', type:'pp',    time:'17:30–18:30', title:'PP S03', location:'PADOK',
+   files:[{label:'📄 Fiche',file:'seance_PP_S03.html'},{label:'📋 Débrief',file:'debrief_PP_S03.html'}], exceptDate:'2026-05-07'},
+  {day:4, team:'harmonia', type:'glace', time:'19:00–20:30', title:'Glace S05', location:'PADOK',
+   files:[{label:'📋 Débrief',file:'debrief_S05_glace.html'}], exceptDate:'2026-05-07'},
+  // ── RÉCURRENT FUTUR ──────────────────────────────────────────
+  // LUNDI
+  {day:1, team:'olympia', type:'glace', time:'18:15–19:30', title:'Olympia — Glace', location:'HASA', file:'', pauseBefore:'2026-05-11'},
+  {day:1, team:'olympia', type:'pp',    time:'19:50–20:50', title:'Olympia — PP (workout)', location:'HASA', file:'', pauseBefore:'2026-05-11'},
+  // MERCREDI
+  {day:3, team:'harmonia', type:'pp',   time:'17:20–18:20', title:'Harmonia — PP (tanec)', location:'HASA', file:'', otherCoach:true},
+  {day:3, team:'harmonia', type:'glace',time:'19:35–21:05', title:'Harmonia + Olympia — Glace', location:'HASA', file:''},
+  {day:3, team:'olympia',  type:'glace',time:'18:20–19:20', title:'Olympia — PP (tanec)', location:'HASA', file:'', otherCoach:true},
+  // JEUDI
+  {day:4, team:'harmonia', type:'pp',   time:'17:30–18:30', title:'Harmonia — PP (workout)', location:'PADOK', file:'seance_PP_S03.html'},
+  {day:4, team:'harmonia', type:'glace',time:'19:00–20:30', title:'Harmonia — Glace', location:'PADOK', file:'seance_GLACE_S04.html'},
+  // DIMANCHE
+  {day:0, team:'harmonia', type:'autre',time:'11:45–12:45', title:'Harmonia — Ballet', location:'HASA', file:'', otherCoach:true},
+  {day:0, team:'harmonia', type:'glace',time:'13:00–14:30', title:'Harmonia — Glace', location:'HASA', file:''},
+  {day:0, team:'olympia',  type:'autre',time:'18:15–19:15', title:'Olympia — Ballet', location:'HASA', file:'', otherCoach:true},
+  {day:0, team:'olympia',  type:'glace',time:'19:35–21:05', title:'Olympia — Glace', location:'HASA', file:''},
+];
+
+const PHASES = [
+  {start:'2026-05-04', end:'2026-06-28', label:'Phase 1 — Reprise générale', color:'#1de9a0'},
+];
+
+// Dates limites
+const SEASON_END = new Date('2026-06-29');
+const OLYMPIA_START = new Date('2026-05-11');
+const LAST_HASA = new Date('2026-06-24');
+const LAST_PADOK = new Date('2026-06-29');
+
+let calOffset = 0; // semaines depuis aujourd'hui
+let calTeamFilter = 'all';
+
+function getMonday(d) {
+  const date = new Date(d);
+  const day = date.getDay();
+  const diff = date.getDate() - day + (day===0 ? -6 : 1);
+  date.setDate(diff);
+  date.setHours(0,0,0,0);
+  return date;
+}
+
+function calNav(dir) { calOffset += dir; renderCalendar(); }
+function calGoToday() { calOffset = 0; renderCalendar(); }
+function calFilter(f) {
+  calTeamFilter = f;
+  document.querySelectorAll('.cal-filter-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('filter-'+f).classList.add('active');
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const container = document.getElementById('cal-days');
+  if (!container) return;
+
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const monday = getMonday(today);
+  monday.setDate(monday.getDate() + calOffset * 7);
+
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    days.push(d);
+  }
+
+  // Week label
+  const sunday = days[6];
+  const weekEl = document.getElementById('cal-week-label');
+  if (weekEl) weekEl.textContent =
+    monday.toLocaleDateString('fr-FR',{day:'numeric',month:'long'}) + ' – ' +
+    sunday.toLocaleDateString('fr-FR',{day:'numeric',month:'long'});
+
+  // Phase banner
+  const banner = document.getElementById('cal-phase-banner');
+  if (banner) {
+    const midWeek = days[3];
+    const phase = PHASES.find(function(p){ return midWeek >= new Date(p.start) && midWeek <= new Date(p.end); });
+    if (phase) {
+      banner.style.cssText = 'margin:0 14px 8px;padding:8px 12px;border-radius:8px;font-size:12px;line-height:1.6;background:rgba(29,233,160,.06);border:1px solid rgba(29,233,160,.2);color:#a0d4b8;';
+      banner.innerHTML = '<span style="color:'+phase.color+';font-family:Bebas Neue,sans-serif;letter-spacing:1px;">'+phase.label+'</span><br>Saison 2025\u201326';
+    } else {
+      banner.innerHTML = '';
+      banner.style.cssText = '';
+    }
+  }
+
+  const DAY_NAMES = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+  const order = [1,2,3,4,5,6,0];
+  const activeDayNums = [];
+  FIXED_SESSIONS.forEach(function(s){ if(activeDayNums.indexOf(s.day)===-1) activeDayNums.push(s.day); });
+  activeDayNums.sort(function(a,b){ return order.indexOf(a) - order.indexOf(b); });
+
+  container.innerHTML = '';
+
+  activeDayNums.forEach(function(dayNum) {
+    const date = days.find(function(d){ return d.getDay() === dayNum; });
+    if (!date) return;
+
+    const isToday = date.getTime() === today.getTime();
+
+    let sessions = FIXED_SESSIONS.filter(function(s) {
+      if (s.day !== dayNum) return false;
+      if (calTeamFilter !== 'all' && s.team !== calTeamFilter) return false;
+      // Session exceptionnelle : afficher seulement à la date exacte
+      if (s.exceptDate) {
+        const d = date.toISOString().slice(0,10);
+        return d === s.exceptDate;
+      }
+      return true;
+    });
+    if (!sessions.length) return;
+
+    sessions = sessions.map(function(s) {
+      let isPaused = false;
+      let pauseReason = '';
+      if (s.pauseBefore && date < new Date(s.pauseBefore)) {
+        isPaused = true; pauseReason = 'Pause \u2014 reprise le 11.05';
+      }
+      if (s.location === 'HASA' && date > LAST_HASA) {
+        isPaused = true; pauseReason = 'Fin de saison HASA (24.06)';
+      }
+      if (s.location === 'PADOK' && date > LAST_PADOK) {
+        isPaused = true; pauseReason = 'Fin de saison PADOK (29.06)';
+      }
+      return Object.assign({}, s, {isPaused: isPaused, pauseReason: pauseReason});
+    });
+
+    // Build day card
+    const dayEl = document.createElement('div');
+    dayEl.className = 'cal-day';
+
+    const headEl = document.createElement('div');
+    headEl.className = 'cal-day-head' + (isToday ? ' today' : '');
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'cal-day-name';
+    nameDiv.textContent = DAY_NAMES[dayNum];
+    const dateDiv = document.createElement('div');
+    dateDiv.className = 'cal-day-date';
+    dateDiv.textContent = date.toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
+    headEl.appendChild(nameDiv);
+    headEl.appendChild(dateDiv);
+    if (isToday) {
+      const todayBadge = document.createElement('span');
+      todayBadge.style.cssText = 'font-size:9px;font-family:Bebas Neue,sans-serif;letter-spacing:1px;color:var(--ice);background:rgba(0,200,232,.15);padding:2px 6px;border-radius:8px;';
+      todayBadge.textContent = "AUJOURD'HUI";
+      headEl.appendChild(todayBadge);
+    }
+    dayEl.appendChild(headEl);
+
+    const sessionsEl = document.createElement('div');
+    sessionsEl.className = 'cal-sessions';
+
+    sessions.forEach(function(s) {
+      const el = document.createElement('div');
+      const cls = s.isPaused ? 'pause' : s.otherCoach ? 'other' : s.team;
+      el.className = 'cal-session ' + cls;
+
+      const timeDiv = document.createElement('div');
+      timeDiv.className = 'cal-time';
+      timeDiv.textContent = s.time;
+
+      const infoDiv = document.createElement('div');
+      infoDiv.className = 'cal-info';
+
+      const titleDiv = document.createElement('div');
+      titleDiv.className = 'cal-title';
+      titleDiv.textContent = s.title;
+
+      const subDiv = document.createElement('div');
+      subDiv.className = 'cal-sub';
+      subDiv.textContent = s.location + (s.isPaused ? ' \u00B7 ' + s.pauseReason : '');
+
+      infoDiv.appendChild(titleDiv);
+      infoDiv.appendChild(subDiv);
+
+      // Liens fichiers — supporte files[] et file string
+      if (!s.isPaused && !s.otherCoach) {
+        var fileLinks = s.files || (s.file ? [{label:'\uD83D\uDCC4 Fiche', file:s.file}] : []);
+        if (fileLinks.length) {
+          var linksDiv = document.createElement('div');
+          linksDiv.style.cssText = 'display:flex;gap:5px;flex-wrap:wrap;margin-top:5px;';
+          fileLinks.forEach(function(fl) {
+            if (!fl.file) return;
+            var lnk = document.createElement('span');
+            lnk.style.cssText = 'font-size:10px;color:var(--ice);background:rgba(0,200,232,.08);border:1px solid rgba(0,200,232,.2);padding:2px 8px;border-radius:8px;cursor:pointer;white-space:nowrap;';
+            lnk.textContent = fl.label;
+            lnk.onclick = function(e){ e.stopPropagation(); openFile(fl.file); };
+            linksDiv.appendChild(lnk);
+          });
+          infoDiv.appendChild(linksDiv);
+        }
+      }
+
+      const badgeEl = document.createElement('span');
+      const badgeClass = s.isPaused ? 'badge-pause' : s.otherCoach ? 'badge-other' : 'badge-' + s.team;
+      badgeEl.className = 'cal-badge ' + badgeClass;
+      badgeEl.textContent = s.isPaused ? '\u23F8 PAUSE' : s.otherCoach ? 'Autre coach' : s.team === 'harmonia' ? 'Harmonia' : 'Olympia';
+
+      el.appendChild(timeDiv);
+      el.appendChild(infoDiv);
+      el.appendChild(badgeEl);
+
+      // Clic sur la carte — ouvre le premier fichier disponible
+      var firstFile = s.files ? (s.files[0] && s.files[0].file) : s.file;
+      if (!s.isPaused && !s.otherCoach && firstFile) {
+        el.onclick = function() { openFile(firstFile); };
+        el.style.cursor = 'pointer';
+      }
+
+      sessionsEl.appendChild(el);
+    });
+
+    dayEl.appendChild(sessionsEl);
+    container.appendChild(dayEl);
+  });
+}
+
+// ══════════════════════════════════════
+// COMPETITIONS
+// ══════════════════════════════════════
+function renderComps(){
+  const comps=db.get('competitions');
+  const list=document.getElementById('comp-list');
+  if(!comps.length){list.innerHTML=`<div class="empty-state"><div class="empty-icon">🏆</div><p>Aucune compétition.</p></div>`;return;}
+  const cols={A:'red',B:'orange',C:'ice'};
+  list.innerHTML=comps.sort((a,b)=>new Date(a.date)-new Date(b.date)).map((c,i)=>{
+    const days=Math.ceil((new Date(c.date)-new Date())/864e5);
+    return `<div class="card"><div class="card-head">
+      <div class="card-icon">${c.level==='A'?'🏆':c.level==='B'?'🥇':'📍'}</div>
+      <div style="flex:1;"><div class="card-title">${c.name}</div><div class="card-sub">${c.date} · ${c.loc||'—'}</div></div>
+      <div class="badge badge-${days<0?'muted':cols[c.level]}">${days<0?'PASSÉ':days+'j'}</div>
+      <button onclick="deleteComp(${i})" style="background:none;border:none;color:var(--red);font-size:13px;cursor:pointer;padding:3px;">✕</button>
+    </div></div>`;
+  }).join('');
+}
+
+function saveComp(){
+  const name=document.getElementById('comp-name').value.trim();if(!name)return;
+  const comps=db.get('competitions');
+  comps.push({name,date:document.getElementById('comp-date').value,loc:document.getElementById('comp-loc').value,level:document.getElementById('comp-level').value});
+  db.set('competitions',comps);closeModal('modal-comp');renderComps();updateHomeStats();
+}
+
+function deleteComp(i){
+  if(!confirm('Supprimer ?'))return;
+  const c=db.get('competitions');c.splice(i,1);db.set('competitions',c);renderComps();
+}
+
+// ══════════════════════════════════════
+// MUSIC
+// ══════════════════════════════════════
+function renderMusic(){
+  const items=db.get('music');
+  const list=document.getElementById('music-list');
+  if(!items.length){list.innerHTML=`<div class="empty-state"><div class="empty-icon">🎵</div><p>Aucune musique ajoutée.</p></div>`;return;}
+  list.innerHTML=items.map((m,i)=>`
+    <div class="card" style="margin-top:${i===0?'10px':'0'};">
+      <a class="resource-link" href="${m.url}" target="_blank">
+        <div class="res-icon">🎵</div>
+        <div><div class="res-title">${m.title}</div><div class="res-sub">${m.cat}</div></div>
+        <div class="res-arrow">↗</div>
+      </a>
+      <div style="border-top:1px solid var(--border);padding:5px 11px;display:flex;justify-content:flex-end;">
+        <button onclick="deleteItem('music',${i})" class="btn btn-danger btn-sm">Supprimer</button>
+      </div>
+    </div>`).join('');
+}
+
+function saveMusic(){
+  const t=document.getElementById('music-title').value.trim();if(!t)return;
+  const items=db.get('music');
+  items.push({title:t,url:document.getElementById('music-url').value,cat:document.getElementById('music-cat').value});
+  db.set('music',items);closeModal('modal-music');renderMusic();
+}
+
+// ══════════════════════════════════════
+// GENERIC LINKS
+// ══════════════════════════════════════
+function openLinkModal(type,title){
+  document.getElementById('modal-link-title').textContent=title;
+  document.getElementById('link-type').value=type;
+  document.getElementById('link-title').value='';
+  document.getElementById('link-url').value='';
+  openModal('modal-link');
+}
+
+function saveLink(){
+  const t=document.getElementById('link-title').value.trim();if(!t)return;
+  const type=document.getElementById('link-type').value;
+  const items=db.get(type);
+  items.push({title:t,url:document.getElementById('link-url').value});
+  db.set(type,items);closeModal('modal-link');
+  if(type==='objectives')renderCustomObjectives();
+  if(type==='reglements')renderCustomReglements();
+  if(type==='links')renderCustomLinks();
+}
+
+function renderCustomObjectives(){
+  const el=document.getElementById('custom-objectives');
+  if(!el)return;
+  if(!el)return;
+  el.innerHTML=db.get('objectives').map((o,i)=>`
+    <div class="card"><div class="card-head"><div class="card-icon">🎯</div><div class="card-title">${o.title}</div>
+    <button onclick="deleteItem('objectives',${i})" style="background:none;border:none;color:var(--red);font-size:13px;cursor:pointer;">✕</button>
+    </div></div>`).join('');
+}
+
+function renderCustomReglements(){
+  const el=document.getElementById('custom-reglements');
+  if(!el)return;
+  el.innerHTML=db.get('reglements').map((r,i)=>`
+    <div class="card"><a class="resource-link" href="${r.url||'#'}" target="_blank">
+      <div class="res-icon">📄</div><div><div class="res-title">${r.title}</div></div><div class="res-arrow">↗</div>
+    </a></div>`).join('');
+}
+
+function renderCustomLinks(){
+  const el=document.getElementById('custom-links');
+  if(!el)return;
+  el.innerHTML=db.get('links').map((l,i)=>`
+    <div class="card"><a class="resource-link" href="${l.url||'#'}" target="_blank">
+      <div class="res-icon">🔗</div><div><div class="res-title">${l.title}</div></div><div class="res-arrow">↗</div>
+    </a></div>`).join('');
+}
+
+function deleteItem(key,i){
+  const items=db.get(key);items.splice(i,1);db.set(key,items);
+  if(key==='music')renderMusic();
+  if(key==='objectives')renderCustomObjectives();
+  if(key==='links')renderCustomLinks();
+}
+
+// ══════════════════════════════════════
+// EXPORT / IMPORT
+// ══════════════════════════════════════
+function openExport(){openModal('modal-export');}
+
+function exportData(){
+  const keys=['athletes','competitions','music','sessions','objectives','reglements','links'];
+  const data={version:2,exported:new Date().toISOString()};
+  // Athletes + their tests and presences
+  data.athletes=db.get('athletes');
+  data.competitions=db.get('competitions');
+  data.music=db.get('music');
+  data.sessions=db.get('sessions',['S01']);
+  data.objectives=db.get('objectives');
+  data.reglements=db.get('reglements');
+  data.links=db.get('links');
+  // Presences and tests
+  data.presences={};data.tests={};
+  const sessions=db.get('sessions',['S01']);
+  sessions.forEach(s=>{
+    data.presences['PP_'+s]=db.get('pres_PP_'+s,{});
+    data.presences['Glace_'+s]=db.get('pres_Glace_'+s,{});
+  });
+  data.athletes.forEach((_,i)=>{
+    ['S00','S01','S02','S03'].forEach(s=>{
+      const t=db.get('tests_'+i+'_'+s,{});
+      if(Object.keys(t).length)data.tests[i+'_'+s]=t;
+    });
+  });
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='synchrocoach_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(!data.athletes)throw new Error('Format invalide');
+      if(!confirm(`Importer ${data.athletes.length} athlètes ? Les données actuelles seront remplacées.`))return;
+      db.set('athletes',data.athletes||[]);
+      db.set('competitions',data.competitions||[]);
+      db.set('music',data.music||[]);
+      db.set('sessions',data.sessions||['S01']);
+      db.set('objectives',data.objectives||[]);
+      db.set('reglements',data.reglements||[]);
+      db.set('links',data.links||[]);
+      if(data.presences)Object.entries(data.presences).forEach(([k,v])=>db.set('pres_'+k,v));
+      if(data.tests)Object.entries(data.tests).forEach(([k,v])=>db.set('tests_'+k,v));
+      // Rebuild session selects
+      const sessions=data.sessions||['S01'];
+      sessions.forEach(s=>addSession(s));
+      closeModal('modal-export');
+      renderRoster();updateHomeStats();
+      alert('✅ Import réussi !');
+    }catch(err){alert('❌ Erreur import : '+err.message);}
+  };
+  reader.readAsText(file);
+}
+
+// ══════════════════════════════════════
+// FILE OPENER
+// ══════════════════════════════════════
+function openFile(name){window.open(name,'_blank');}
+
+// ══════════════════════════════════════
+// MODAL HELPERS
+// ══════════════════════════════════════
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});
+});
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+// Sync session selects with saved sessions
+function syncSessionSelects(){
+  const sessions=db.get('sessions', SESSIONS_DEFAULT);
+  if(!sessions.includes('S02')){sessions.push('S02');db.set('sessions',sessions);}
+  if(!sessions.includes('S03')){sessions.push('S03');db.set('sessions',sessions);}
+  if(!sessions.includes('S05')){sessions.push('S05');db.set('sessions',sessions);}
+  if(!sessions.includes('S06')){sessions.push('S06');db.set('sessions',sessions);}
+  sessions.forEach(s=>addSession(s));
+}
+
+window.addEventListener('load',()=>{
+  syncSessionSelects();
+  updateHomeStats();
+  renderCustomObjectives();
+  renderCustomLinks();
+  renderCustomReglements();
+});
+</script>
+</body>
+</html>
