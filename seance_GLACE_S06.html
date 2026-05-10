@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Séance Glace — S06</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --bg:#080e1c;--surface:#0f1828;--surface2:#162035;--border:#1a2b48;
+  --ice:#00c8e8;--text:#e8f0fc;--text2:#a0b4cc;--muted:#6a7d9e;
+  --green:#1de9a0;--orange:#ff9f2e;--red:#ff4f6a;--yellow:#ffd84a;--purple:#b388ff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);padding-bottom:50px;}
+.header{background:linear-gradient(135deg,#060e22,#0a1e3d,#00233d);padding:24px 16px 18px;border-bottom:2px solid var(--ice);position:relative;overflow:hidden;}
+.header::before{content:'⛸';position:absolute;font-size:140px;right:-10px;top:-20px;opacity:.06;}
+.badge{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--ice);border:1px solid var(--ice);padding:2px 7px;border-radius:2px;display:inline-block;margin-bottom:7px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;color:#fff;line-height:1;}
+h1 span{color:var(--ice);}
+.meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;}
+.meta-item{font-size:12px;color:var(--muted);}
+.meta-item strong{color:var(--text);font-weight:500;}
+
+.fils-rouges{margin:14px 14px 0;background:rgba(0,200,232,.05);border:1px solid rgba(0,200,232,.2);border-left:3px solid var(--ice);border-radius:8px;padding:11px 13px;}
+.fils-rouges h3{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;color:var(--ice);margin-bottom:8px;}
+.fr-item{font-size:12px;line-height:1.7;padding-left:14px;position:relative;color:var(--text2);}
+.fr-item::before{content:'→';position:absolute;left:0;color:var(--ice);}
+
+.total-bar{margin:14px 14px 0;display:flex;border-radius:6px;overflow:hidden;height:7px;}
+.seg-a{background:var(--green);flex:15;}
+.seg-b{background:var(--red);flex:20;}
+.seg-c{background:var(--ice);flex:15;}
+.seg-d{background:var(--purple);flex:15;}
+.seg-e{background:var(--orange);flex:25;}
+.total-label{margin:5px 14px 0;display:flex;gap:8px;flex-wrap:wrap;font-size:10px;color:var(--muted);}
+
+.timeline{padding:14px 14px 0;display:flex;flex-direction:column;gap:10px;}
+.block{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.block-header{display:flex;align-items:center;gap:11px;padding:13px 14px;cursor:pointer;user-select:none;}
+.block-header:active{background:rgba(255,255,255,.02);}
+.time-pill{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;background:var(--surface2);border:1px solid var(--border);padding:3px 9px;border-radius:20px;white-space:nowrap;min-width:52px;text-align:center;}
+.block-title{flex:1;font-weight:600;font-size:14px;}
+.block-sub{font-size:11px;color:var(--muted);margin-top:1px;font-weight:400;}
+.chevron{color:var(--muted);font-size:11px;transition:transform .25s;}
+.block.open .chevron{transform:rotate(180deg);}
+.block-body{display:none;border-top:1px solid var(--border);padding:13px 14px;}
+.block.open .block-body{display:block;}
+.block.routine .time-pill{color:var(--green);}
+.block.routine .block-title::before{content:'🟢 ';}
+.block.slides .time-pill{color:var(--red);}
+.block.slides .block-title::before{content:'🔴 ';}
+.block.croise .time-pill{color:var(--ice);}
+.block.croise .block-title::before{content:'🔵 ';}
+.block.twizzle .time-pill{color:var(--purple);}
+.block.twizzle .block-title::before{content:'🟣 ';}
+.block.inter .time-pill{color:var(--orange);}
+.block.inter .block-title::before{content:'🟠 ';}
+
+.steps{display:flex;flex-direction:column;gap:7px;}
+.step{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:var(--surface2);border-radius:7px;}
+.step-num{font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--ice);min-width:18px;line-height:1.4;flex-shrink:0;}
+.step-text{font-size:12.5px;line-height:1.65;}
+.step-text strong{color:var(--text);font-weight:600;}
+.step-text em{color:var(--muted);font-style:normal;font-size:11.5px;}
+
+.tip{margin-top:6px;font-size:11.5px;color:var(--ice);padding-left:8px;border-left:2px solid var(--ice);}
+.warn{margin-top:6px;font-size:11.5px;color:var(--orange);padding-left:8px;border-left:2px solid var(--orange);}
+.cue{margin-top:6px;font-size:11.5px;color:var(--yellow);padding-left:8px;border-left:2px solid var(--yellow);}
+.new{margin-top:6px;font-size:11.5px;color:var(--green);padding-left:8px;border-left:2px solid var(--green);}
+.crit{margin-top:6px;font-size:11.5px;color:var(--red);padding-left:8px;border-left:2px solid var(--red);}
+
+.slide-card{border-radius:8px;border:1px solid var(--border);overflow:hidden;margin-bottom:7px;}
+.slide-head{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);}
+.slide-num{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--red);line-height:1;min-width:24px;}
+.slide-name{font-weight:600;font-size:13px;flex:1;}
+.slide-tag{font-size:10px;padding:2px 7px;border-radius:8px;}
+.tag-solo{color:var(--muted);background:var(--surface2);border:1px solid var(--border);}
+.tag-duo{color:var(--purple);background:rgba(179,136,255,.1);border:1px solid rgba(179,136,255,.25);}
+.tag-groupe{color:var(--green);background:rgba(29,233,160,.1);border:1px solid rgba(29,233,160,.25);}
+.slide-body{padding:10px 12px;font-size:12.5px;line-height:1.75;}
+
+.feat-card{border-radius:8px;border:1px solid var(--border);overflow:hidden;margin-bottom:7px;}
+.feat-head{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);}
+.feat-num{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--purple);line-height:1;min-width:24px;}
+.feat-name{font-weight:600;font-size:13px;flex:1;}
+.feat-diff{font-size:10px;padding:2px 7px;border-radius:8px;}
+.diff-1{color:var(--green);background:rgba(29,233,160,.1);border:1px solid rgba(29,233,160,.25);}
+.diff-2{color:var(--orange);background:rgba(255,159,46,.1);border:1px solid rgba(255,159,46,.25);}
+.diff-3{color:var(--red);background:rgba(255,79,106,.1);border:1px solid rgba(255,79,106,.25);}
+.feat-body{padding:10px 12px;font-size:12.5px;line-height:1.75;}
+
+.inter-schema{background:rgba(255,159,46,.05);border:1px solid rgba(255,159,46,.2);border-radius:8px;padding:12px 13px;margin-bottom:10px;font-family:monospace;font-size:12px;line-height:1.8;color:var(--text2);}
+.inter-schema strong{color:var(--orange);}
+
+.twiz-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;}
+.twiz-step{background:var(--surface2);border-radius:7px;padding:8px 10px;text-align:center;}
+.twiz-num{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--purple);line-height:1;}
+.twiz-label{font-size:10px;color:var(--muted);margin-top:2px;}
+
+.notes-box{margin:14px 14px 0;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+.notes-box h3{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;color:var(--ice);margin-bottom:8px;}
+.notes-line{font-size:12px;color:var(--muted);line-height:2.4;}
+hr.div{border:none;border-top:1px solid var(--border);margin:10px 0;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">SYNCHROLEARN · SÉANCE GLACE</div>
+  <h1>SÉANCE <span>GLACE — S06</span></h1>
+  <div class="meta">
+    <div class="meta-item">📅 <strong>Dim. 10 mai 2026 · HASA</strong></div>
+    <div class="meta-item">⏱ <strong>13h00–14h30 · 90 min</strong></div>
+    <div class="meta-item">👥 <strong>Harmonia</strong></div>
+    <div class="meta-item">🎯 <strong>Slides · Croisés leans · Twizzles features · Intersection</strong></div>
+  </div>
+</div>
+
+<div class="fils-rouges">
+  <h3>🎯 FILS ROUGES S06</h3>
+  <div class="fr-item">Slides ISU — explorer solo, duo, groupe · identifier les highlights potentiels</div>
+  <div class="fr-item" style="margin-top:3px;">Croisés arrière — leans profonds et amples · qualité de glisse</div>
+  <div class="fr-item" style="margin-top:3px;">Twizzles features — jambe tendue côté + talon-fesses</div>
+  <div class="fr-item" style="margin-top:3px;">Angle intersection — première introduction · 2 groupes</div>
+</div>
+
+<div class="total-bar" style="margin-top:14px;">
+  <div class="seg-a"></div>
+  <div class="seg-b"></div>
+  <div class="seg-c"></div>
+  <div class="seg-d"></div>
+  <div class="seg-e"></div>
+</div>
+<div class="total-label">
+  <span>🟢 Routine 15'</span>
+  <span>🔴 Slides 20'</span>
+  <span>🔵 Croisés leans 15'</span>
+  <span>🟣 Twizzles 15'</span>
+  <span>🟠 Intersection 25'</span>
+</div>
+
+<div class="timeline">
+
+<!-- ROUTINE -->
+<div class="block routine open">
+  <div class="block-header" onclick="toggle(this)">
+    <div class="time-pill">15 min</div>
+    <div><div class="block-title">Routine d'échauffement V2</div><div class="block-sub">Autonome · Pause boisson après les tours</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="block-body">
+    <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:8px;">Elles déroulent seules. Pause boisson obligatoire après les tours individuels avant de croiser.</p>
+    <div class="tip">→ Observer : progression cardio — les croisés en fin de routine sont-ils moins fatigants ?</div>
+  </div>
+</div>
+
+<!-- SLIDES -->
+<div class="block slides open">
+  <div class="block-header" onclick="toggle(this)">
+    <div class="time-pill">20 min</div>
+    <div><div class="block-title">Choreographic Slides</div><div class="block-sub">Exploration · Solo → Duo → Groupe · ISU definition</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="block-body">
+
+    <div style="background:rgba(255,79,106,.05);border:1px solid rgba(255,79,106,.15);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;line-height:1.7;color:var(--text2);">
+      <strong style="color:var(--red);">📖 Définition ISU :</strong> Mouvement pendant lequel une ou plusieurs patineuses glissent sur la glace de manière contrôlée — sur un ou deux genoux, la cuisse ou d'autres parties du corps.
+    </div>
+
+    <div class="slide-card">
+      <div class="slide-head"><div class="slide-num">1</div><div class="slide-name">Genou solo — exploration libre</div><div class="slide-tag tag-solo">SOLO</div></div>
+      <div class="slide-body">Chaque fille essaie seule — glissée sur un genou, puis deux genoux, trouver sa version. Quelques minutes libres pour explorer.
+        <div class="tip">→ Observer qui est naturellement à l'aise, qui a peur. Ça donne de l'info sur qui peut être highlight.</div>
+        <div class="cue">👁 "Le slide doit être contrôlé — on glisse, on ne tombe pas. La vitesse avant le slide donne la distance."</div>
+      </div>
+    </div>
+
+    <div class="slide-card">
+      <div class="slide-head"><div class="slide-num">2</div><div class="slide-name">Slide genou en duo synchronisé</div><div class="slide-tag tag-duo">DUO</div></div>
+      <div class="slide-body">En binôme, les deux font le slide en même temps, côte à côte ou face à face. Synchronisation du moment du slide et de la distance parcourue.
+        <div class="new">→ Potentiel highlight fort : deux filles qui slident simultanément en symétrie. Très visuel pour la caméra.</div>
+        <div class="warn">→ Commencer lentement — bien choisir le moment où on lâche les genoux pour glisser.</div>
+      </div>
+    </div>
+
+    <div class="slide-card">
+      <div class="slide-head"><div class="slide-num">3</div><div class="slide-name">Slide cuisse / position assise</div><div class="slide-tag tag-solo">SOLO</div></div>
+      <div class="slide-body">Explorer la glissée sur la cuisse (corps plus horizontal) ou en position assise latérale. Sensation très différente du genou — plus de surface = plus de contrôle.
+        <div class="tip">→ Protection : si certaines ont peur, commencer sur une jambe fléchie puis laisser glisser progressivement.</div>
+      </div>
+    </div>
+
+    <div class="slide-card">
+      <div class="slide-head"><div class="slide-num">4</div><div class="slide-name">Slide en ligne ou en groupe</div><div class="slide-tag tag-groupe">GROUPE</div></div>
+      <div class="slide-body">Toute la ligne fait le slide au même moment — sur un signal. D'abord petits groupes (4-5), puis toute la ligne si ça marche.
+        <div class="new">→ Visuellement très fort si tout le monde descend en même temps. C'est un highlight de groupe puissant.</div>
+        <div class="cue">👁 "Sur le signal, tout le monde glisse en même temps — pas en cascade. Le signal c'est le sifflet ou le bras."</div>
+      </div>
+    </div>
+
+    <div class="slide-card">
+      <div class="slide-head"><div class="slide-num">5</div><div class="slide-name">Slide duo avec une partenaire debout</div><div class="slide-tag tag-duo">DUO</div></div>
+      <div class="slide-body">Une fille slide, l'autre reste debout à côté ou au-dessus — crée un contraste de hauteur très intéressant. La fille debout peut faire une arabesque ou une pose pendant que l'autre glisse.
+        <div class="new">→ C'est exactement ce qu'on cherche pour un highlight : contraste vertical immédiat, très lisible à la caméra.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CROISÉS ARRIÈRE LEANS -->
+<div class="block croise open">
+  <div class="block-header" onclick="toggle(this)">
+    <div class="time-pill">15 min</div>
+    <div><div class="block-title">Croisés arrière — Leans profonds</div><div class="block-sub">Très lents · Très amples · Poussée réelle</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="block-body">
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>Croisés arrière lents — lean droit d'abord — 5 min</strong><br>
+        Vitesse modérée, se pencher sur le côté intérieur du cercle. Corps incliné comme un seul bloc — hanches, épaules, tête dans le même axe. Bras libre tendu vers l'extérieur pour l'équilibre.
+        <div class="cue">👁 "Tu es comme un arbre qui penche — tout le corps dans la même direction, pas seulement les épaules."</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>Augmenter l'amplitude — lean maximum — 5 min</strong><br>
+        Chercher le lean le plus profond possible tout en maintenant la glisse et le contrôle. La jambe libre peut être élevée vers l'extérieur pour contrebalancer et augmenter l'amplitude.
+        <div class="tip">→ Plus le lean est profond, plus la carre est sollicitée — c'est un bon indicateur du niveau de carre arrière.</div>
+        <div class="warn">→ Certaines vont tomber en cherchant le maximum — c'est normal et attendu. Pas de pression.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>En ligne de 4 — synchronisation du lean — 5 min</strong><br>
+        Reprendre en ligne. Toutes leanent au même moment, même amplitude, même côté. Connexion visuelle entre les filles.
+        <div class="new">→ Visuellement très fort en ligne — toutes inclinées en même temps. À mémoriser pour un futur programme.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TWIZZLES FEATURES -->
+<div class="block twizzle open">
+  <div class="block-header" onclick="toggle(this)">
+    <div class="time-pill">15 min</div>
+    <div><div class="block-title">Twizzles — Features</div><div class="block-sub">Jambe tendue côté · Talon-fesses · Individuel</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="block-body">
+
+    <div style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">Travail individuel. D'abord consolider la base dedans avant / dehors arrière sans feature, puis introduire les features progressivement.</div>
+
+    <div class="twiz-grid">
+      <div class="twiz-step"><div class="twiz-num">1D · 1G</div><div class="twiz-label">Rappel base</div></div>
+      <div class="twiz-step"><div class="twiz-num">2D · 2G</div><div class="twiz-label">Consolider</div></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-head"><div class="feat-num">F1</div><div class="feat-name">Jambe libre tendue sur le côté — 45°+</div><div class="feat-diff diff-1">FEATURE 1</div></div>
+      <div class="feat-body">Pendant la rotation, sortir la jambe libre sur le côté, tendue, à minimum 45° d'élévation. Maintenir l'axe de rotation malgré le déplacement du centre de gravité.
+        <div class="cue">👁 "La jambe sort sur le côté — tendue, pas pliée. Tu restes sur ton axe même si la jambe tire."</div>
+        <div class="new">→ Lien PP direct : c'est exactement la force active arabesque qu'on développe depuis S03. Nommer ce lien.</div>
+        <div class="warn">→ Si l'axe se perd : réduire l'élévation de la jambe d'abord, qualité de rotation avant hauteur de jambe.</div>
+      </div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-head"><div class="feat-num">F2</div><div class="feat-name">Talon-fesses — attraper derrière</div><div class="feat-diff diff-2">FEATURE 2</div></div>
+      <div class="feat-body">Pendant la rotation, plier la jambe libre, attraper le patin derrière la fesse avec la main libre. Maintenir la prise pendant 1-2 rotations minimum.
+        <div class="tip">→ Plus accessible que la jambe tendue en termes d'axe — le poids reste centré. Par contre, la souplesse de quadriceps est nécessaire.</div>
+        <div class="cue">👁 "Le patin vient vers la main — ne pas forcer le dos en arrière pour aller chercher le patin."</div>
+        <div class="warn">→ Certaines n'ont pas la mobilité quad pour ça. Pas de pression — on note qui peut pour le programme.</div>
+      </div>
+    </div>
+
+    <div style="background:var(--surface2);border-radius:8px;padding:9px 12px;font-size:11.5px;color:var(--muted);margin-top:4px;">
+      <strong style="color:var(--text);">Observer et noter :</strong> qui maîtrise F1, qui maîtrise F2 → information précieuse pour construction du programme et des highlights twizzles.
+    </div>
+
+  </div>
+</div>
+
+<!-- ANGLE INTERSECTION -->
+<div class="block inter open">
+  <div class="block-header" onclick="toggle(this)">
+    <div class="time-pill">25 min</div>
+    <div><div class="block-title">Angle Intersection — Introduction</div><div class="block-sub">2 groupes · Principe + timing + exécution</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="block-body">
+
+    <div style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">Première introduction aux intersections. L'angle intersection est la plus intuitive : deux lignes qui se croisent en diagonale. Simple à comprendre, difficile à exécuter proprement.</div>
+
+    <div class="inter-schema">
+      <strong>Schéma angle intersection :</strong><br><br>
+      Groupe A  →  →  →  →  ↘<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;✕  ← Point de croisement<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↗  ←  ←  ←  ←  Groupe B<br><br>
+      A passe, B attend — puis B passe, A attend.<br>
+      Le groupe qui <strong>attend</strong> gère le timing, pas celui qui traverse.
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>Explication au sol — 3 min</strong><br>
+        Tracer les deux chemins sur la glace avec le patin. Montrer le point de croisement. Expliquer le principe du timing : <strong>"c'est le groupe qui attend qui décide quand passer — pas le groupe qui traverse."</strong>
+        <div class="tip">→ Désigner un leader dans chaque groupe qui donne le signal de départ. Évite la confusion collective.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>Marche lente à travers l'intersection — 5 min</strong><br>
+        Les deux groupes marchent (pas de vitesse) sur leurs trajets. Traverser l'intersection lentement, sentir le timing. Plusieurs passages.
+        <div class="cue">👁 "On ne s'arrête pas — on ralentit si besoin mais le mouvement continue toujours."</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>Vitesse progressive — 10 min</strong><br>
+        Augmenter la vitesse progressivement. Le vrai défi apparaît ici : maintenir la formation ET le timing. Plusieurs passages, ajuster entre chaque.
+        <div class="warn">→ La première vraie vitesse va créer du chaos — c'est normal. Observer ce qui ne fonctionne pas et corriger un élément à la fois.</div>
+        <div class="cue">👁 "Le groupe qui traverse ne regarde pas l'autre groupe — il regarde devant lui et maintient sa formation."</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text"><strong>Répétitions + qualité — 7 min</strong><br>
+        Quand le timing est à peu près acquis, travailler la qualité : garder la vitesse jusqu'à l'intersection, ne pas ralentir avant, reprendre la formation après.
+        <div class="new">→ Si ça marche bien : essayer de changer quel groupe passe en premier. L'autre groupe doit s'adapter.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:rgba(255,159,46,.06);border:1px solid rgba(255,159,46,.2);border-radius:8px;padding:9px 12px;margin-top:4px;font-size:12px;color:#d4aa60;line-height:1.6;">
+      <strong style="color:var(--orange);">Points d'attention coaching :</strong><br>
+      — Les filles ont naturellement tendance à s'arrêter ou ralentir fort avant le croisement par peur de collision.<br>
+      — Le groupe qui traverse doit garder les yeux devant, pas sur l'autre groupe.<br>
+      — L'espace entre les patineuses dans chaque ligne détermine si l'intersection est possible — trop serrées = collision.
+    </div>
+
+  </div>
+</div>
+
+</div>
+
+<div class="notes-box">
+  <h3>📝 Notes post-séance</h3>
+  <div class="notes-line">
+    Nb présentes : ___ &nbsp;|&nbsp; Slides : meilleur type : _____________ · Meilleures en duo : _____________<br>
+    Croisés leans : amplitude atteinte : ⬜ Légère &nbsp;⬜ Bonne &nbsp;⬜ Très profonde<br>
+    Twizzles F1 (jambe côté) : qui maîtrise → _________________________________<br>
+    Twizzles F2 (talon-fesses) : qui maîtrise → _________________________________<br>
+    Intersection : timing acquis : ⬜ Oui &nbsp;⬜ Partiellement &nbsp;⬜ À reprendre · Tours réussis : ___<br>
+    Highlights potentiels identifiés : ___________________________________________<br>
+    Ajustements S07 : ____________________________________________
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:18px;font-size:11px;color:var(--muted);font-family:'Bebas Neue',sans-serif;letter-spacing:1px;">
+  <span style="color:var(--ice);">SYNCHROLEARN</span> · GLACE · S06 · Dim. 10 mai · Sezóna 2025–26
+</div>
+
+<script>
+function toggle(h){h.parentElement.classList.toggle('open');}
+</script>
+</body>
+</html>

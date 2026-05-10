@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Difficulty Groups 2026/27</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --bg:#07101f;--surface:#0f1f35;--surface2:#162840;--border:#1e3352;
+  --ice:#00c8e8;--text:#e8f0fc;--text2:#a0b4cc;--muted:#5a7090;
+  --green:#1de9a0;--orange:#ff9f2e;--red:#ff4f6a;--yellow:#ffd84a;--purple:#b388ff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);padding-bottom:50px;}
+
+.header{background:linear-gradient(135deg,#060d1e,#0a1a38,#002840);padding:22px 16px 16px;border-bottom:2px solid var(--ice);position:relative;overflow:hidden;}
+.header::before{content:'📊';position:absolute;font-size:120px;right:-10px;top:-20px;opacity:.05;}
+.badge{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--ice);border:1px solid var(--ice);padding:2px 7px;border-radius:2px;display:inline-block;margin-bottom:6px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:#fff;line-height:1.1;}
+h1 span{color:var(--ice);}
+.meta{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7;}
+
+/* PDF LINK */
+.pdf-link{display:flex;align-items:center;gap:10px;margin:14px 14px 0;background:rgba(0,200,232,.06);border:1px solid rgba(0,200,232,.25);border-radius:10px;padding:12px 14px;text-decoration:none;color:var(--text);}
+.pdf-link:active{background:rgba(0,200,232,.1);}
+.pdf-icon{font-size:22px;}
+.pdf-info{flex:1;}
+.pdf-title{font-weight:600;font-size:13px;}
+.pdf-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.pdf-arrow{color:var(--ice);font-size:16px;}
+
+/* CHANGES */
+.changes{margin:14px 14px 0;background:rgba(255,159,46,.05);border:1px solid rgba(255,159,46,.2);border-left:3px solid var(--orange);border-radius:8px;padding:12px 14px;}
+.changes h3{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;color:var(--orange);margin-bottom:10px;}
+.change-item{display:flex;gap:8px;align-items:flex-start;margin-bottom:7px;font-size:12.5px;line-height:1.6;}
+.change-tag{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:1px;padding:2px 7px;border-radius:6px;white-space:nowrap;flex-shrink:0;margin-top:2px;}
+.tag-new{color:var(--green);background:rgba(29,233,160,.1);border:1px solid rgba(29,233,160,.25);}
+.tag-mod{color:var(--orange);background:rgba(255,159,46,.1);border:1px solid rgba(255,159,46,.25);}
+.change-text{color:var(--text2);}
+.change-text strong{color:var(--text);}
+
+/* SECTION LABEL */
+.sec-label{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:2px;color:var(--muted);padding:14px 14px 6px;}
+
+/* ELEMENT CARDS */
+.elements{padding:0 14px;display:flex;flex-direction:column;gap:7px;}
+.elem-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.elem-link{display:flex;align-items:center;gap:12px;padding:12px 13px;text-decoration:none;color:var(--text);}
+.elem-link:active{background:var(--surface2);}
+.elem-code{font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--ice);min-width:52px;letter-spacing:1px;}
+.elem-info{flex:1;}
+.elem-name{font-weight:600;font-size:13px;}
+.elem-desc{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.5;}
+.elem-page{font-family:'Bebas Neue',sans-serif;font-size:11px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);padding:2px 8px;border-radius:8px;white-space:nowrap;}
+.elem-arrow{color:var(--muted);margin-left:4px;}
+
+/* PRIORITY BADGE */
+.elem-card.priority .elem-code{color:var(--green);}
+.elem-card.priority{border-color:rgba(29,233,160,.2);}
+.prio-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;}
+
+.info-note{margin:0 14px;background:var(--surface2);border-radius:8px;padding:10px 12px;font-size:11.5px;color:var(--muted);line-height:1.6;}
+.info-note strong{color:var(--text);}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">ISU COMMUNICATION 2787</div>
+  <h1>DIFFICULTY GROUPS<br><span>SYNCHRO 12–16</span></h1>
+  <div class="meta">
+    Effective 2026/2027 season · Replaces Comm. 2695 · May 5, 2026<br>
+    Jae Youl Kim, President · Colin Smith, Director General
+  </div>
+</div>
+
+<!-- PDF LINK -->
+<a class="pdf-link" href="regl_difficulty_groups_2627.pdf" target="_blank">
+  <div class="pdf-icon">📄</div>
+  <div class="pdf-info">
+    <div class="pdf-title">Document complet — PDF officiel</div>
+    <div class="pdf-sub">ISU Comm. 2787 · 22 pages · Version intégrale</div>
+  </div>
+  <div class="pdf-arrow">↗</div>
+</a>
+
+<!-- CHANGEMENTS MAJEURS -->
+<div class="changes" style="margin-top:14px;">
+  <h3>⚡ Changements majeurs 2026/27</h3>
+
+  <div class="change-item">
+    <span class="change-tag tag-mod">CHOREO</span>
+    <div class="change-text">La Choreo Series doit inclure <strong>deux types différents</strong> de turns difficiles correctement exécutés.</div>
+  </div>
+  <div class="change-item">
+    <span class="change-tag tag-new">CrD</span>
+    <div class="change-text"><strong>Nouvel élément Creative Dance Element</strong> ajouté.</div>
+  </div>
+  <div class="change-item">
+    <span class="change-tag tag-mod">GL</span>
+    <div class="change-text">Deux front split simultanés autorisés. Les non-porteurs doivent inclure au moins un SM. Certaines features supprimées.</div>
+  </div>
+  <div class="change-item">
+    <span class="change-tag tag-mod">I</span>
+    <div class="change-text">Difficulty Chart révisé. Entry Variation supprimée mais toujours reflétée dans le GOE.</div>
+  </div>
+  <div class="change-item">
+    <span class="change-tag tag-mod">pi</span>
+    <div class="change-text">Box/Triangle — exigence pi4 Feature augmentée.</div>
+  </div>
+  <div class="change-item">
+    <span class="change-tag tag-mod">ME</span>
+    <div class="change-text">Nouvelle fm ajoutée : <strong>Difficult Spiral Variation</strong> (jambe libre ≥170°, jambe d'appui droite, maintenue en arrière).</div>
+  </div>
+  <div class="change-item">
+    <span class="change-tag tag-mod">NHE</span>
+    <div class="change-text">Pivoting Feature révisé. Advanced Novice : obligé d'essayer au moins un Twizzle dans chaque direction.</div>
+  </div>
+  <div class="change-item">
+    <span class="change-tag tag-mod">Pa</span>
+    <div class="change-text"><strong>Nouvelle division des Features.</strong> Nouvelles exigences de position et features pour les <strong>Juniors</strong> (fm au lieu de DS).</div>
+  </div>
+  <div class="change-item">
+    <span class="change-tag tag-mod">SySp</span>
+    <div class="change-text">Change of Position Feature requis pour le niveau 4. Plus de liberté pour changer de place.</div>
+  </div>
+  <div class="change-item">
+    <span class="change-tag tag-mod">TwE</span>
+    <div class="change-text">Twizzles dans les <strong>deux directions obligatoires</strong>. Interaction comptée uniquement pour les niveaux 1, 2 et 3.</div>
+  </div>
+</div>
+
+<!-- ÉLÉMENTS JUNIORS -->
+<div class="sec-label">🟢 ÉLÉMENTS PRIORITAIRES — HARMONIA JUNIOR</div>
+<div class="elements">
+
+  <div class="elem-card priority">
+    <a class="elem-link" href="regl_difficulty_groups_2627.pdf#page=14" target="_blank">
+      <div class="prio-dot"></div>
+      <div class="elem-code">Pa</div>
+      <div class="elem-info">
+        <div class="elem-name">Pair Element</div>
+        <div class="elem-desc">Junior : fm position (pas DS). PaB→Pa4. Nouvelles features 2026/27.</div>
+      </div>
+      <div class="elem-page">p.14–16</div>
+      <div class="elem-arrow">↗</div>
+    </a>
+  </div>
+
+  <div class="elem-card priority">
+    <a class="elem-link" href="regl_difficulty_groups_2627.pdf#page=7" target="_blank">
+      <div class="prio-dot"></div>
+      <div class="elem-code">I + pi</div>
+      <div class="elem-info">
+        <div class="elem-name">Intersection + Point of Intersection</div>
+        <div class="elem-desc">IB→I4 · Two Line, V, Box/Triangle, Whip, Angled. pi features révisées.</div>
+      </div>
+      <div class="elem-page">p.7–9</div>
+      <div class="elem-arrow">↗</div>
+    </a>
+  </div>
+
+  <div class="elem-card priority">
+    <a class="elem-link" href="regl_difficulty_groups_2627.pdf#page=20" target="_blank">
+      <div class="prio-dot"></div>
+      <div class="elem-code">TrE</div>
+      <div class="elem-info">
+        <div class="elem-name">Traveling Element (Wheel/Circle)</div>
+        <div class="elem-desc">TrEB→TrE4 · Change of Place, Interlocking, Rotations 360°. Feature #7 obligatoire niveau 4.</div>
+      </div>
+      <div class="elem-page">p.20</div>
+      <div class="elem-arrow">↗</div>
+    </a>
+  </div>
+
+  <div class="elem-card priority">
+    <a class="elem-link" href="regl_difficulty_groups_2627.pdf#page=21" target="_blank">
+      <div class="prio-dot"></div>
+      <div class="elem-code">TwE</div>
+      <div class="elem-info">
+        <div class="elem-name">Twizzle Element</div>
+        <div class="elem-desc">TwEB→TwE4 · Directions opposées obligatoires. Features jambe libre, bras, interaction.</div>
+      </div>
+      <div class="elem-page">p.21–22</div>
+      <div class="elem-arrow">↗</div>
+    </a>
+  </div>
+
+  <div class="elem-card priority">
+    <a class="elem-link" href="regl_difficulty_groups_2627.pdf#page=16" target="_blank">
+      <div class="prio-dot"></div>
+      <div class="elem-code">PB/PL</div>
+      <div class="elem-info">
+        <div class="elem-name">Pivoting Element (Block / Line)</div>
+        <div class="elem-desc">PBB→PB4 · Rockers, Brackets, Counters. Pivot point change d'extrémité niveaux 3–4.</div>
+      </div>
+      <div class="elem-page">p.16–17</div>
+      <div class="elem-arrow">↗</div>
+    </a>
+  </div>
+
+  <div class="elem-card priority">
+    <a class="elem-link" href="regl_difficulty_groups_2627.pdf#page=11" target="_blank">
+      <div class="prio-dot"></div>
+      <div class="elem-code">ME</div>
+      <div class="elem-info">
+        <div class="elem-name">Move Element</div>
+        <div class="elem-desc">MEB→ME4 · fm basiques et difficiles. Nouvelle Difficult Spiral Variation 2026/27.</div>
+      </div>
+      <div class="elem-page">p.11–12</div>
+      <div class="elem-arrow">↗</div>
+    </a>
+  </div>
+
+  <div class="elem-card priority">
+    <a class="elem-link" href="regl_difficulty_groups_2627.pdf#page=10" target="_blank">
+      <div class="prio-dot"></div>
+      <div class="elem-code">B/C/L/W</div>
+      <div class="elem-info">
+        <div class="elem-name">Linear & Rotating Elements</div>
+        <div class="elem-desc">Block, Circle, Line, Wheel · Features : Change of Hold, Place, Configuration, Choreo Series.</div>
+      </div>
+      <div class="elem-page">p.10</div>
+      <div class="elem-arrow">↗</div>
+    </a>
+  </div>
+
+</div>
+
+<!-- TOUS LES ÉLÉMENTS -->
+<div class="sec-label" style="margin-top:8px;">📋 TOUS LES ÉLÉMENTS</div>
+<div class="elements">
+
+  <div class="elem-card">
+    <a class="elem-link" href="regl_difficulty_groups_2627.pdf#page=4" target="_blank">
+      <div class="elem-code">AB/AC<br>AL/AW</div>
+      <div class="elem-info">
+        <div class="elem-name">Artistic Element</div>
+        <div class="elem-desc">Block, Circle, Line, Wheel en mode artistique. Niveaux B→2.</div>
+      </div>
+      <div class="elem-page">p.4</div>
+      <div class="elem-arrow">↗</div>
+    </a>
+  </div>
+
+  <div class="elem-card">
+    <a class="elem-link" href="regl_difficulty_groups_2627.pdf#page=5" target="_blank">
+      <div class="elem-code">CrD</div>
+      <div class="elem-info">
+        <div class="elem-name">Creative Dance Element</div>
+        <div class="elem-desc">Nouvel élément 2026/27. Tous les patineurs participent.</div>
+      </div>
+      <div class="elem-page">p.5</div>
+      <div class="elem-arrow">↗</div>
+    </a>
+  </div>
+
+  <div class="elem-card">
+    <a class="elem-link" href="regl_difficulty_groups_2627.pdf#page=5" target="_blank">
+      <div class="elem-code">CrL</div>
+      <div class="elem-info">
+        <div class="elem-name">Creative Element (Lifts)</div>
+        <div class="elem-desc">Toutes les règles de lift suspendues sauf définitions générales. Tous participent.</div>
+      </div>
+      <div class="elem-page">p.5</div>
+      <div class="elem-arrow">↗</div>
+    </a>
+  </div>
+
+  <div class="elem-card">
+    <a class="elem-link" href="regl_difficulty_groups_2627.pdf#page=5" target="_blank">
+      <div class="elem-code">GL</div>
+      <div class="elem-info">
+        <div class="elem-name">Group Lift Element — Senior</div>
+        <div class="elem-desc">GLB→GL4 · Minimum 3 lifts. Features : Entry Variation, Position, Change of Height, Rotation.</div>
+      </div>
+      <div class="elem-page">p.5–6</div>
+      <div class="elem-arrow">↗</div>
+    </a>
+  </div>
+
+  <div class="elem-card">
+    <a class="elem-link" href="regl_difficulty_groups_2627.pdf#page=13" target="_blank">
+      <div class="elem-code">NHE</div>
+      <div class="elem-info">
+        <div class="elem-name">No Hold Element</div>
+        <div class="elem-desc">NHEB→NHE4 · Step Sequence additional feature. Block obligatoire.</div>
+      </div>
+      <div class="elem-page">p.13–14</div>
+      <div class="elem-arrow">↗</div>
+    </a>
+  </div>
+
+  <div class="elem-card">
+    <a class="elem-link" href="regl_difficulty_groups_2627.pdf#page=18" target="_blank">
+      <div class="elem-code">SySp</div>
+      <div class="elem-info">
+        <div class="elem-name">Synchronized Spin Element</div>
+        <div class="elem-desc">SySpB→SySp4 · Camel, Sit, Upright. Change of Position requis niveau 4.</div>
+      </div>
+      <div class="elem-page">p.18–19</div>
+      <div class="elem-arrow">↗</div>
+    </a>
+  </div>
+
+</div>
+
+<div class="info-note" style="margin-top:12px;">
+  <strong>Note :</strong> Les liens ouvrent le PDF officiel à la page correspondante. Toujours se référer au document original pour les décisions techniques. Comm. 2787 remplace la Comm. 2695.
+</div>
+
+<div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted);font-family:'Bebas Neue',sans-serif;letter-spacing:1px;">
+  <span style="color:var(--ice);">SYNCHROLEARN</span> · ISU COMM. 2787 · 2026/27
+</div>
+
+</body>
+</html>
