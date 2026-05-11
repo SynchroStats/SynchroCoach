@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Débrief S06 — Glace</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{--bg:#090d18;--surface:#111826;--surface2:#172035;--border:#1c2b45;--ice:#00c8e8;--text:#e8f0fc;--muted:#6a7d9e;--text2:#a0b4cc;--green:#1de9a0;--orange:#ff9f2e;--red:#ff4f6a;--yellow:#ffd84a;--purple:#b388ff;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);padding-bottom:50px;}
+.header{background:linear-gradient(135deg,#060d1e,#0a1a38,#002840);padding:22px 16px 16px;border-bottom:2px solid var(--ice);position:relative;overflow:hidden;}
+.header::before{content:'📋';position:absolute;font-size:120px;right:-10px;top:-20px;opacity:.04;}
+.badge{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--ice);border:1px solid var(--ice);padding:2px 7px;border-radius:2px;display:inline-block;margin-bottom:6px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:3px;color:#fff;line-height:1;}
+h1 span{color:var(--ice);}
+.meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;}
+.meta-item{font-size:12px;color:var(--muted);}
+.meta-item strong{color:var(--text);font-weight:500;}
+.tabs{display:flex;overflow-x:auto;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:1px;color:var(--muted);padding:12px 10px;white-space:nowrap;cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;transition:all .2s;flex-shrink:0;}
+.tab-btn.active{color:var(--ice);border-bottom-color:var(--ice);}
+.panel{display:none;padding:14px;}
+.panel.active{display:block;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:9px;}
+.card-head{display:flex;align-items:flex-start;gap:10px;padding:12px 13px;}
+.card-icon{font-size:17px;flex-shrink:0;margin-top:1px;}
+.card-title{font-weight:600;font-size:13px;flex:1;line-height:1.4;}
+.card-body{border-top:1px solid var(--border);padding:11px 13px;font-size:12.5px;line-height:1.8;color:var(--text2);}
+.card-body strong{color:var(--text);}
+.badge-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;white-space:nowrap;flex-shrink:0;}
+.tag-green{color:var(--green);background:rgba(29,233,160,.1);border:1px solid rgba(29,233,160,.25);}
+.tag-orange{color:var(--orange);background:rgba(255,159,46,.1);border:1px solid rgba(255,159,46,.25);}
+.tag-red{color:var(--red);background:rgba(255,79,106,.1);border:1px solid rgba(255,79,106,.25);}
+.tag-ice{color:var(--ice);background:rgba(0,200,232,.08);border:1px solid rgba(0,200,232,.2);}
+.tag-yellow{color:var(--yellow);background:rgba(255,216,74,.1);border:1px solid rgba(255,216,74,.25);}
+.tag-purple{color:var(--purple);background:rgba(179,136,255,.1);border:1px solid rgba(179,136,255,.25);}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--orange);padding:8px 0 5px;}
+.sec-title:first-child{padding-top:0;}
+.highlight-box{background:rgba(255,216,74,.05);border:1px solid rgba(255,216,74,.25);border-left:3px solid var(--yellow);border-radius:8px;padding:11px 13px;margin-bottom:9px;font-size:12.5px;line-height:1.7;color:#d4c87a;}
+.highlight-box strong{color:var(--yellow);}
+.insight-box{background:rgba(179,136,255,.05);border:1px solid rgba(179,136,255,.2);border-left:3px solid var(--purple);border-radius:8px;padding:11px 13px;margin-bottom:9px;font-size:12.5px;line-height:1.7;color:var(--text2);}
+.insight-box strong{color:var(--purple);}
+.prio-list{display:flex;flex-direction:column;gap:7px;}
+.prio-item{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 12px;}
+.prio-num{font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--orange);line-height:1;min-width:20px;}
+.prio-text{font-size:12.5px;line-height:1.6;}
+.prio-text strong{color:var(--text);}
+.prio-text em{color:var(--muted);font-style:normal;font-size:11.5px;}
+.memo-box{background:rgba(0,200,232,.05);border:1px solid rgba(0,200,232,.2);border-left:3px solid var(--ice);border-radius:8px;padding:11px 13px;margin-bottom:9px;font-size:12.5px;line-height:1.7;}
+.memo-box strong{color:var(--ice);}
+hr.div{border:none;border-top:1px solid var(--border);margin:10px 0;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">SYNCHROLEARN · DÉBRIEF</div>
+  <h1>BILAN <span>S06 — GLACE</span></h1>
+  <div class="meta">
+    <div class="meta-item">📅 <strong>Dim. 10 mai 2026 · HASA</strong></div>
+    <div class="meta-item">⏱ <strong>13h00–14h30</strong></div>
+    <div class="meta-item">👥 <strong>Harmonia</strong></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="show('slides')">🔴 Slides</button>
+  <button class="tab-btn" onclick="show('croise')">🔵 Croisés</button>
+  <button class="tab-btn" onclick="show('inter')">🟠 Intersection</button>
+  <button class="tab-btn" onclick="show('twiz')">🟣 Twizzles</button>
+  <button class="tab-btn" onclick="show('s07')">🎯 S07</button>
+</div>
+
+<!-- SLIDES -->
+<div class="panel active" id="panel-slides">
+
+  <div class="sec-title">Highlights identifiés — à retenir pour programme</div>
+
+  <div class="highlight-box">
+    <strong>⭐ KEEPER #1 — Genou rotatif avec jambe tendue en fente</strong><br>
+    Les deux partenaires en rotation, une jambe au genou sur la glace, l'autre jambe tendue sur le côté en fente. Si bonne vitesse de rotation → très joli. Si les deux arrivent à lever la jambe tendue → très très joli.<br><br>
+    <strong>À tester prochainement :</strong> prise sur les hanches au lieu des mains. Rappeler à la prochaine séance slides.
+  </div>
+
+  <div class="highlight-box">
+    <strong>⭐ KEEPER #2 — Contrepoids allongée au sol</strong><br>
+    Une fille en arabesque/poussée tenue par un bras, en contrepoids. L'autre fille allongée au sol — voire qui glisse sur le dos. Visuellement fort, contraste de hauteur maximal.<br><br>
+    Déjà fait avant S06 — à consolider et intégrer comme highlight de programme.
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">⚠️</div><div class="card-title">Slide dos à dos — difficile d'exécution</div><div class="badge-tag tag-orange">À RETRAVAILLER</div></div>
+    <div class="card-body">Une fille debout, l'autre allongée sur le dos. Concept intéressant mais trop difficile à exécuter — la fille allongée doit pousser contre l'autre jambe. <strong>À réessayer avec les seniors</strong> — niveau technique plus adapté. À garder dans les idées mais pas en priorité.</div>
+  </div>
+
+  <div class="memo-box">
+    <strong>📝 Mémo pour prochaine séance slides :</strong><br>
+    → Genou rotatif : tester prise sur les hanches<br>
+    → Tester élévation jambe tendue pendant la rotation (si vitesse suffisante)<br>
+    → Si les 2 lèvent la jambe en même temps : highlight très fort
+  </div>
+
+</div>
+
+<!-- CROISÉS ARRIÈRE LEANS -->
+<div class="panel" id="panel-croise">
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Croisés arrière leans — fait avec musique sur la durée</div><div class="badge-tag tag-green">AVANCÉ</div></div>
+    <div class="card-body">Travaillé longtemps avec musique. Certaines commencent à comprendre le principe à la fin. C'est un progrès réel même si lent.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🔴</div><div class="card-title">Anticipation de la poussée — problème fondamental</div><div class="badge-tag tag-red">TRAVAIL DE FOND</div></div>
+    <div class="card-body">
+      Elles commencent l'action de poussée <strong>avant le temps</strong> pour finir sur le 1. Résultat : elles sont toujours en avance sur la musique.<br><br>
+      <strong>Ce qu'on veut :</strong> presque en retard, puis l'action de poussée se fait <strong>en moins d'un temps</strong> — du fléchi au tendu instantanément — puis rester tendu.<br><br>
+      <strong>Exemple sur 4 temps (croisé = 2 temps) :</strong><br>
+      ❌ Actuel : l'extension prend les 2 temps entiers<br>
+      ✅ Objectif : extension en &lt;1 temps → tenir tendu pendant 1+ temps
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <strong>💡 Comment l'enseigner</strong><br>
+    Le problème vient du fait qu'elles <strong>contrôlent</strong> l'extension au lieu de l'<strong>exploser</strong>. Piste pédagogique : travailler d'abord <strong>hors glace en salle</strong> — fléchi au sol, clap sur le 1, extension immédiate et freeze. Elles doivent comprendre la différence entre une extension progressive et une extension explosive avec maintien. La connexion PP est directe avec les sauts et les atterrissages.
+  </div>
+
+</div>
+
+<!-- ANGLE INTERSECTION -->
+<div class="panel" id="panel-inter">
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Étape 1 — Ligne par ligne + alignement</div><div class="badge-tag tag-green">ACQUIS</div></div>
+    <div class="card-body">Garder l'alignement tout au long, ligne bien droite. <strong>Pas mal à la fin.</strong> Base solide pour continuer.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Étape 2 — Une ligne stable, l'autre passe dans les trous</div><div class="badge-tag tag-green">EN COURS</div></div>
+    <div class="card-body">Une ligne reste stable au point d'intersection, l'autre prend les espaces entre les patineuses pour passer. <strong>Pas trop mal à 2 lignes.</strong> C'est la bonne progression pour comprendre le timing.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">⚠️</div><div class="card-title">Étape 3 — Les 2 lignes en simultané</div><div class="badge-tag tag-orange">EN CONSTRUCTION</div></div>
+    <div class="card-body">Quand les 2 lignes bougent en même temps, ça se complexifie. <strong>Encore du travail.</strong> Normal — beaucoup ne connaissent pas cette intersection. La progression est dans le bon sens même si plus lente qu'espéré.</div>
+  </div>
+
+  <div class="insight-box">
+    <strong>💡 Patience sur les intersections</strong><br>
+    Une intersection propre en compétition prend typiquement 4 à 6 semaines de travail régulier. S06 c'est la première séance — les attentes doivent être calibrées en conséquence. Ce qui est important c'est que le principe est compris et que les étapes progressent dans l'ordre.
+  </div>
+
+</div>
+
+<!-- TWIZZLES -->
+<div class="panel" id="panel-twiz">
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Feature — jambe tendue côté à 45° testée</div><div class="badge-tag tag-green">TESTÉ</div></div>
+    <div class="card-body">Testé et fonctionnel. Également testé le changement de position : 2 tours jambe tendue côté → fermer en position classique. Fonctionne.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">💡</div><div class="card-title">Jambe fermée → rotation accélère mais perd le travel</div><div class="badge-tag tag-ice">OBSERVATION CLÉ</div></div>
+    <div class="card-body">
+      Observation avec l'autre coach : fermer la jambe accélère effectivement la rotation (<strong>conservation du moment cinétique</strong> — même principe qu'une patineuse solo qui ramène les bras). Mais l'énergie va dans la rotation plutôt que dans le déplacement → <strong>elles tournent sur place → perte de tous les niveaux.</strong><br><br>
+      C'est une observation coaching très fine. La conclusion : en synchro, une feature qui ferme la jambe est à utiliser avec précaution — elle doit être combinée avec une impulsion suffisante pour maintenir le travel.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🎯</div><div class="card-title">Prochain test — talon aux fesses</div><div class="badge-tag tag-orange">À TESTER</div></div>
+    <div class="card-body">Pas eu le temps en S06. À tester prochainement — juste pour voir ce que ça donne et si c'est compatible avec le travel. Plus difficile techniquement mais potentiellement plus visuel.</div>
+  </div>
+
+</div>
+
+<!-- S07 -->
+<div class="panel" id="panel-s07">
+
+  <div class="sec-title">Priorités S07 — Glace</div>
+  <div class="prio-list">
+    <div class="prio-item">
+      <div class="prio-num">1</div>
+      <div class="prio-text"><strong>Croisés arrière — extension explosive</strong><br><em>Travailler hors glace si possible avant la séance : fléchi → tendu en moins d'1 temps → freeze. Puis appliquer sur glace.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">2</div>
+      <div class="prio-text"><strong>Angle intersection — étape 3 (2 lignes simultanées)</strong><br><em>Reprendre là où on s'est arrêtés. Consolider avant d'ajouter de la vitesse.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">3</div>
+      <div class="prio-text"><strong>Twizzles — tester talon aux fesses</strong><br><em>Observer l'impact sur le travel. Garder si compatible avec les niveaux.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">4</div>
+      <div class="prio-text"><strong>Slides — genou rotatif avec prise hanches</strong><br><em>Si séance slides prévue : tester la prise sur les hanches + tenter élévation jambe tendue.</em></div>
+    </div>
+  </div>
+
+  <div class="highlight-box" style="margin-top:14px;">
+    <strong>⭐ Highlights programme identifiés S06</strong><br>
+    <strong>1.</strong> Genou rotatif duo jambe tendue — à développer (prise hanches à tester)<br>
+    <strong>2.</strong> Contrepoids allongée au sol — à consolider<br>
+    <strong>3.</strong> Hydroblading (identifié S04) — 1-2 paires excellentes à confirmer
+  </div>
+
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('panel-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

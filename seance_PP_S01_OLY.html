@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PP S01 — Olympia · 11 mai</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+  :root {
+    --ice: #00c2e0; --ice-dim: #0097b2;
+    --bg: #0b0f1a; --surface: #131929; --surface2: #1b2440; --border: #1e2e50;
+    --text: #e8edf8; --muted: #7a8aaa;
+    --green: #22c98a; --orange: #f5a623; --red: #e85555; --yellow: #f5d020;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 60px; }
+
+  .header { background: linear-gradient(135deg, #0d1b3e 0%, #0b2a4a 60%, #003d5c 100%); padding: 28px 20px 20px; border-bottom: 2px solid var(--ice); position: relative; overflow: hidden; }
+  .header::before { content: '🏋'; position: absolute; font-size: 160px; right: -10px; top: -30px; opacity: 0.05; }
+  .badge { display: inline-block; font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 2px; color: var(--ice); border: 1px solid var(--ice); padding: 2px 8px; border-radius: 2px; margin-bottom: 8px; }
+  .header h1 { font-family: 'Bebas Neue', sans-serif; font-size: 38px; letter-spacing: 3px; color: #fff; line-height: 1; }
+  .header h1 span { color: var(--ice); }
+  .meta { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+  .meta-item { font-size: 13px; color: var(--muted); }
+  .meta-item strong { color: var(--text); font-weight: 500; }
+
+  .alert { margin: 14px 16px 0; background: rgba(245,166,35,0.08); border: 1px solid rgba(245,166,35,0.25); border-left: 3px solid var(--orange); border-radius: 6px; padding: 10px 14px; font-size: 12.5px; color: #d4aa60; line-height: 1.5; }
+  .alert strong { color: var(--orange); }
+
+  .solo-box { margin: 12px 16px 0; background: rgba(0,194,224,0.05); border: 1px solid rgba(0,194,224,0.2); border-radius: 10px; padding: 14px 16px; }
+  .solo-box h3 { font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 1.5px; color: var(--ice); margin-bottom: 8px; }
+  .solo-item { font-size: 12.5px; line-height: 1.7; padding-left: 14px; position: relative; color: var(--text); }
+  .solo-item::before { content: '→'; position: absolute; left: 0; color: var(--ice); }
+
+  .total-bar { margin: 14px 16px 0; display: flex; border-radius: 6px; overflow: hidden; height: 7px; }
+  .seg-green { background: var(--green); flex: 12; }
+  .seg-orange { background: var(--orange); flex: 14; }
+  .seg-blue { background: var(--ice); flex: 32; }
+  .total-label { margin: 5px 16px 0; display: flex; justify-content: space-between; font-size: 10.5px; color: var(--muted); }
+
+  .timeline { padding: 16px 16px 0; display: flex; flex-direction: column; gap: 10px; }
+  .block { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .block-header { display: flex; align-items: center; gap: 12px; padding: 13px 15px; cursor: pointer; user-select: none; }
+  .block-header:hover { background: rgba(255,255,255,0.02); }
+  .time-pill { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 1px; background: var(--surface2); border: 1px solid var(--border); color: var(--ice); padding: 3px 9px; border-radius: 20px; white-space: nowrap; min-width: 52px; text-align: center; }
+  .block-title { flex: 1; font-weight: 600; font-size: 14px; }
+  .block-sub { font-size: 11px; color: var(--muted); margin-top: 1px; font-weight: 400; }
+  .chevron { color: var(--muted); font-size: 11px; transition: transform 0.25s; }
+  .block.open .chevron { transform: rotate(180deg); }
+  .block-body { display: none; border-top: 1px solid var(--border); padding: 14px 15px; font-size: 13px; line-height: 1.7; }
+  .block.open .block-body { display: block; }
+
+  .block.warmup .time-pill { color: var(--green); } .block.warmup .block-title::before { content: '🟢 '; }
+  .block.gainage .time-pill { color: var(--orange); } .block.gainage .block-title::before { content: '🟡 '; }
+  .block.circuit .time-pill { color: var(--ice); } .block.circuit .block-title::before { content: '🔵 '; }
+
+  .steps { display: flex; flex-direction: column; gap: 7px; }
+  .step { display: flex; gap: 10px; align-items: flex-start; padding: 8px 10px; background: var(--surface2); border-radius: 7px; }
+  .step-num { font-family: 'Bebas Neue', sans-serif; font-size: 15px; color: var(--ice); min-width: 18px; line-height: 1.4; }
+  .step-text { font-size: 12.5px; line-height: 1.6; }
+  .step-text strong { color: var(--text); font-weight: 600; }
+  .step-text em { color: var(--muted); font-style: normal; font-size: 11.5px; }
+
+  .ateliers { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+  .atelier { border-radius: 8px; border: 1px solid var(--border); overflow: hidden; }
+  .atelier-head { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--surface2); }
+  .atelier-num { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--orange); line-height: 1; }
+  .atelier-name { font-weight: 600; font-size: 13px; flex: 1; }
+  .atelier-tag { font-size: 10px; color: var(--muted); background: rgba(255,255,255,0.05); padding: 2px 7px; border-radius: 10px; }
+  .atelier-body { padding: 10px 12px; font-size: 12.5px; line-height: 1.7; }
+  .tip { margin-top: 6px; font-size: 11.5px; color: var(--ice); padding-left: 8px; border-left: 2px solid var(--ice); }
+  .warn { margin-top: 6px; font-size: 11.5px; color: var(--orange); padding-left: 8px; border-left: 2px solid var(--orange); }
+  .cue { margin-top: 6px; font-size: 11.5px; color: var(--yellow); padding-left: 8px; border-left: 2px solid var(--yellow); }
+
+  .format-box { background: var(--surface2); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; font-size: 12.5px; line-height: 1.7; }
+  .format-box strong { color: var(--ice); }
+
+  .stations { display: flex; flex-direction: column; gap: 8px; }
+  .station { border-radius: 8px; border: 1px solid var(--border); overflow: hidden; }
+  .station-head { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--surface2); }
+  .station-num { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--ice); line-height: 1; }
+  .station-name { font-weight: 600; font-size: 13px; flex: 1; }
+  .station-tag { font-size: 10px; color: var(--muted); background: rgba(0,194,224,0.08); padding: 2px 7px; border-radius: 10px; border: 1px solid rgba(0,194,224,0.15); }
+  .station-body { padding: 10px 12px; font-size: 12.5px; line-height: 1.7; }
+
+  .circuit-chips { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 12px; }
+  .chip { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; border: 1px solid; }
+  .chip-blue { color: var(--ice); border-color: rgba(0,194,224,0.3); background: rgba(0,194,224,0.07); }
+  .chip-green { color: var(--green); border-color: rgba(34,201,138,0.3); background: rgba(34,201,138,0.07); }
+  .chip-orange { color: var(--orange); border-color: rgba(245,166,35,0.3); background: rgba(245,166,35,0.07); }
+
+  hr.div { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
+
+  .notes-box { margin: 16px 16px 0; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+  .notes-box h3 { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 1.5px; color: var(--ice); margin-bottom: 8px; }
+  .notes-line { font-size: 12px; color: var(--muted); line-height: 2.4; }
+
+  .footer { text-align: center; margin-top: 20px; font-size: 11px; color: var(--muted); letter-spacing: 1px; font-family: 'Bebas Neue', sans-serif; }
+  .footer span { color: var(--ice); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">SYNCHROLEARN · PP · OLYMPIA</div>
+  <h1>SÉANCE <span>PP — S01</span><br><div style="font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;letter-spacing:1px;color:var(--ice);margin-top:4px;">⛸ OLYMPIA · Lun. 11 mai 2026</div></h1>
+  <div class="meta">
+    <div class="meta-item">📅 <strong>Rentrée 2025–26</strong></div>
+    <div class="meta-item">👥 <strong>12–20 filles</strong> · Hétérogène</div>
+    <div class="meta-item">⏱ <strong>~58 min</strong></div>
+    <div class="meta-item">🎯 <strong>Évaluation informelle + cohésion</strong></div>
+  </div>
+</div>
+
+<div class="alert">
+  <strong>⚠️ Coach seul · Fatigue anticipée</strong> — Elles enchaînent directement avec 1h30 de glace. Calibrer la charge : engagées mais pas à plat.
+</div>
+
+<div class="solo-box">
+  <h3>🎯 Gestion solo — priorités</h3>
+  <div class="solo-item">Désigne <strong>1 leader par groupe</strong> dès le départ — elle gère le tempo pendant que tu tournes</div>
+  <div class="solo-item" style="margin-top:5px;">Circuit : <strong>1 sifflet = rotation</strong>, 2 sifflets = pause inter-tour. Toutes tournent dans le même sens en même temps</div>
+  <div class="solo-item" style="margin-top:5px;">Observe pendant que tu circules — tu construis ta <strong>baseline informelle</strong> (asymétries, équilibre, explosivité)</div>
+</div>
+
+<div class="total-bar">
+  <div class="seg-green"></div>
+  <div class="seg-orange"></div>
+  <div class="seg-blue"></div>
+</div>
+<div class="total-label">
+  <span>🟢 Échauff. 12'</span>
+  <span>🟡 Gainage 14'</span>
+  <span>🔵 Circuit ~32'</span>
+</div>
+
+<div class="timeline">
+
+  <!-- ÉCHAUFFEMENT -->
+  <div class="block warmup open">
+    <div class="block-header" onclick="toggle(this)">
+      <div class="time-pill">12 min</div>
+      <div><div class="block-title">Échauffement</div><div class="block-sub">Mobilité articulaire → Gamme athlétique en slalom</div></div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="block-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Mobilité articulaire en cercle — 5 min</strong><br>
+          Chevilles → genoux → hanches → colonne → épaules → nuque. Toutes face au centre. <em>Pace lent, pas de compétition. Observer les amplitudes.</em></div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Gamme athlétique en slalom — 7 min</strong><br>
+          Talons-fesses · Genoux hauts · Pas chassés · Skipping · Foulées bondissantes · Carioca<br>
+          <em>2 longueurs par exercice, retour trot. Observer coordination et asymétries.</em></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAINAGE -->
+  <div class="block gainage open">
+    <div class="block-header" onclick="toggle(this)">
+      <div class="time-pill">14 min</div>
+      <div><div class="block-title">Blindage abdo-lombaire</div><div class="block-sub">3 ateliers · 6 sous-groupes · Format 30''/30''</div></div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="block-body">
+      <div class="format-box">
+        <strong>Organisation :</strong> 3 groupes divisés en 2 sous-groupes chacun → 6 sous-groupes au total.<br>
+        À chaque atelier : <strong>sous-groupe A travaille 30''</strong> → 5'' changement → <strong>sous-groupe B travaille 30''</strong> → rotation vers l'atelier suivant.<br>
+        <em>Tu n'as rien à gérer : pendant que l'un travaille, l'autre récupère. Les leaders gèrent le chrono à leur atelier.</em>
+      </div>
+      <div class="ateliers">
+        <div class="atelier">
+          <div class="atelier-head"><div class="atelier-num">A1</div><div class="atelier-name">Planche + balle de tennis</div><div class="atelier-tag">Anti-rotation</div></div>
+          <div class="atelier-body">En cercle, position planche. Se passer la balle en croisant — la réception force la déstabilisation et l'engagement du gainage.
+            <div class="tip">→ Observer : qui creuse les lombaires, qui lève les fesses. Feedback discret en passant.</div>
+          </div>
+        </div>
+        <div class="atelier">
+          <div class="atelier-head"><div class="atelier-num">A2</div><div class="atelier-name">Unipodal + medicine ball</div><div class="atelier-tag">Équilibre + double tâche</div></div>
+          <div class="atelier-body">En cercle sur 1 pied, se passer le medball. La réception perturbe l'équilibre. Alterner la jambe d'appui entre les 30''.
+            <div class="tip">→ Info clé : asymétrie D/G à noter mentalement pour les tests formels.</div>
+          </div>
+        </div>
+        <div class="atelier">
+          <div class="atelier-head"><div class="atelier-num">A3</div><div class="atelier-name">Arabesque en ligne + passage sous la jambe</div><div class="atelier-tag">Stabilité + synchronisation</div></div>
+          <div class="atelier-body">En ligne, arabesque tenue. La voisine passe sous la jambe — toutes coordonnent le passage simultanément. Lien direct avec la glace.
+            <div class="tip">→ Les novices copient les expérimentées. Crée de la cohésion immédiatement.</div>
+            <div class="warn">→ Seul : place-toi en bout de ligne pour voir toute la rangée.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CIRCUIT -->
+  <div class="block circuit open">
+    <div class="block-header" onclick="toggle(this)">
+      <div class="time-pill">~32 min</div>
+      <div><div class="block-title">Circuit Team Challenge</div><div class="block-sub">5 stations · 4 ou 5 tours · 40s/20s · Pause 2 min inter-tour</div></div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="block-body">
+      <div class="circuit-chips">
+        <div class="chip chip-blue">⏱ 40s travail / 20s rotation</div>
+        <div class="chip chip-green">🔄 4 tours = 26 min · 5 tours = 32 min</div>
+        <div class="chip chip-orange">☕ Pause 2 min entre tours</div>
+      </div>
+      <div class="stations">
+        <div class="station">
+          <div class="station-head"><div class="station-num">S1</div><div class="station-name">Box Jump coordonné à 2 — unipodal</div><div class="station-tag">Explosivité</div></div>
+          <div class="station-body">Binômes sur boxes de hauteurs différentes. Saut unilatéral coordonné — partir et atterrir ensemble. Progression : augmenter la hauteur si la réception est propre.
+            <div class="tip">✓ Réception : genou dans l'axe. Corriger le valgus avant d'augmenter la hauteur.</div>
+            <div class="cue">👁 Novices : step-up unilatéral propre d'abord.</div>
+          </div>
+        </div>
+        <div class="station">
+          <div class="station-head"><div class="station-num">S2</div><div class="station-name">Step touch latéral rapide 4m D/G</div><div class="station-tag">Aérobie + coordination</div></div>
+          <div class="station-body">Déplacement latéral rapide sur 4m, pas chassés, bras actifs. Maintenir le rythme sur les 40 sec.
+            <div class="tip">✓ Proche de la gestuelle glace — faire le lien verbalement pour les novices.</div>
+          </div>
+        </div>
+        <div class="station">
+          <div class="station-head"><div class="station-num">S3</div><div class="station-name">Fente arrière + rotation tronc medball</div><div class="station-tag">Force inf + mobilité</div></div>
+          <div class="station-body">Fente arrière jambe gauche → rotation buste <strong>vers la droite</strong> (vers la jambe avant). Revenir pieds joints. Alterner. Bras tendus = intensité max, coudes fléchis = plus facile.
+            <div class="tip">✓ Rotation vers la jambe avant = opposition naturelle. Ne pas inverser.</div>
+            <div class="cue">👁 Genou avant ne doit pas dépasser la pointe du pied.</div>
+          </div>
+        </div>
+        <div class="station">
+          <div class="station-head"><div class="station-num">S4</div><div class="station-name">TRX Row incliné / Pompes bras surélevés</div><div class="station-tag">Force haut du corps</div></div>
+          <div class="station-body"><strong>Avec TRX :</strong> tirade en rangée, corps incliné. Plus horizontal = plus difficile. Régler l'angle individuellement.<br>
+          <strong>Sans TRX :</strong> pompes bras surélevés sur banc.
+            <div class="tip">✓ Le TRX permet à chacune de trouver son niveau sans être en échec.</div>
+          </div>
+        </div>
+        <div class="station">
+          <div class="station-head"><div class="station-num">S5</div><div class="station-name">Squat profond → saut → atterrissage unipodal</div><div class="station-tag">Puissance + stabilité</div></div>
+          <div class="station-body">Squat profond → impulsion maximale → atterrissage 1 pied → tenir 2 sec immobile. Alterner le pied d'atterrissage.
+            <div class="tip">✓ Qualité > quantité. 6 reps propres valent mieux que 12 brouillonnes.</div>
+            <div class="cue">👁 Asymétrie D/G à la réception — noter pour les tests formels.</div>
+          </div>
+        </div>
+      </div>
+      <hr class="div">
+      <p style="font-size:11.5px;color:var(--muted);">Groupes de 3–4 par station. <strong style="color:var(--text)">1 sifflet</strong> = rotation. <strong style="color:var(--text)">2 sifflets</strong> = pause inter-tour.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="notes-box">
+  <h3>📝 Notes post-séance</h3>
+  <div class="notes-line">
+    Nb présentes : ___ &nbsp;|&nbsp; Niveau général : ⬜ Attendu &nbsp;⬜ Mieux &nbsp;⬜ En-dessous<br>
+    Asymétries notées : ___________________________________________________<br>
+    À surveiller (blessure / niveau) : ________________________________________<br>
+    Potentielles Synchro9 : _________________________________________________<br>
+    Tours circuit réalisés : ⬜ 4 &nbsp;⬜ 5 &nbsp;|&nbsp; Ajustements S02 : _____________________
+  </div>
+</div>
+
+<div class="footer" style="margin-top:16px;"><span>SYNCHROLEARN</span> · PP · S01 · OLYMPIA · 11 mai 2026</div>
+
+<script>
+function toggle(h) { h.parentElement.classList.toggle('open'); }
+</script>
+</body>
+</html>
