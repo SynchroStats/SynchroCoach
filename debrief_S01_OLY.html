@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Débrief S01 — Olympia</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{--bg:#090d18;--surface:#111826;--surface2:#172035;--border:#1c2b45;--ice:#00c8e8;--text:#e8f0fc;--muted:#6a7d9e;--text2:#a0b4cc;--green:#1de9a0;--orange:#ff9f2e;--red:#ff4f6a;--yellow:#ffd84a;--purple:#b388ff;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);padding-bottom:50px;}
+.header{background:linear-gradient(135deg,#060d1e,#0a1a38,#001a40);padding:22px 16px 16px;border-bottom:2px solid var(--ice);position:relative;overflow:hidden;}
+.header::before{content:'⛸';position:absolute;font-size:120px;right:-10px;top:-20px;opacity:.05;}
+.badge{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--ice);border:1px solid var(--ice);padding:2px 7px;border-radius:2px;display:inline-block;margin-bottom:6px;}
+.badge-oly{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--purple);border:1px solid var(--purple);padding:2px 7px;border-radius:2px;display:inline-block;margin-bottom:6px;margin-left:6px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:3px;color:#fff;line-height:1;}
+h1 span{color:var(--ice);}
+.meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;}
+.meta-item{font-size:12px;color:var(--muted);}
+.meta-item strong{color:var(--text);font-weight:500;}
+
+.injury-box{margin:14px 14px 0;background:rgba(255,79,106,.08);border:1px solid rgba(255,79,106,.35);border-left:4px solid var(--red);border-radius:8px;padding:12px 13px;}
+.injury-box h3{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;color:var(--red);margin-bottom:7px;}
+.injury-body{font-size:12.5px;line-height:1.7;color:#e8a0a8;}
+.injury-body strong{color:var(--text);}
+
+.tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
+.tab-btn{flex:1;font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:1px;color:var(--muted);padding:12px 6px;text-align:center;cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;transition:all .2s;}
+.tab-btn.active{color:var(--ice);border-bottom-color:var(--ice);}
+.panel{display:none;padding:14px;}
+.panel.active{display:block;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:9px;}
+.card-head{display:flex;align-items:flex-start;gap:10px;padding:12px 13px;}
+.card-icon{font-size:17px;flex-shrink:0;margin-top:1px;}
+.card-title{font-weight:600;font-size:13px;flex:1;line-height:1.4;}
+.card-body{border-top:1px solid var(--border);padding:11px 13px;font-size:12.5px;line-height:1.8;color:var(--text2);}
+.card-body strong{color:var(--text);}
+.badge-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;white-space:nowrap;flex-shrink:0;}
+.tag-green{color:var(--green);background:rgba(29,233,160,.1);border:1px solid rgba(29,233,160,.25);}
+.tag-orange{color:var(--orange);background:rgba(255,159,46,.1);border:1px solid rgba(255,159,46,.25);}
+.tag-red{color:var(--red);background:rgba(255,79,106,.1);border:1px solid rgba(255,79,106,.25);}
+.tag-ice{color:var(--ice);background:rgba(0,200,232,.08);border:1px solid rgba(0,200,232,.2);}
+.tag-purple{color:var(--purple);background:rgba(179,136,255,.1);border:1px solid rgba(179,136,255,.25);}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--orange);padding:8px 0 5px;}
+.sec-title:first-child{padding-top:0;}
+.insight-box{background:rgba(179,136,255,.05);border:1px solid rgba(179,136,255,.2);border-left:3px solid var(--purple);border-radius:8px;padding:11px 13px;margin-bottom:9px;font-size:12.5px;line-height:1.7;color:var(--text2);}
+.insight-box strong{color:var(--purple);}
+.prio-list{display:flex;flex-direction:column;gap:7px;}
+.prio-item{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 12px;}
+.prio-num{font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--orange);line-height:1;min-width:20px;}
+.prio-text{font-size:12.5px;line-height:1.6;}
+.prio-text strong{color:var(--text);}
+.prio-text em{color:var(--muted);font-style:normal;font-size:11.5px;}
+hr.div{border:none;border-top:1px solid var(--border);margin:10px 0;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="badge">SYNCHROLEARN · DÉBRIEF S01</div>
+    <div class="badge-oly">OLYMPIA · SENIORS</div>
+  </div>
+  <h1>BILAN <span>S01 — OLYMPIA</span></h1>
+  <div class="meta">
+    <div class="meta-item">📅 <strong>Lun. 11 mai 2026</strong></div>
+    <div class="meta-item">⏱ <strong>Glace 18h15 + PP 19h50</strong></div>
+    <div class="meta-item">👥 <strong>Olympia — Seniors</strong></div>
+    <div class="meta-item">🎯 <strong>Reprise post-championnats du monde</strong></div>
+  </div>
+</div>
+
+<!-- ALERTE BLESSURE -->
+<div class="injury-box">
+  <h3>🚨 BLESSURE — MICRO-ENTORSE CHEVILLE</h3>
+  <div class="injury-body">
+    Une fille s'est fait une <strong>micro-entorse en PP</strong>. Antécédent : blessure à la cheville en <strong>janvier 2026</strong>.<br>
+    <strong>Action requise :</strong> surveillance à chaque séance · pas de reprise sur impact avant guérison complète · adapter les exercices sauts.<br>
+    <strong>Noté dans l'application.</strong>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="show('glace')">⛸️ Glace</button>
+  <button class="tab-btn" onclick="show('pp')">🏋️ PP</button>
+  <button class="tab-btn" onclick="show('s02')">🎯 S02</button>
+</div>
+
+<!-- GLACE S01 OLYMPIA -->
+<div class="panel active" id="panel-glace">
+
+  <div class="sec-title">Skating Skills — Progression structurée</div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Progression marche av/arr — bien construite</div><div class="badge-tag tag-green">MÉTHODE</div></div>
+    <div class="card-body">
+      Progression de l'autre coach : <strong>sans tenue → tenue 2 temps/détaché 2 → tenue full → bloc</strong>. Sur 4 temps puis 2 temps. Bonne structure pédagogique — à réutiliser.<br><br>
+      Marche avant globalement acquise. Marche arrière : beaucoup plus à travailler.
+    </div>
+  </div>
+
+  <div class="sec-title">Corrections techniques majeures</div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🔴</div><div class="card-title">Explosivité des poussées — FIL ROUGE SAISON</div><div class="badge-tag tag-red">PRIORITÉ #1</div></div>
+    <div class="card-body">
+      <strong>LA grosse correction du jour.</strong> Les poussées manquent d'explosivité — la jambe s'étend progressivement au lieu d'exploser instantanément. Identique sur Harmonia depuis S01.<br><br>
+      Ce n'est pas un problème de technique de patinage — c'est un problème de <strong>force explosive</strong>. La PP doit cibler ça directement.
+      <div style="margin-top:8px;font-size:11.5px;color:var(--ice);padding-left:8px;border-left:2px solid var(--ice);">→ Consigne : "La poussée se fait en moins d'un temps — fléchi → tendu INSTANTANÉ — puis on tient."</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🔴</div><div class="card-title">Valgus patinage — genou tombe derrière la cheville</div><div class="badge-tag tag-red">À CORRIGER</div></div>
+    <div class="card-body">
+      Même problème que sur les sauts en PP : le genou tombe vers l'intérieur, derrière la cheville lors de la flexion. Résultat : poussée inefficace, perte d'énergie. <strong>Connexion directe avec le travail de fessier en PP.</strong>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">⚠️</div><div class="card-title">Séquence de pas — changement de carre + poussée indirecte</div><div class="badge-tag tag-orange">À TRAVAILLER</div></div>
+    <div class="card-body">
+      Séquence : 3 dehors av → changement carre → 3 dehors arr → 3 dedans av → changement carre → 3 dedans arr.<br><br>
+      Problème : <strong>changement de carre pas assez explosif</strong> = pas de vitesse générée = rendu peu esthétique. La poussée indirecte (pousser depuis la jambe porteuse en y restant) doit être explosive.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">⚠️</div><div class="card-title">Axel — swing jambe bloqué</div><div class="badge-tag tag-orange">CORRECTION SAUT</div></div>
+    <div class="card-body">
+      La jambe libre reste bloquée au niveau de la jambe d'appui au lieu de la dépasser pour créer le swing. Résultat : saut plus plat, moins de rotation.<br><br>
+      <strong>Correction :</strong> la jambe doit dépasser la jambe d'appui avant de se refermer. C'est le même principe que pour la marche — la jambe passe devant.
+    </div>
+  </div>
+
+</div>
+
+<!-- PP S01 OLYMPIA -->
+<div class="panel" id="panel-pp">
+
+  <div class="sec-title">Contexte</div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">ℹ️</div><div class="card-title">PP directement après la glace — échauffement sauté</div><div class="badge-tag tag-ice">CONTEXTE</div></div>
+    <div class="card-body">Olympia avait la glace juste avant → déjà bien échauffées. <strong>Échauffement sauté, passage direct au gainage.</strong> À noter pour les prochaines séances lundi.</div>
+  </div>
+
+  <div class="sec-title">Gainage</div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Bases solides — surtout les filles venues des juniors</div><div class="badge-tag tag-green">POSITIF</div></div>
+    <div class="card-body">Les 4-5 filles ayant fait des séances avec les juniors sont nettement au-dessus. La différence est visible — preuve que le travail de PP porte ses fruits. À valoriser.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">⚠️</div><div class="card-title">Exercice unipodal — zone de confort</div><div class="badge-tag tag-orange">CHALLENGER</div></div>
+    <div class="card-body">Même constat que Harmonia : elles ne se challengent pas assez. Ça s'est amélioré à la fin. <strong>Mêmes repères quantifiables à introduire.</strong></div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">⚠️</div><div class="card-title">Arabesque — main au sol impossible à enlever</div><div class="badge-tag tag-orange">À CORRIGER</div></div>
+    <div class="card-body">Certaines sont tellement habituées à mettre la main au sol qu'elles ne peuvent plus faire sans. <strong>Règle explicite à instaurer dès S02 : pas de main au sol. Arabesque plus basse si besoin.</strong></div>
+  </div>
+
+  <div class="sec-title">Circuit</div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">⚠️</div><div class="card-title">Fente + rotation medball — exécution à revoir</div><div class="badge-tag tag-orange">QUALITÉ</div></div>
+    <div class="card-body">Genoux qui bougent dans tous les sens pendant la rotation du buste. Medball mal calibré (trop lourd ou trop léger). Dos qui compense en partant en arrière. <strong>Ralentir le tempo, insister sur la qualité avant la vitesse.</strong></div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">💡</div><div class="card-title">Haies latérales — excellent remplacement des box jumps</div><div class="badge-tag tag-green">VALIDÉ ✅</div></div>
+    <div class="card-body">
+      Séquence : saut latéral petite → grande haie → grande → petite → atterrissage patineur côté extérieur → repat sans pieds joints sur l'autre pied.<br><br>
+      <strong>Scientifiquement :</strong> plus spécifique au synchro que les box jumps — déplacement latéral, changement de direction, atterrissage unilatéral. Les box jumps travaillent la puissance verticale pure ; les haies ajoutent la dimension latérale du patinage. <strong>À conserver pour Olympia.</strong><br><br>
+      C'était l'exercice le plus difficile pour elles — signe que le stimulus est adapté.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">🔴</div><div class="card-title">Squat saut — explosivité très faible</div><div class="badge-tag tag-red">FIL ROUGE</div></div>
+    <div class="card-body">
+      Sauts bas · temps d'attente entre le squat et le saut (2 actions au lieu d'1) · bras qui vont vers le bas au lieu de monter au décollage.<br><br>
+      <strong>Même thème que la glace : manque d'explosivité.</strong> C'est le fil rouge PP + glace pour les deux équipes.
+      <div style="margin-top:8px;font-size:11.5px;color:var(--ice);padding-left:8px;border-left:2px solid var(--ice);">→ Correction bras : "Les bras montent au décollage comme si tu plongeais vers le haut — pas vers le bas."</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-icon">✅</div><div class="card-title">Pompes inclinées — à progresser</div><div class="badge-tag tag-ice">EN COURS</div></div>
+    <div class="card-body">Niveau incliné normal pour une S01. <strong>Ajouter du pull dès S02</strong> — TRX row / élastique — pour équilibrer le push/pull. Même décision prise pour Harmonia.</div>
+  </div>
+
+</div>
+
+<!-- S02 OLYMPIA -->
+<div class="panel" id="panel-s02">
+
+  <div class="sec-title">Priorités S02 Olympia</div>
+  <div class="prio-list">
+    <div class="prio-item">
+      <div class="prio-num">1</div>
+      <div class="prio-text"><strong>Blessure cheville — surveiller et adapter</strong><br><em>Pas d'impact sur la cheville avant guérison. Exercices assis ou sans saut pour cette fille.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">2</div>
+      <div class="prio-text"><strong>Explosivité — fil rouge glace + PP</strong><br><em>Travailler le principe "fléchi → tendu instantané → tenir" sur glace ET en PP.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">3</div>
+      <div class="prio-text"><strong>PP — arabesque sans main au sol (règle)</strong><br><em>Arabesque plus basse si besoin, jamais de compensation main au sol.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">4</div>
+      <div class="prio-text"><strong>PP — ajouter pull (TRX row / élastique)</strong><br><em>Dès S02. Équilibrer le push/pull pour la santé épaule long terme.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">5</div>
+      <div class="prio-text"><strong>PP — tempo fente medball</strong><br><em>Ralentir. Qualité d'exécution avant vitesse. Calibrer le poids du medball par groupe.</em></div>
+    </div>
+    <div class="prio-item">
+      <div class="prio-num">6</div>
+      <div class="prio-text"><strong>Glace — valgus patinage</strong><br><em>Même correction que PP : genou dans l'axe, pas derrière la cheville. Connexion PP↔glace à verbaliser.</em></div>
+    </div>
+  </div>
+
+  <div class="insight-box" style="margin-top:14px;">
+    <strong>💡 Observation globale S01 Olympia</strong><br>
+    Les seniors ont de meilleures bases techniques que les juniors en S01 — normal après une saison de compétition au top niveau. Mais l'explosivité est le point faible commun aux deux équipes. C'est la qualité physique à développer en priorité sur toute la saison.
+  </div>
+
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('panel-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
