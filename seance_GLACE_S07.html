@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Glace S07 · Harmonia · 14 mai</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{--bg:#080e1c;--surface:#0f1828;--surface2:#162035;--border:#1a2b48;--ice:#00c8e8;--text:#e8f0fc;--text2:#a0b4cc;--muted:#6a7d9e;--green:#1de9a0;--orange:#ff9f2e;--red:#ff4f6a;--yellow:#ffd84a;--purple:#b388ff;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);padding-bottom:50px;}
+.header{background:linear-gradient(135deg,#060e22,#0a1e3d,#00233d);padding:24px 16px 18px;border-bottom:2px solid var(--ice);position:relative;overflow:hidden;}
+.header::before{content:'⛸';position:absolute;font-size:140px;right:-10px;top:-20px;opacity:.06;}
+.badge{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--ice);border:1px solid var(--ice);padding:2px 7px;border-radius:2px;display:inline-block;margin-bottom:7px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;color:#fff;line-height:1;}
+h1 span{color:var(--ice);}
+.meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;}
+.meta-item{font-size:12px;color:var(--muted);}
+.meta-item strong{color:var(--text);font-weight:500;}
+.fils-rouges{margin:14px 14px 0;background:rgba(0,200,232,.05);border:1px solid rgba(0,200,232,.2);border-left:3px solid var(--ice);border-radius:8px;padding:11px 13px;}
+.fils-rouges h3{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;color:var(--ice);margin-bottom:8px;}
+.fr-item{font-size:12px;line-height:1.7;padding-left:14px;position:relative;color:var(--text2);}
+.fr-item::before{content:'→';position:absolute;left:0;color:var(--ice);}
+.total-bar{margin:14px 14px 0;display:flex;border-radius:6px;overflow:hidden;height:7px;}
+.seg-a{background:var(--green);flex:15;}
+.seg-b{background:var(--ice);flex:10;}
+.seg-c{background:var(--orange);flex:25;}
+.seg-d{background:var(--purple);flex:20;}
+.seg-e{background:var(--yellow);flex:20;}
+.total-label{margin:5px 14px 0;display:flex;gap:8px;flex-wrap:wrap;font-size:10px;color:var(--muted);}
+.timeline{padding:14px 14px 0;display:flex;flex-direction:column;gap:10px;}
+.block{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.block-header{display:flex;align-items:center;gap:11px;padding:13px 14px;cursor:pointer;user-select:none;}
+.block-header:active{background:rgba(255,255,255,.02);}
+.time-pill{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;background:var(--surface2);border:1px solid var(--border);padding:3px 9px;border-radius:20px;white-space:nowrap;min-width:52px;text-align:center;}
+.block-title{flex:1;font-weight:600;font-size:14px;}
+.block-sub{font-size:11px;color:var(--muted);margin-top:1px;font-weight:400;}
+.chevron{color:var(--muted);font-size:11px;transition:transform .25s;}
+.block.open .chevron{transform:rotate(180deg);}
+.block-body{display:none;border-top:1px solid var(--border);padding:13px 14px;}
+.block.open .block-body{display:block;}
+.block.routine .time-pill{color:var(--green);}
+.block.routine .block-title::before{content:'🟢 ';}
+.block.skating .time-pill{color:var(--ice);}
+.block.skating .block-title::before{content:'🔵 ';}
+.block.inter .time-pill{color:var(--orange);}
+.block.inter .block-title::before{content:'🟠 ';}
+.block.move .time-pill{color:var(--purple);}
+.block.move .block-title::before{content:'🟣 ';}
+.block.choreo .time-pill{color:var(--yellow);}
+.block.choreo .block-title::before{content:'🟡 ';}
+
+.steps{display:flex;flex-direction:column;gap:7px;}
+.step{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:var(--surface2);border-radius:7px;}
+.step-num{font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--ice);min-width:18px;line-height:1.4;flex-shrink:0;}
+.step-text{font-size:12.5px;line-height:1.65;}
+.step-text strong{color:var(--text);}
+
+.tip{margin-top:6px;font-size:11.5px;color:var(--ice);padding-left:8px;border-left:2px solid var(--ice);}
+.warn{margin-top:6px;font-size:11.5px;color:var(--orange);padding-left:8px;border-left:2px solid var(--orange);}
+.cue{margin-top:6px;font-size:11.5px;color:var(--yellow);padding-left:8px;border-left:2px solid var(--yellow);}
+.new{margin-top:6px;font-size:11.5px;color:var(--green);padding-left:8px;border-left:2px solid var(--green);}
+.crit{margin-top:6px;font-size:11.5px;color:var(--red);padding-left:8px;border-left:2px solid var(--red);}
+
+.pi-box{background:rgba(255,159,46,.05);border:1px solid rgba(255,159,46,.2);border-radius:8px;padding:11px 13px;margin-bottom:10px;font-size:12.5px;line-height:1.7;color:#d4aa60;}
+.pi-box strong{color:var(--orange);}
+
+.choreo-box{background:rgba(255,216,74,.05);border:1px solid rgba(255,216,74,.2);border-left:3px solid var(--yellow);border-radius:8px;padding:14px 13px;font-size:13px;line-height:1.8;color:var(--text2);text-align:center;}
+.choreo-box strong{color:var(--yellow);font-size:15px;display:block;margin-bottom:8px;}
+
+.notes-box{margin:14px 14px 0;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+.notes-box h3{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;color:var(--ice);margin-bottom:8px;}
+.notes-line{font-size:12px;color:var(--muted);line-height:2.4;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">SYNCHROLEARN · GLACE · HARMONIA · S07</div>
+  <h1>SÉANCE <span>GLACE — S07</span></h1>
+  <div class="meta">
+    <div class="meta-item">📅 <strong>Jeu. 14 mai 2026</strong></div>
+    <div class="meta-item">👥 <strong>Harmonia</strong></div>
+    <div class="meta-item">⏱ <strong>19h00–20h30 · PADOK</strong></div>
+    <div class="meta-item">🎯 <strong>SP Junior — Intersection · Move · Choreo</strong></div>
+  </div>
+</div>
+
+<div class="fils-rouges">
+  <h3>🎯 OBJECTIFS S07 — ÉLÉMENTS SP</h3>
+  <div class="fr-item">Intersection angled — consolider les 2 lignes + introduire <strong>pi rotation 1 pied (2ème rotation)</strong></div>
+  <div class="fr-item" style="margin-top:3px;">Move element — <strong>hauteur de jambe exigée</strong> + enchaînement biellmann</div>
+  <div class="fr-item" style="margin-top:3px;">Choreo séries — <strong>libre sur la diagonale</strong> · cadres + utilisation du corps</div>
+</div>
+
+<div class="total-bar" style="margin-top:14px;">
+  <div class="seg-a"></div>
+  <div class="seg-b"></div>
+  <div class="seg-c"></div>
+  <div class="seg-d"></div>
+  <div class="seg-e"></div>
+</div>
+<div class="total-label">
+  <span>🟢 Routine 15'</span>
+  <span>🔵 Skating 10'</span>
+  <span>🟠 Intersection 25'</span>
+  <span>🟣 Move 20'</span>
+  <span>🟡 Choreo 20'</span>
+</div>
+
+<div class="timeline">
+
+<!-- ROUTINE -->
+<div class="block routine open">
+  <div class="block-header" onclick="toggle(this)">
+    <div class="time-pill">15 min</div>
+    <div><div class="block-title">Routine d'échauffement</div><div class="block-sub">Autonome · Pause boisson après les tours</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="block-body">
+    <p style="font-size:12px;color:var(--muted);line-height:1.6;">Elles déroulent seules.</p>
+    <div class="tip">→ Observer : fatigue en fin de croisés — indicateur d'adaptation cardio saison.</div>
+  </div>
+</div>
+
+<!-- SKATING SKILLS -->
+<div class="block skating open">
+  <div class="block-header" onclick="toggle(this)">
+    <div class="time-pill">10 min</div>
+    <div><div class="block-title">Skating Skills — Croisés arrière leans</div><div class="block-sub">Consolidation · Explosion poussée · Lien PP</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="block-body">
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>Leans profonds sur le cercle — 4 min</strong><br>
+        Croisés arrière très lents, lean maximum. Tout le corps dans le même axe incliné.
+        <div class="cue">👁 "Tu es un arbre qui penche — tête, épaules, hanches dans la même direction."</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>Explosion de la poussée — 6 min</strong><br>
+        Reprendre la séquence S04-S05 : fléchi → tendu <strong>instantané</strong> → tenir. Le lean arrive après l'extension, pas pendant.
+        <div class="cue">👁 "La poussée se fait en moins d'un temps. Fléchi — BANG — tendu. Puis tu tiens."</div>
+        <div class="warn">→ Fil rouge saison : même correction qu'en PP. Le verbaliser.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INTERSECTION ANGLED -->
+<div class="block inter open">
+  <div class="block-header" onclick="toggle(this)">
+    <div class="time-pill">25 min</div>
+    <div><div class="block-title">Angled Intersection</div><div class="block-sub">Petits groupes → 2 lignes → Pi rotation 1 pied</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="block-body">
+
+    <div class="pi-box">
+      <strong>📋 Rappel ISU — Pi Angled :</strong><br>
+      Les ABR (additional backward rotations) précèdent la pi rotation. La pi commence <strong>avant</strong> que les lignes se croisent et continue pendant l'intersection. Elle ne doit pas se terminer avant le croisement.
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>Petits groupes — ancrer l'approche en angle — 8 min</strong><br>
+        Groupes de 6–7. Reprendre le principe : les deux lignes s'approchent <strong>en angle</strong>, pas face à face. Une ligne traverse, l'autre gère le timing. Plusieurs passages.
+        <div class="tip">→ Corriger en priorité : la tendance à aller en ligne droite au lieu de maintenir l'angle d'approche.</div>
+        <div class="cue">👁 "Tu ne vas pas vers l'autre ligne — tu vas vers ton coin de la patinoire."</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>2 grandes lignes — application complète — 10 min</strong><br>
+        Toute l'équipe. Les 2 lignes à vitesse normale. Consolider le timing et l'alignement avant d'ajouter la rotation.
+        <div class="warn">→ Si le timing n'est pas là : ne pas avancer vers le pi. Qualité de l'intersection d'abord.</div>
+        <div class="cue">👁 "Le groupe qui traverse regarde devant lui — pas l'autre ligne."</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>Introduction pi rotation 2ème rotation sur 1 pied — 7 min</strong><br>
+        <strong>Objectif :</strong> les ABR restent sur 2 pieds (comme d'habitude) — seule la <strong>deuxième rotation</strong> (la pi proprement dite) passe sur 1 pied = twizzle.<br><br>
+        <strong>Progression :</strong><br>
+        • D'abord statique : essayer le twizzle sur place, s'assurer que tout le monde peut faire au moins 1 rotation sur 1 pied<br>
+        • Ensuite dans l'intersection lentement : ABR 2 pieds → pied gauche → twizzle<br>
+        • Ne pas viser la perfection aujourd'hui — introduction du concept
+        <div class="tip">→ ISU : la pi rotation doit commencer avant le croisement et continuer pendant. Le twizzle doit voyager — pas tourner sur place.</div>
+        <div class="new">→ Identifier qui a déjà un bon twizzle = leaders pour cette feature.</div>
+        <div class="warn">→ Si elles tombent sur le twizzle : retour 2 pieds pour ce passage. Ne pas forcer.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MOVE ELEMENT -->
+<div class="block move open">
+  <div class="block-header" onclick="toggle(this)">
+    <div class="time-pill">20 min</div>
+    <div><div class="block-title">Move Element — Arabesque + Biellmann</div><div class="block-sub">Hauteur de jambe exigée · Enchaînement biellmann</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="block-body">
+
+    <div style="background:rgba(179,136,255,.05);border:1px solid rgba(179,136,255,.2);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;line-height:1.7;color:var(--text2);">
+      <strong style="color:var(--purple);">Lien PP :</strong> la hauteur d'arabesque active c'est exactement ce qu'on développe en PP avec le pont fessier et l'arabesque élastique. <strong>Verbaliser ce lien explicitement.</strong>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>Arabesque — hauteur exigée — 8 min</strong><br>
+        En ligne, prise par les hanches. <strong>Exiger la hauteur dès le départ</strong> — au minimum au niveau de la hanche, objectif au-dessus. Feedback individuel pendant le passage.
+        <div class="cue">👁 "La jambe monte — c'est le fessier qui travaille, pas le dos qui se creuse. Si ton dos se creuse trop, baisse la jambe."</div>
+        <div class="warn">→ Identifier qui compense avec le dos. Ce sont les mêmes qui ont du mal en PP.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>Arabesque → enchaînement biellmann — 8 min</strong><br>
+        Depuis l'arabesque tenue : attraper le patin derrière avec la main libre, continuer en biellmann sans s'arrêter. Le dos descend vers la jambe — la jambe ne descend pas.
+        <div class="cue">👁 "Tu gardes la jambe haute — c'est le buste qui se penche vers elle, pas l'inverse."</div>
+        <div class="tip">→ Celles qui n'ont pas le biellmann restent en arabesque haute avec exigence de qualité.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>2 passages complets en ligne — 4 min</strong><br>
+        Feedback collectif après chaque passage. Identifier les meilleures arabesques + biellmanns pour le programme.
+        <div class="new">→ Noter les paires arabesque/biellmann les plus propres — information programme.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CHOREO SERIES -->
+<div class="block choreo open">
+  <div class="block-header" onclick="toggle(this)">
+    <div class="time-pill">20 min</div>
+    <div><div class="block-title">Choreo Séries — Sur la diagonale</div><div class="block-sub">2 versions · Cadres · Utilisation du corps</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="block-body">
+
+    <div class="choreo-box">
+      <strong>🎨 BLOC LIBRE — À CRÉER SUR LE TAS</strong>
+      Contenu défini en séance.<br>
+      Objectifs : <span style="color:var(--ice);">cadres</span> · <span style="color:var(--green);">utilisation du corps</span> · <span style="color:var(--yellow);">mouvements chorégraphiques</span><br><br>
+      <span style="font-size:11.5px;color:var(--muted);">ISU Comm. 2787 — Choreo Series : 2+ types de Difficult Turns différents · 2 types de mouvements minimum de la liste · 2 mouvements de bras différents</span>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:10px;">
+      <div style="padding:8px 10px;background:var(--surface2);border-radius:7px;font-size:12px;color:var(--text2);">
+        <strong style="color:var(--yellow);">Série 1</strong> — à définir en séance
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Diagonale A → B · Bras : _____ · Turns : _____ · Éléments : _____</div>
+      </div>
+      <div style="padding:8px 10px;background:var(--surface2);border-radius:7px;font-size:12px;color:var(--text2);">
+        <strong style="color:var(--yellow);">Série 2</strong> — à définir en séance
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Diagonale A → B · Bras : _____ · Turns : _____ · Éléments : _____</div>
+      </div>
+    </div>
+
+    <div style="margin-top:10px;font-size:11.5px;color:var(--muted);line-height:1.7;padding:9px 12px;background:var(--surface2);border-radius:7px;">
+      <strong style="color:var(--text);">Points d'attention coaching :</strong><br>
+      → Cadres : toutes les patineuses finissent les mouvements <strong>exactement au même moment</strong><br>
+      → Corps : utiliser la tête, les bras, le buste — pas seulement les jambes<br>
+      → Diagonale : maintenir la ligne droite tout au long
+    </div>
+
+  </div>
+</div>
+
+</div>
+
+<div class="notes-box">
+  <h3>📝 Notes post-séance</h3>
+  <div class="notes-line">
+    Nb présentes : ___ &nbsp;|&nbsp; Skating skills — explosion poussée : ⬜ Mieux ⬜ Pareil<br>
+    Intersection — timing 2 lignes : ⬜ Acquis ⬜ En cours · Pi 1 pied : ⬜ Essayé ⬜ Partiellement ⬜ Non<br>
+    Move — hauteur arabesque : ⬜ Nette amélioration ⬜ Similaire S05 · Biellmann : qui enchaîne → ___________<br>
+    Choreo série 1 : _____________ · Série 2 : _____________<br>
+    Cadres : ⬜ Bons ⬜ À travailler<br>
+    Ajustements S08 : ____________________________________________
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:18px;font-size:11px;color:var(--muted);font-family:'Bebas Neue',sans-serif;letter-spacing:1px;">
+  <span style="color:var(--ice);">SYNCHROLEARN</span> · GLACE · S07 · HARMONIA · 14 mai 2026
+</div>
+
+<script>
+function toggle(h){h.parentElement.classList.toggle('open');}
+</script>
+</body>
+</html>

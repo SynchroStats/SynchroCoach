@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>PP S04 · Harmonia · 14 mai</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{--bg:#07101f;--surface:#0f1f35;--surface2:#162840;--border:#1e3352;--ice:#00c8e8;--text:#e8f0fc;--text2:#a0b4cc;--muted:#5a7090;--green:#1de9a0;--orange:#ff9f2e;--red:#ff4f6a;--yellow:#ffd84a;--purple:#b388ff;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);padding-bottom:50px;}
+.header{background:linear-gradient(135deg,#0d1b3e,#0b2a4a,#003d5c);padding:24px 16px 18px;border-bottom:2px solid var(--ice);position:relative;overflow:hidden;}
+.header::before{content:'🏋';position:absolute;font-size:140px;right:-10px;top:-25px;opacity:.05;}
+.badge{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--ice);border:1px solid var(--ice);padding:2px 7px;border-radius:2px;display:inline-block;margin-bottom:7px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;color:#fff;line-height:1;}
+h1 span{color:var(--ice);}
+.meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;}
+.meta-item{font-size:12px;color:var(--muted);}
+.meta-item strong{color:var(--text);font-weight:500;}
+
+.focus-box{margin:14px 14px 0;background:rgba(29,233,160,.05);border:1px solid rgba(29,233,160,.2);border-left:3px solid var(--green);border-radius:8px;padding:11px 13px;}
+.focus-box h3{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;color:var(--green);margin-bottom:7px;}
+.fr-item{font-size:12px;line-height:1.7;padding-left:14px;position:relative;color:var(--text2);}
+.fr-item::before{content:'→';position:absolute;left:0;color:var(--green);}
+
+.total-bar{margin:14px 14px 0;display:flex;border-radius:6px;overflow:hidden;height:7px;}
+.seg-a{background:var(--green);flex:12;}
+.seg-b{background:var(--orange);flex:14;}
+.seg-c{background:var(--yellow);flex:12;}
+.seg-d{background:var(--ice);flex:22;}
+.seg-e{background:var(--yellow);flex:5;}
+.total-label{margin:5px 14px 0;display:flex;gap:8px;flex-wrap:wrap;font-size:10px;color:var(--muted);}
+
+.timeline{padding:14px 14px 0;display:flex;flex-direction:column;gap:10px;}
+.block{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.block-header{display:flex;align-items:center;gap:11px;padding:13px 14px;cursor:pointer;user-select:none;}
+.block-header:active{background:var(--surface2);}
+.time-pill{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;background:var(--surface2);border:1px solid var(--border);padding:3px 9px;border-radius:20px;white-space:nowrap;min-width:52px;text-align:center;}
+.block-title{flex:1;font-weight:600;font-size:14px;}
+.block-sub{font-size:11px;color:var(--muted);margin-top:1px;font-weight:400;}
+.chevron{color:var(--muted);font-size:11px;transition:transform .25s;}
+.block.open .chevron{transform:rotate(180deg);}
+.block-body{display:none;border-top:1px solid var(--border);padding:13px 14px;}
+.block.open .block-body{display:block;}
+.block.warmup .time-pill{color:var(--green);}
+.block.warmup .block-title::before{content:'🟢 ';}
+.block.gainage .time-pill{color:var(--orange);}
+.block.gainage .block-title::before{content:'🟡 ';}
+.block.squat .time-pill{color:var(--yellow);}
+.block.squat .block-title::before{content:'⭐ ';}
+.block.circuit .time-pill{color:var(--ice);}
+.block.circuit .block-title::before{content:'🔵 ';}
+.block.mobility .time-pill{color:var(--purple);}
+.block.mobility .block-title::before{content:'🟣 ';}
+
+.tip{margin-top:6px;font-size:11.5px;color:var(--ice);padding-left:8px;border-left:2px solid var(--ice);}
+.warn{margin-top:6px;font-size:11.5px;color:var(--orange);padding-left:8px;border-left:2px solid var(--orange);}
+.cue{margin-top:6px;font-size:11.5px;color:var(--yellow);padding-left:8px;border-left:2px solid var(--yellow);}
+.new{margin-top:6px;font-size:11.5px;color:var(--green);padding-left:8px;border-left:2px solid var(--green);}
+.crit{margin-top:6px;font-size:11.5px;color:var(--red);padding-left:8px;border-left:2px solid var(--red);}
+
+.atel{border-radius:8px;border:1px solid var(--border);overflow:hidden;margin-bottom:7px;}
+.atel-head{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);}
+.atel-num{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--orange);min-width:24px;line-height:1;}
+.atel-name{font-weight:600;font-size:13px;flex:1;}
+.atel-body{padding:10px 12px;font-size:12.5px;line-height:1.75;}
+
+.station{border-radius:8px;border:1px solid var(--border);overflow:hidden;margin-bottom:7px;}
+.stat-head{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--ice);min-width:24px;line-height:1;}
+.stat-name{font-weight:600;font-size:13px;flex:1;}
+.stat-body{padding:10px 12px;font-size:12.5px;line-height:1.75;}
+
+/* FEEDBACK BADGES */
+.fb{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-family:'Bebas Neue',sans-serif;letter-spacing:.5px;padding:2px 8px;border-radius:6px;margin-top:6px;}
+.fb-watch{color:var(--ice);background:rgba(0,200,232,.08);border:1px solid rgba(0,200,232,.2);}
+.fb-correct{color:var(--orange);background:rgba(255,159,46,.08);border:1px solid rgba(255,159,46,.2);}
+.fb-progress{color:var(--green);background:rgba(29,233,160,.08);border:1px solid rgba(29,233,160,.2);}
+
+.format-box{background:var(--surface2);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12.5px;line-height:1.7;}
+.format-box strong{color:var(--ice);}
+
+.notes-box{margin:14px 14px 0;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+.notes-box h3{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;color:var(--ice);margin-bottom:8px;}
+.notes-line{font-size:12px;color:var(--muted);line-height:2.4;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">SYNCHROLEARN · PP · HARMONIA · S04</div>
+  <h1>SÉANCE <span>PP — S04</span></h1>
+  <div class="meta">
+    <div class="meta-item">📅 <strong>Jeu. 14 mai 2026</strong></div>
+    <div class="meta-item">👥 <strong>Harmonia</strong></div>
+    <div class="meta-item">⏱ <strong>~60 min</strong></div>
+    <div class="meta-item">🎯 <strong>Finir squat · Observer circuit</strong></div>
+  </div>
+</div>
+
+<div class="focus-box">
+  <h3>🎯 OBJECTIF S04 — OBSERVER ET CORRIGER</h3>
+  <div class="fr-item">Finir les 4–5 filles restantes au squat (<strong>10–12 min max</strong>) → rejoindre le circuit</div>
+  <div class="fr-item" style="margin-top:3px;"><strong>Feedback continu</strong> sur le circuit — première vraie observation en 4 séances</div>
+  <div class="fr-item" style="margin-top:3px;">Circuit passe à <strong>4 tours</strong> — progression de charge</div>
+</div>
+
+<div class="total-bar" style="margin-top:14px;">
+  <div class="seg-a"></div>
+  <div class="seg-b"></div>
+  <div class="seg-c"></div>
+  <div class="seg-d"></div>
+  <div class="seg-e"></div>
+</div>
+<div class="total-label">
+  <span>🟢 Échauff. 12'</span>
+  <span>🟡 Gainage 14'</span>
+  <span>⭐ Squat 12'</span>
+  <span>🔵 Circuit 4×45s 27'</span>
+  <span>🟣 Mobilité 5'</span>
+</div>
+
+<div class="timeline">
+
+<!-- ÉCHAUFFEMENT -->
+<div class="block warmup open">
+  <div class="block-header" onclick="toggle(this)">
+    <div class="time-pill">12 min</div>
+    <div><div class="block-title">Échauffement</div><div class="block-sub">Articulaire → Gamme athlétique</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="block-body">
+    <p style="font-size:12px;color:var(--muted);line-height:1.6;">Identique S01–S03. Pendant la gamme athlétique, observer les points de côté — indicateur cardio qui devrait progresser semaine après semaine.</p>
+  </div>
+</div>
+
+<!-- GAINAGE -->
+<div class="block gainage open">
+  <div class="block-header" onclick="toggle(this)">
+    <div class="time-pill">14 min</div>
+    <div><div class="block-title">Gainage — 4 ateliers</div><div class="block-sub">Identique S03 · Challenge actif à chaque atelier</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="block-body">
+    <div style="background:rgba(255,159,46,.06);border:1px solid rgba(255,159,46,.2);border-radius:8px;padding:9px 12px;margin-bottom:10px;font-size:12px;color:#d4aa60;line-height:1.6;">
+      <strong style="color:var(--orange);">Consigne globale :</strong> donner des repères <strong>quantifiables</strong> à chaque atelier. Pas "allez plus loin" — mais "l'élastique doit vraiment résister" ou "les bras sont complètement tendus".
+    </div>
+
+    <div class="atel">
+      <div class="atel-head"><div class="atel-num">A1</div><div class="atel-name">Pallof press debout</div></div>
+      <div class="atel-body">Élastique tendu latéralement. Pousser les bras et résister à la rotation.
+        <div class="cue">👁 "L'élastique doit vraiment tirer — si c'est facile, recule d'un pas."</div>
+      </div>
+    </div>
+    <div class="atel">
+      <div class="atel-head"><div class="atel-num">A2</div><div class="atel-name">Rotation medball en fente</div></div>
+      <div class="atel-body">Fente, bras tendus, rotations explosives. Bassin fixe, tronc qui tourne.
+        <div class="cue">👁 "Bras complètement tendus — si les coudes plient, tu triches."</div>
+      </div>
+    </div>
+    <div class="atel">
+      <div class="atel-head"><div class="atel-num">A3</div><div class="atel-name">Pont fessier unilatéral</div></div>
+      <div class="atel-body">Allongée dos, une jambe tendue. Pousser le bassin. Tempo <strong>2021</strong> — 1s pause en haut.
+        <div class="cue">👁 "En haut tu serres vraiment fort — 1 seconde de contraction obligatoire."</div>
+      </div>
+    </div>
+    <div class="atel">
+      <div class="atel-head"><div class="atel-num">A4</div><div class="atel-name">Side plank avec rotation</div></div>
+      <div class="atel-body">Planche latérale, bras libre passe sous le corps et revient. Continu et contrôlé.
+        <div class="warn">→ Si trop difficile : side plank statique — qualité avant tout.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SQUAT -->
+<div class="block squat open">
+  <div class="block-header" onclick="toggle(this)">
+    <div class="time-pill">12 min</div>
+    <div><div class="block-title">Squat barre — 4–5 filles restantes</div><div class="block-sub">Finir en 12 min · Rejoindre le circuit ensuite</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="block-body">
+    <div class="format-box">
+      <strong>Protocole identique S03 :</strong> 2–3 × 8 reps à vide · tempo 3020 · corrections techniques.<br>
+      Pour celles déjà passées en S03 avec bonne technique : <strong>ajouter 5–10 kg</strong> en autonomie pendant que tu fais passer les nouvelles.
+    </div>
+    <div style="display:flex;flex-direction:column;gap:7px;">
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:var(--surface2);border-radius:7px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--yellow);min-width:18px;">1</div>
+        <div style="font-size:12.5px;line-height:1.65;"><strong>4–5 filles restantes — 2×8 à vide</strong><br>Corrections : dos droit · hanches en arrière · genoux dans l'axe. Tempo 3020.
+        <div class="cue" style="margin-top:4px;">👁 "Hanches en arrière d'abord — comme si tu t'asseyais sur une chaise derrière toi."</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:var(--surface2);border-radius:7px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--yellow);min-width:18px;">2</div>
+        <div style="font-size:12.5px;line-height:1.65;"><strong>Celles déjà passées — 2×8 légèrement chargé en autonomie</strong><br>5–10 kg si technique propre en S03. Elles savent ce qu'elles font — te libère pour le circuit.
+        <div class="new" style="margin-top:4px;">→ Dès que les 4–5 filles sont passées → tu rejoins le circuit pour l'observer.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CIRCUIT -->
+<div class="block circuit open">
+  <div class="block-header" onclick="toggle(this)">
+    <div class="time-pill">27 min</div>
+    <div><div class="block-title">Circuit australien — 4 tours</div><div class="block-sub">Feedback continu · Observer chaque station · +1 tour vs S03</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="block-body">
+
+    <div class="format-box">
+      <strong>45s travail / 15s rotation · 4 tours · Pause 90s inter-tour</strong><br>
+      <strong>Priorité absolue :</strong> donner du feedback à chaque station à chaque tour. C'est la première fois que tu observes vraiment le circuit.
+    </div>
+
+    <div class="station">
+      <div class="stat-head"><div class="stat-num">S1</div><div class="stat-name">Pompes</div></div>
+      <div class="stat-body">
+        <span class="fb fb-progress">📈 PROGRESSION</span> <span class="fb fb-watch">👁 OBSERVER</span><br>
+        <div style="margin-top:6px;">Compter les reps au <strong>tour 1</strong> — comparaison avec S01 (si mémorisé). C'est ton indicateur de progression HDC.
+        <div class="cue">👁 "Corps en planche de la tête aux talons. Si le bassin monte, tu t'arrêtes."</div>
+        <div class="warn">→ Chercher : qui fait des demi-pompes ? Qui plie les genoux ? Qui garde le corps droit ?</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="station">
+      <div class="stat-head"><div class="stat-num">S2</div><div class="stat-name">TRX Row / Rowing élastique</div></div>
+      <div class="stat-body">
+        <span class="fb fb-watch">👁 OBSERVER</span><br>
+        <div style="margin-top:6px;">First real observation. Chercher : coudes proches du corps pendant la traction ? Corps aligné ou bassin qui tombe ?
+        <div class="cue">👁 "Coudes vers les hanches — pas évasés sur les côtés."</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="station">
+      <div class="stat-head"><div class="stat-num">S3</div><div class="stat-name">Squat saut → réception unipodal 2s</div></div>
+      <div class="stat-body">
+        <span class="fb fb-correct">⚠️ CORRECTION CLÉ</span><br>
+        <div style="margin-top:6px;">Station critique — même problème identifié sur Olympia. Chercher : est-ce qu'il y a un temps d'attente entre le squat et le saut ? Les bras montent-ils au décollage ?
+        <div class="cue">👁 "On saute EN montant les bras — pas après. Squat + saut = une seule action."</div>
+        <div class="warn">→ Valgus à la réception : genou dans l'axe. Même consigne depuis S01.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="station">
+      <div class="stat-head"><div class="stat-num">S4</div><div class="stat-name">Extension de hanche avec élastique</div></div>
+      <div class="stat-body">
+        <span class="fb fb-correct">⚠️ CORRECTION CLÉ</span><br>
+        <div style="margin-top:6px;">L'arabesque active. Chercher : qui compense avec le dos qui se creuse au lieu d'utiliser le fessier ?
+        <div class="cue">👁 "Le mouvement vient du fessier — si ton dos se creuse fort, baisse la jambe."</div>
+        <div class="new">→ Lien glace direct : c'est la force qui manque pour les arabesques hautes. Le dire à voix haute.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="station">
+      <div class="stat-head"><div class="stat-num">S5</div><div class="stat-name">Step touch latéral</div></div>
+      <div class="stat-body">
+        <span class="fb fb-watch">👁 OBSERVER</span><br>
+        <div style="margin-top:6px;">Station cardio de récupération. Observer : qui ralentit dès le tour 3 ? Indicateur cardio.
+        </div>
+      </div>
+    </div>
+
+    <div style="background:rgba(0,200,232,.05);border:1px solid rgba(0,200,232,.2);border-radius:8px;padding:10px 12px;margin-top:4px;font-size:12px;line-height:1.7;">
+      <strong style="color:var(--ice);">💬 Plan de feedback inter-tours :</strong><br>
+      Tour 1 → observer sans intervenir · Tour 2 → corriger S3 et S4 en priorité · Tour 3 → corriger S1 et S2 · Tour 4 → feedback global final
+    </div>
+
+  </div>
+</div>
+
+<!-- MOBILITÉ -->
+<div class="block mobility open">
+  <div class="block-header" onclick="toggle(this)">
+    <div class="time-pill">5 min</div>
+    <div><div class="block-title">Mobilité — Hanches + Psoas</div><div class="block-sub">Identique S03 · Lien arabesque verbalisé</div></div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="block-body">
+    <div style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:var(--text2);">
+      <div style="padding:7px 10px;background:var(--surface2);border-radius:7px;">🔵 Étirement pigeon — 60s par côté <span style="color:var(--ice);font-size:11.5px;">→ ouverture hanche = aigle</span></div>
+      <div style="padding:7px 10px;background:var(--surface2);border-radius:7px;">🔵 Fente basse + rotation thoracique — 30s par côté <span style="color:var(--ice);font-size:11.5px;">→ psoas + arabesque haute</span></div>
+      <div style="padding:7px 10px;background:var(--surface2);border-radius:7px;">🔵 Étirement quadriceps debout — 30s par côté</div>
+    </div>
+    <div style="margin-top:8px;font-size:11.5px;color:var(--muted);font-style:italic;">→ S05 : tests de souplesse (grand écart D/G/facial + arabesque active filmée CoachEye)</div>
+  </div>
+</div>
+
+</div>
+
+<div class="notes-box">
+  <h3>📝 Notes post-séance</h3>
+  <div class="notes-line">
+    Squat — filles restantes passées : ___/4-5 · Charge ajoutée pour avancées : ⬜ Oui ⬜ Non<br>
+    Circuit observé : ⬜ Oui ⬜ Partiellement<br>
+    Pompes tour 1 — reps médian approximatif : ___ (réf. progression)<br>
+    S3 squat saut — bras corrects : ⬜ Mieux ⬜ Pareil · Délai squat/saut : ⬜ Mieux ⬜ Toujours là<br>
+    S4 arabesque élastique — compensation dos : ⬜ Oui (qui ?) ___ ⬜ Bien géré<br>
+    Fatigues visibles dès tour : ___ · Station la plus difficile : ___<br>
+    Ajustements S05 : ____________________________________________
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:18px;font-size:11px;color:var(--muted);font-family:'Bebas Neue',sans-serif;letter-spacing:1px;">
+  <span style="color:var(--ice);">SYNCHROLEARN</span> · PP · S04 · HARMONIA · 14 mai 2026
+</div>
+
+<script>
+function toggle(h){h.parentElement.classList.toggle('open');}
+</script>
+</body>
+</html>
